@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*$py.class
+*.sfk
+*.mp4
+*.swatch
+*.idea
+*.exe
+*/MemesIgnore
+.idea
+resources/

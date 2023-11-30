@@ -1,0 +1,22 @@
+{
+	"move_forward": "w",
+	"move_left":    "a",
+	"move_back":    "s",
+	"move_right":   "d",
+	"move_up":      "space",
+	"move_down":    "shift",
+
+	"turn_back":             "arrow_up",
+	"turn_forward":          "arrow_down",
+	"turn_left_horizontal":  "arrow_left",
+	"turn_right_horizontal": "arrow_right",
+	"turn_right_vertical":   "e",
+	"turn_left_vertical":    "q",
+
+	"speed up":    0,
+	"slow down":   1,
+	"snail speed": 2,
+
+	"orb_cam_sensitivity": 70,
+	"fov_scroll_increment": 6
+}
