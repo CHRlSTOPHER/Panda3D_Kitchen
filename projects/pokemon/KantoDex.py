@@ -76,6 +76,7 @@ class KantoDex(ShowBase):
             entry = KG.DEX_ENTRIES[i]
             texture_path = SPRITE_TEX_PATH + f"ani_bw_{dex_str}{i+1}.png"
             sprite = PokemonSprite(texture_path, columns=entry[0], wait_time=.1, name=f"self.sprite[{i}]")
+            sprite.uv_sequence.loop()
             sprite.set_pos(self.x_pos, 0, self.z_pos)
             self.setup_sprite_shadow(i, entry, sprite, dex_str)
 
@@ -90,9 +91,9 @@ class KantoDex(ShowBase):
     # Make a copy of the sprite as a shadow.
     def setup_sprite_shadow(self, i, entry, sprite, num):
         sprite_shadow = AnimatedSprite(SPRITE_TEX_PATH + f"ani_bw_{num}{i+1}.png", columns=entry[0], wait_time=.1)
-
-        sprite_shadow.set_pos(self.x_pos, .2, self.z_pos+.15)
-        sprite_shadow.set_scale(SPRITE_SCALE)
+        sprite_shadow.reparent_to(sprite)
+        sprite_shadow.set_y(.2)
+        sprite_shadow.set_scale(SPRITE_SCALE * 2)
         sprite_shadow.set_color(0, 0, 0, 1)
         sprite_shadow.set_alpha_scale(0.5)
         self.shadows.append(sprite_shadow)

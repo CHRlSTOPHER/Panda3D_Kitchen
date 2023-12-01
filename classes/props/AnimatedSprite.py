@@ -14,7 +14,7 @@ class AnimatedSprite(NodePath):
 		self.columns = columns
 		self.missing_frames = missing_frames
 		self.wait_time = wait_time
-		self.uv_scroll_sequence = Sequence()
+		self.uv_sequence = Sequence()
 
 		NodePath.__init__(self, self.plane_model())
 		self.set_name(name)
@@ -93,7 +93,6 @@ class AnimatedSprite(NodePath):
 		# set UV coordinate starting position
 		self.set_tex_offset(TextureStage.get_default(), u, v)
 
-		self.uv_scroll_sequence = Sequence()
 		for frame in range(0, max_frames - 1):
 			# if the U coordinate goes too far to the right, reset and increment V down to the next column
 			if x_limit > self.columns - 2:
@@ -106,11 +105,9 @@ class AnimatedSprite(NodePath):
 				x_limit += 1
 
 			# add a small pause between frames
-			self.uv_scroll_sequence.append(Wait(self.wait_time))
-			self.uv_scroll_sequence.append(Func(self.set_tex_offset, TextureStage.get_default(), u, v))
-
-		self.uv_scroll_sequence.loop()
+			self.uv_sequence.append(Wait(self.wait_time))
+			self.uv_sequence.append(Func(self.set_tex_offset, TextureStage.get_default(), u, v))
 
 	def cleanup(self):
-		self.uv_scroll_sequence.finish()
+		self.uv_sequence.finish()
 		self.remove_node()
