@@ -5,6 +5,7 @@ SETTINGS_JSON = 'settings.json'
 KEYBINDINGS_JSON = "keybindings.json"
 
 ORBITAL_CAM_MOUSE_SENSITIVITY = 70
+FOV_MODIFIER = 90
 FOV_SCROLL_AMOUNT = 6
 
 ESCAPE = 'escape'

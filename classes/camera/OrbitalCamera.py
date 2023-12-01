@@ -9,7 +9,6 @@ from classes.globals import Globals as G
 
 MOUSE_SENSITIVITY = G.ORBITAL_CAM_MOUSE_SENSITIVITY
 
-
 class OrbitalCamera(DirectObject):
 
     def __init__(self):
@@ -54,8 +53,13 @@ class OrbitalCamera(DirectObject):
             y_pos = base.mouseWatcherNode.get_mouse_y()
 
             # based on where the mouse has moved from the center, modify the camera orientation
-            new_cam_h_value = camera.getH() - (x_pos * MOUSE_SENSITIVITY)
-            new_cam_p_value = camera.getP() + (y_pos * MOUSE_SENSITIVITY)
+            # also factor fov into the equation.
+            # if the fov is very small, reduce the movement. Easier viewing close up.
+            fov_mod = base.camLens.getFov()[0] / G.FOV_MODIFIER
+            new_cam_h_value = camera.getH() - (x_pos * MOUSE_SENSITIVITY * fov_mod)
+            new_cam_p_value = camera.getP() + (y_pos * MOUSE_SENSITIVITY * fov_mod)
+            #print(MOUSE_SENSITIVITY)
+            #print(new_cam_p_value)
 
             camera.setH(new_cam_h_value)
             camera.setP(new_cam_p_value)
