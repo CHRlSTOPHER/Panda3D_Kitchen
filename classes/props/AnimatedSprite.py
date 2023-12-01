@@ -1,6 +1,7 @@
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from panda3d.core import loadPrcFileData, NodePath, SamplerState, TextureStage, TransparencyAttrib
-from panda3d.core import GeomVertexArrayFormat, Geom, GeomVertexFormat, GeomVertexData, GeomVertexWriter, GeomTriangles, GeomNode
+from panda3d.core import GeomVertexArrayFormat, Geom, GeomVertexFormat
+from panda3d.core import GeomVertexData, GeomVertexWriter, GeomTriangles, GeomNode
 
 # make pixel art look more clear
 loadPrcFileData("", "textures-power-2 0")
@@ -109,3 +110,7 @@ class AnimatedSprite(NodePath):
 			self.uv_scroll_sequence.append(Func(self.set_tex_offset, TextureStage.get_default(), u, v))
 
 		self.uv_scroll_sequence.loop()
+
+	def cleanup(self):
+		self.uv_scroll_sequence.finish()
+		self.remove_node()

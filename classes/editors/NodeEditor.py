@@ -19,3 +19,7 @@ class NodeEditor(DirectObject): # Will probably change this to a UI class later.
         self.tf_printer.update_transform_data(self.node_mover)
         function_print_index = 4 # test. I'll implement ui for printing data later
         self.tf_printer.print_transform_func(function_print_index)
+
+    def cleanup(self):
+        self.node_mover.cleanup()
+        self.node_selector.cleanup()

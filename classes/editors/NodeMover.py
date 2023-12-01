@@ -20,6 +20,7 @@ class NodeMover(NodePath, DirectObject):
         self.move_speed = G.NM_BASE_MOVE_RATE
         self.turn_speed = G.NM_BASE_TURN_RATE
         self.allow_click = True
+        self.allow_tasks = True
 
         # As a shortcut, press the assigned key below to set the camera as the node being moved by the node mover.
         self.accept(G.MIDDLE_MOUSE_BUTTON, self.set_node, extraArgs=[camera])
@@ -40,8 +41,8 @@ class NodeMover(NodePath, DirectObject):
             ).start()
 
     def set_move_options(self):
-    	self.move_options = [
-    		[self.setY, self.get_move_speed, 1],
+        self.move_options = [
+            [self.setY, self.get_move_speed, 1],
             [self.setY, self.get_move_speed, -1],
             [self.setX, self.get_move_speed, -1],
             [self.setX, self.get_move_speed, 1],
@@ -73,7 +74,7 @@ class NodeMover(NodePath, DirectObject):
         taskMgr.add(self.move_task, f"move_{key}", extraArgs=[key, direction], appendTask=True)
 
     def move_task(self, key, index, task):
-        if not self.move_options:
+        if not self.move_options or not self.allow_tasks:
             return task.done
 
         move_option = self.move_options[index]
@@ -103,3 +104,7 @@ class NodeMover(NodePath, DirectObject):
 
     def get_turn_speed(self):
         return self.turn_speed
+
+    def cleanup(self):
+        self.allow_tasks = False
+        self.ignore_all()

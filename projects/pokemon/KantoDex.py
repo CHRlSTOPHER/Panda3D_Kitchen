@@ -1,4 +1,5 @@
 # This code lets you load this file directly in cmd/IDE instead of through the bat file.
+# (You will still need to use a version of python that comes with Panda3D)
 import os, sys
 
 current_path = os.getcwd()
@@ -73,7 +74,8 @@ class KantoDex(ShowBase):
         for i in range(start, end):
             # Pull their entry and generate a sprite.
             entry = KG.DEX_ENTRIES[i]
-            sprite = PokemonSprite(SPRITE_TEX_PATH + f"ani_bw_{dex_str}{i+1}.png", columns=entry[0], wait_time=.1, name=f"self.sprite[{i}]")
+            texture_path = SPRITE_TEX_PATH + f"ani_bw_{dex_str}{i+1}.png"
+            sprite = PokemonSprite(texture_path, columns=entry[0], wait_time=.1, name=f"self.sprite[{i}]")
             sprite.set_pos(self.x_pos, 0, self.z_pos)
             self.setup_sprite_shadow(i, entry, sprite, dex_str)
 

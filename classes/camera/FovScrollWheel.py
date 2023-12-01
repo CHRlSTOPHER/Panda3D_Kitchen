@@ -30,3 +30,6 @@ class FovScrollWheel(DirectObject):
         if fov <= MAXIMUM_FOV:
             bigger_fov = fov + SCROLL_AMOUNT
             base.camLens.setFov(bigger_fov)
+
+    def cleanup(self):
+        self.ignore_all()

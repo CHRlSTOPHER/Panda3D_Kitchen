@@ -15,42 +15,38 @@ class OrbitalCamera(DirectObject):
     def __init__(self):
         DirectObject.__init__(self)
         self.window_properties = WindowProperties()
-        self.enable = False
+        self.toggle_value = True
+        self.cam_task = True
 
         base.disable_mouse()
-        self.enable_orb_cam()
+        self.toggle_orb_cam()
         base.win.requestProperties(self.window_properties)
 
-        self.accept(G.RIGHT_MOUSE_BUTTON, self.enable_or_disable_orb_cam)
+        self.accept(G.RIGHT_MOUSE_BUTTON, self.toggle_orb_cam)
 
-    def enable_or_disable_orb_cam(self):
-        if self.enable:
-            self.enable_orb_cam()
+    def toggle_orb_cam(self):
+        self.window_properties.setCursorHidden(self.toggle_value)
+
+        if self.toggle_value:
+            self.recenter_mouse_cursor()
+            taskMgr.doMethodLater(G.TINY_DELAY, self.orb_cam_task, G.ORB_CAM_TASK)
         else:
-            self.disable_orb_cam()
+            taskMgr.remove(G.ORB_CAM_TASK)
 
         base.win.requestProperties(self.window_properties)
-        self.enable = not self.enable
-
-    def enable_orb_cam(self):
-        self.window_properties.setCursorHidden(True)
-        self.recenter_mouse_cursor()
-
-        # doLater gives the cursor time to re-center. This prevents a sudden camera jump when re-enabling the orb cam.
-        taskMgr.doMethodLater(G.TINY_DELAY, self.turn_camera_based_on_mouse_movements, G.ORB_CAM_TASK)
-    
-    def disable_orb_cam(self):
-        self.window_properties.setCursorHidden(False)
-        taskMgr.remove(G.ORB_CAM_TASK)
+        self.toggle_value = not self.toggle_value
 
     def recenter_mouse_cursor(self):
         mouse_x_center, mouse_y_center = [base.win.getXSize() // 2, base.win.getYSize() // 2]
         base.win.move_pointer(0, mouse_x_center, mouse_y_center)
 
-    def turn_camera_based_on_mouse_movements(self, task):
-        self.recenter_mouse_cursor()
-        self.update_cam_orientation()
-        return task.cont
+    def orb_cam_task(self, task):
+        if self.cam_task:
+            self.recenter_mouse_cursor()
+            self.update_cam_orientation()
+            return task.cont
+        else:
+            return task.done
 
     def update_cam_orientation(self):
         if base.mouseWatcherNode.hasMouse():
@@ -65,6 +61,7 @@ class OrbitalCamera(DirectObject):
             camera.setP(new_cam_p_value)
 
     def cleanup(self):
-        if not self.mouse_visibility:
-            self.change_mouse_mode()
+        if not self.toggle_value:
+            self.toggle_orb_cam()
+        self.cam_task = False
         self.ignoreAll()

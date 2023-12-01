@@ -1,2 +1,1 @@
-# Panda3D_Kitchen
- 
+Welcome to the kitchen! Let's cook up something good!
