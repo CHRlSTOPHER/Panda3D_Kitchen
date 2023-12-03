@@ -22,7 +22,7 @@ from direct.showbase.ShowBase import ShowBase
 
 from classes.camera.OrbitalCamera import OrbitalCamera
 from classes.camera.FovScrollWheel import FovScrollWheel
-from classes.editors.NodeEditor import NodeEditor
+from classes.editors.MasterEditor import MasterEditor
 from classes.props.AnimatedSprite import AnimatedSprite
 from classes.props.PokemonSprite import PokemonSprite
 from classes.globals import Globals as G
@@ -49,7 +49,7 @@ class KantoDex(ShowBase):
         base.set_background_color(.1, .1, .1, 1)
         camera.set_pos_hpr(10.49, -9.09, 0.54, 31.0, -11.0, 0.0)
 
-        self.node_editor = NodeEditor()
+        self.node_editor = MasterEditor()
         self.orb_cam = OrbitalCamera()
         self.fov_wheel = FovScrollWheel(camera)
 

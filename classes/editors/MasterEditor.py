@@ -3,23 +3,23 @@ This is a collection of different classes and mashes them all together into an e
 """
 from panda3d.core import WindowProperties
 
-from classes.gui.NodeEditorGUI import NodeEditorGUI
 from .NodeMover import NodeMover
 from .NodeSelector import NodeSelector
 from .TransformFunctionPrinter import TransformFunctionPrinter, get_transform_data
-from classes.gui.DataPrinterWindow import DataPrinterWindow
+from classes.windows.TransformFuncWindow import TransformFuncWindow
+from classes.windows.PropGeneratorWindow import PropGeneratorWindow
 
 
-class NodeEditor(NodeEditorGUI):
+class MasterEditor():
 
     def __init__(self):
-        NodeEditorGUI.__init__(self)
         # Set the camera as the default node. It can be changed later through selection.
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)
         self.tf_printer = TransformFunctionPrinter(*get_transform_data(camera))
 
-        self.dp_window = DataPrinterWindow(self.node_mover, self.tf_printer)
+        self.dp_window = TransformFuncWindow(self.node_mover, self.tf_printer)
+        self.pg_window = PropGeneratorWindow(self.node_mover)
 
         # set the main window in the foreground
         wp = WindowProperties()
