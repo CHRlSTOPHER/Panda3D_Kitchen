@@ -44,6 +44,26 @@ TRANSFORM_FUNCTION_STRINGS = [
     "Func(base.camLens.set_fov, {fov}),",
     "LerpFunc(base.camLens.set_fov, fromData=FOV_1, toData={fov}, duration=DURATION, blendType='noBlend'),",
 ]
+TRANSFORM_FUNCTION_NAMES = [
+    "SET(POS)",
+    "SET(HPR)",
+    "SET(SCALE)",
+    "SET(POS HPR)",
+    "SET(POS HPR SCALE)",
+
+    "FUNC(POS HPR)",
+    "FUNC(SCALE)",
+
+    "INTERVAL(POS HPR)",
+    "INTERVAL(SCALE)",
+
+    "[POS HPR]",
+    "[SCALE]",
+
+    "SET(FOV)",
+    "FUNC(FOV)",
+    "LERPFUNC(FOV)"
+]
 
 # NM is short for Node Mover
 NM_TRANSFORM_INPUTS = [

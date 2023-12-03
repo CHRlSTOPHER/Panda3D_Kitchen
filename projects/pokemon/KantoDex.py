@@ -74,7 +74,7 @@ class KantoDex(ShowBase):
             # Pull their entry and generate a sprite.
             entry = KG.DEX_ENTRIES[i]
             texture_path = SPRITE_TEX_PATH + f"ani_bw_{dex_str}{i+1}.png"
-            sprite = PokemonSprite(texture_path, columns=entry[0], wait_time=.1, name=f"self.sprite[{i}]")
+            sprite = PokemonSprite(texture_path, columns=entry[0], wait_time=.1, name=f"self.sprites[{i}]")
             sprite.uv_sequence.loop()
             sprite.set_pos(self.x_pos, 0, self.z_pos)
             self.setup_sprite_shadow(i, entry, sprite, dex_str)
