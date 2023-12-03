@@ -13,10 +13,7 @@
 	"turn_right_vertical":   "e",
 	"turn_left_vertical":    "q",
 
-	"speed up":    0,
-	"slow down":   1,
-	"snail speed": 2,
-
-	"orb_cam_sensitivity": 70,
-	"fov_scroll_increment": 6
+	"speed_up":    0,
+	"slow_down":   1,
+	"snail_speed": 2
 }

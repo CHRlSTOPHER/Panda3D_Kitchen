@@ -43,8 +43,8 @@ class NodeMover(NodePath, DirectObject):
     def set_move_options(self):
         self.move_options = [
             [self.setY, self.get_move_speed, 1],
-            [self.setY, self.get_move_speed, -1],
             [self.setX, self.get_move_speed, -1],
+            [self.setY, self.get_move_speed, -1],
             [self.setX, self.get_move_speed, 1],
             [self.setZ, self.getZ, self.get_move_speed, 1],
             [self.setZ, self.getZ, self.get_move_speed, -1],
@@ -60,7 +60,9 @@ class NodeMover(NodePath, DirectObject):
     def listen_for_key_inputs(self):
         index = 0
         # Add input detection for node transformations.
-        for key in G.NM_TRANSFORM_INPUTS:
+        for key in KBS:
+            if key == "speed_up": break # stop when we run into speed modifiers.
+
             self.accept(KBS[key], self.initiate_movement, extraArgs=[key, index])
             self.accept(KBS[key] + "-up", self.stop_move_task, extraArgs=[key])
             index += 1

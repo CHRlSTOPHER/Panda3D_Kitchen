@@ -64,27 +64,11 @@ TRANSFORM_FUNCTION_NAMES = [
     "FUNC(FOV)",
     "LERPFUNC(FOV)"
 ]
-
-# NM is short for Node Mover
-NM_TRANSFORM_INPUTS = [
-    "move_forward", # +y
-    "move_back",    # -y
-    "move_left",    # -x
-    "move_right",   # +x
-    "move_up",      # +z
-    "move_down",    # -z
-
-    "turn_back",             # +p
-    "turn_forward",          # -p
-    "turn_left_horizontal",  # +h
-    "turn_right_horizontal", # -h
-    "turn_right_vertical",   # +r
-    "turn_left_vertical",    # -r
-]
+# Node Mover
 NM_SPEEDS = [
-    ("speed up", 0.33),
-    ("slow down", 2.5),
-    ("snail speed", 5.0),
+    ("speed_up", 0.33),
+    ("slow_down", 2.5),
+    ("snail_speed", 5.0),
 ]
 NM_BASE_MOVE_RATE = .1
 NM_BASE_TURN_RATE = .5
