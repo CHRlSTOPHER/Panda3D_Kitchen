@@ -17,6 +17,7 @@ loadPrcFileData("", f"depth-bits {json_settings['bits']}")
 loadPrcFileData("", f"framebuffer-multisample {json_settings['framebuffer-multisample']}")
 loadPrcFileData("", f"multisamples {json_settings['multisamples']}")
 loadPrcFileData("", f"win-size {json_settings['screen_resolution']}")
+loadPrcFileData("", f"undecorated {json_settings['borderless']}")
 loadPrcFileData("", f"show-frame-rate-meter {json_settings['show_fps_meter']}")
 
 # Shadow bin for drop shadows

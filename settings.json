@@ -2,6 +2,7 @@
 	"project-path": "C:/Users/Chris/Desktop/Panda3D_Kitchen/",
 
 	"screen_resolution": "1280 720",
+	"borderless": true,
 	"bits": 24,
 	"framebuffer-multisample": 1,
 	"multisamples": 8,

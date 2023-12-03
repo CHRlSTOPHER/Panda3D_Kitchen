@@ -1,3 +1,5 @@
 DP_WINDOW = "data_printer"
 DP_WINDOW_SIZE = (300, 750)
 DP_WINDOW_ORIGIN = (1600, 150)
+DP_WINDOW_SIZE_B_LESS = (300, 720) # borderless
+DP_WINDOW_ORIGIN_B_LESS = (1600, 180) # borderless
