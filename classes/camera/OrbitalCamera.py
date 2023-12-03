@@ -18,8 +18,8 @@ class OrbitalCamera(DirectObject):
         self.cam_task = True
 
         base.disable_mouse()
+        self.window_properties.set_foreground(True)
         self.toggle_orb_cam()
-        base.win.requestProperties(self.window_properties)
 
         self.accept(G.RIGHT_MOUSE_BUTTON, self.toggle_orb_cam)
 

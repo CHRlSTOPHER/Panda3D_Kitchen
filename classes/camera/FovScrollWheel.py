@@ -3,7 +3,6 @@ Adjust the Camera Fov by scrolling the Mouse Wheel.
 Limited range between 0-180.
 """
 from direct.showbase.DirectObject import DirectObject
-import json
 
 from classes.globals import Globals as G
 

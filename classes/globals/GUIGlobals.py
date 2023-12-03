@@ -1,0 +1,3 @@
+DP_WINDOW = "data_printer"
+DP_WINDOW_SIZE = (300, 750)
+DP_WINDOW_ORIGIN = (1600, 150)

@@ -1,4 +1,3 @@
-# Change project path to the filepath you saved the project to.
 WINDOW_TITLE = "PANDA3D KITCHEN"
 ICON_FILENAME = "panda3d-chef.ico"
 SETTINGS_JSON = 'settings.json'

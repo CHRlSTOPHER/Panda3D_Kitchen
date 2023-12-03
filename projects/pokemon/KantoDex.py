@@ -19,12 +19,10 @@ Organizes them in a vertically rectangular shape.
 from classes.settings import Settings
 
 from direct.showbase.ShowBase import ShowBase
-from direct.interval.IntervalGlobal import Sequence, Func, Wait
 
 from classes.camera.OrbitalCamera import OrbitalCamera
 from classes.camera.FovScrollWheel import FovScrollWheel
 from classes.editors.NodeEditor import NodeEditor
-from classes.props.PlaneModel import PlaneModel
 from classes.props.AnimatedSprite import AnimatedSprite
 from classes.props.PokemonSprite import PokemonSprite
 from classes.globals import Globals as G
@@ -54,8 +52,6 @@ class KantoDex(ShowBase):
         self.node_editor = NodeEditor()
         self.orb_cam = OrbitalCamera()
         self.fov_wheel = FovScrollWheel(camera)
-
-        # self.plane_model = PlaneModel(SPRITE_TEX_PATH + "ani_bw_038.png", columns=10)
 
         # Make a background sprite.
         background = AnimatedSprite(SPRITE_TEX_PATH + "route-23.png")

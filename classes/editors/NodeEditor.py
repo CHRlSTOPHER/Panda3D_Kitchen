@@ -1,13 +1,18 @@
-from direct.showbase.DirectObject import DirectObject
+"""
+This is a collection of different classes and mashes them all together into an editor. WIP.
+"""
+from classes.gui.DataPrinterWindow import DataPrinterWindow
+from classes.gui.NodeEditorGUI import NodeEditorGUI
 from .NodeMover import NodeMover
 from .NodeSelector import NodeSelector
 from .TransformFunctionPrinter import TransformFunctionPrinter, get_transform_data
 
 
-class NodeEditor(DirectObject): # Will probably change this to a UI class later.
+class NodeEditor(NodeEditorGUI, DataPrinterWindow):
 
     def __init__(self):
-        DirectObject.__init__(self)
+        NodeEditorGUI.__init__(self)
+        DataPrinterWindow.__init__(self)
         # Set the camera as the default node. It can be changed later through selection.
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)

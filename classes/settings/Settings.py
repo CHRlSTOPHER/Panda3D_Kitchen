@@ -1,5 +1,4 @@
 """ SETTINGS CONFIG, AN ESSENTIAL FILE FOR BASIC NEEDS """
-import os, sys
 import json
 
 from panda3d.core import loadPrcFileData, CullBinManager
