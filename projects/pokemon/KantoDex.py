@@ -20,6 +20,7 @@ from classes.settings import Settings
 
 from direct.showbase.ShowBase import ShowBase
 
+from classes.actors.Suit import Suit
 from classes.camera.OrbitalCamera import OrbitalCamera
 from classes.camera.FovScrollWheel import FovScrollWheel
 from classes.editors.MasterEditor import MasterEditor
@@ -67,6 +68,8 @@ class KantoDex(ShowBase):
 
         for sprite in self.sprites:
             sprite.set_scale(SPRITE_SCALE)
+
+        self.cog = Suit("f", render)
 
     def generate_sprites(self, start, end, dex_str):
         # For pokemon in a specified range-
