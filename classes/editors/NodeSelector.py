@@ -24,9 +24,22 @@ class NodeSelector(DirectObject):
     def select_node(self):
         base.cTrav.traverse(render)
         if self.node_mover and self.collision_handler.get_num_entries() > 0:
-            self.collision_handler.sort_entries()
-            node = self.collision_handler.getEntry(0).get_into_node_path()
+            node = self.get_node_from_handler()
             self.node_mover.set_node(node)
+
+    def get_node_from_handler(self):
+        self.collision_handler.sort_entries()
+        node = self.collision_handler.getEntry(0).get_into_node_path()
+        if node == render or node.is_hidden():
+            return None # Do NOT allow render or hidden nodes to be selected.
+
+        # the special "node"ifier flag lets you pick nodes that aren't directly reparented to render.
+        while True:
+            if node.get_parent() == render or node.get_name()[0] == G.SPECIAL_NODE_IFIER_FLAG:
+                break
+            node = node.get_parent()
+
+        return node
 
     def add_coll_ray_to_traverser(self):
         self.mouse_ray = CollisionRay()

@@ -5,7 +5,7 @@ from . import SuitGlobals as SG
 
 class Suit(Actor):
 
-    def __init__(self, suit_key, parent, skelecog=False):
+    def __init__(self, suit_key, parent, skelecog=False, name="~Suit"):
         self.suits = []
         self.skelecog = skelecog
         self.suit = SG.SUITS[suit_key]
@@ -17,6 +17,7 @@ class Suit(Actor):
         self.scale = self.suit[5]
 
         self.assemble_cog_parts(parent)
+        self.set_name(name)
 
     def assemble_cog_parts(self, parent, actor=None):
         Actor.__init__(self, actor)

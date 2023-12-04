@@ -69,7 +69,7 @@ class KantoDex(ShowBase):
         for sprite in self.sprites:
             sprite.set_scale(SPRITE_SCALE)
 
-        self.cog = Suit("f", render)
+        self.flunky = Suit("f", render, name="~self.flunky")
 
     def generate_sprites(self, start, end, dex_str):
         # For pokemon in a specified range-
