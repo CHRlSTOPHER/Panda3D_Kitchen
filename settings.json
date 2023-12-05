@@ -6,5 +6,6 @@
 	"bits": 24,
 	"framebuffer-multisample": 1,
 	"multisamples": 8,
-	"show_fps_meter": true
+	"show_fps_meter": true,
+	"auto_walker": true
 }

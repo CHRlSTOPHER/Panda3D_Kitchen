@@ -51,10 +51,9 @@ class TransformFunctionPrinter():
         print(formatted_string)
 
     def check_for_special_node_ifier(self, required_arg_dict):
-        if "name" in required_arg_dict:
-            if required_arg_dict["name"][0] == G.SPECIAL_NODE_IFIER_FLAG:
-                # If name has the special character, remove it for the data printing.
-                required_arg_dict["name"] = required_arg_dict["name"][1:]
+        if "name" in required_arg_dict and required_arg_dict["name"][0] == G.SPECIAL_NODE_IFIER_FLAG:
+            # If name has the special character, remove it for the data printing.
+            required_arg_dict["name"] = required_arg_dict["name"][1:]
 
         return required_arg_dict
 

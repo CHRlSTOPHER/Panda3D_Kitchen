@@ -59,7 +59,7 @@ class KantoDex(ShowBase):
         background.set_pos(3.5, .5, -5)
         scale_boost = 7
         background.set_scale(scale_boost, 1, scale_boost * 2.72)
-        background.hide()
+        background.remove_node()
 
         # Make Kanto Pokemon sprites. (151 Total)
         self.generate_sprites(0, 9, "00")
@@ -69,7 +69,16 @@ class KantoDex(ShowBase):
         for sprite in self.sprites:
             sprite.set_scale(SPRITE_SCALE)
 
-        self.flunky = Suit("f", render, name="~self.flunky")
+        self.flunky = Suit("f", name="~self.flunky")
+        self.pusher = Suit("p", name="~self.pusher")
+        self.yesman = Suit("ym", name="~self.yesman")
+
+        self.yesman.set_pos_hpr(9.93, -6.21, 0.0, -98.29, 0.0, 0.0)
+        self.flunky.set_pos_hpr(9.92, -3.59, 0.0, -120.39, 0.0, 0.0)
+        self.pusher.set_pos_hpr(12.06, -2.23, 0.2, -138.44, 0.0, 0.0)
+
+        camera.set_pos_hpr(16.5, -7.41, 3.06, 61.56, 10.45, 0.0)
+        base.camLens.set_fov(56.0)
 
     def generate_sprites(self, start, end, dex_str):
         # For pokemon in a specified range-

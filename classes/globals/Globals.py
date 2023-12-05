@@ -1,4 +1,15 @@
 WINDOW_TITLE = "PANDA3D KITCHEN"
+
+#json variable names
+PROJECT_PATH = "project-path"
+SCREEN_RES = "screen_resolution"
+BORDERLESS = "borderless"
+BITS = "bits"
+FRAMEBUFFER_MULTISAMPLE = "framebuffer-multisample"
+MULTISAMPLES = "multisamples"
+FPS_METER = "show_fps_meter"
+AUTO_WALKER = "auto_walker"
+
 ICON_FILENAME = "panda3d-chef.ico"
 SETTINGS_JSON = 'settings.json'
 KEYBINDINGS_JSON = "keybindings.json"
@@ -15,7 +26,8 @@ MIDDLE_MOUSE_BUTTON = "mouse2"
 RIGHT_MOUSE_BUTTON = "mouse3"
 
 ORB_CAM_TASK = "orb_cam_task"
-RAY_MOUSE_TASK = 'ray_mouse_task'
+RAY_MOUSE_TASK = "ray_mouse_task"
+AUTO_WALKER_TASK = "auto_walker_task"
 
 SPECIAL_NODE_IFIER_FLAG = "~"
 

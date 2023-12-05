@@ -13,12 +13,12 @@ loadPrcFileData("", f"model-path {RESOURCES}")
 loadPrcFileData("", f"window-title {G.WINDOW_TITLE}")
 loadPrcFileData("", f"icon-filename {RESOURCES}windows/{G.ICON_FILENAME}")
 
-loadPrcFileData("", f"depth-bits {json_settings['bits']}")
-loadPrcFileData("", f"framebuffer-multisample {json_settings['framebuffer-multisample']}")
-loadPrcFileData("", f"multisamples {json_settings['multisamples']}")
-loadPrcFileData("", f"win-size {json_settings['screen_resolution']}")
-loadPrcFileData("", f"undecorated {json_settings['borderless']}")
-loadPrcFileData("", f"show-frame-rate-meter {json_settings['show_fps_meter']}")
+loadPrcFileData("", f"depth-bits {G.BITS}")
+loadPrcFileData("", f"framebuffer-multisample {json_settings[G.FRAMEBUFFER_MULTISAMPLE]}")
+loadPrcFileData("", f"multisamples {json_settings[G.MULTISAMPLES]}")
+loadPrcFileData("", f"win-size {json_settings[G.SCREEN_RES]}")
+loadPrcFileData("", f"undecorated {json_settings[G.BORDERLESS]}")
+loadPrcFileData("", f"show-frame-rate-meter {json_settings[G.FPS_METER]}")
 
 # Shadow bin for drop shadows
 cbm = CullBinManager.getGlobalPtr()

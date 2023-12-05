@@ -51,12 +51,12 @@ SUITS = {
 }
 SUIT_ANIMS = {
     'A': {
-        "neutral": 4,
+        "neutral": 4, "walk": 4,
     },
     'B': {
-        "neutral": 4,
+        "neutral": 4, "walk": 4,
     },
     'C': {
-        "neutral": 3.5,
+        "neutral": 3.5, "walk": 3.5,
     }
 }
