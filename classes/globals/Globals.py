@@ -36,6 +36,8 @@ MINIMUM_SCROLL_FOV = 0
 MAXIMUM_SCROLL_FOV = 180
 TINY_DELAY = .001
 
+AUTOWALKER_MOVE_ANIMS = ["walk", "run"]
+
 RED = (1, 0, 0, 1)
 
 TRANSFORM_FUNCTION_STRINGS = [
@@ -81,8 +83,8 @@ TRANSFORM_FUNCTION_NAMES = [
 # Node Mover
 NM_SPEEDS = [
     ("speed_up", 0.33),
-    ("slow_down", 2.5),
-    ("snail_speed", 5.0),
+    ("slow_down", 2.25),
+    ("snail_speed", 4.50),
 ]
 NM_BASE_MOVE_RATE = .1
 NM_BASE_TURN_RATE = .5
