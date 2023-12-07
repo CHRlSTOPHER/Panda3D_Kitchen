@@ -8,6 +8,8 @@ from direct.showbase.DirectObject import DirectObject
 
 from classes.globals import Globals as G
 
+RAY_MOUSE_TASK = "ray_mouse_task"
+
 
 class NodeSelector(DirectObject):
 
@@ -20,7 +22,7 @@ class NodeSelector(DirectObject):
 
         self.add_coll_ray_to_traverser()
         self.accept(G.LEFT_MOUSE_BUTTON, self.select_node)
-        taskMgr.add(self.sync_ray_with_mouse_pos, G.RAY_MOUSE_TASK)
+        taskMgr.add(self.sync_ray_with_mouse_pos, RAY_MOUSE_TASK)
 
     def select_node(self):
         base.cTrav.traverse(render)
@@ -66,5 +68,5 @@ class NodeSelector(DirectObject):
         return task.again
 
     def cleanup(self):
-        taskMgr.remove(G.RAY_MOUSE_TASK)
+        taskMgr.remove(RAY_MOUSE_TASK)
         self.ignore_all()

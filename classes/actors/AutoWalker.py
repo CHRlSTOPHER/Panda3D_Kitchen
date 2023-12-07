@@ -8,6 +8,7 @@ print(json_settings)
 
 H_REVERSE_START = 45
 H_REVERSE_END = 225
+AUTO_WALKER_TASK = "auto_walker_task"
 
 
 class AutoWalker():
@@ -22,7 +23,7 @@ class AutoWalker():
         self.previous_hpr = actor.get_hpr()
         self.walking = False
         if json_settings[G.AUTO_WALKER]:
-            taskMgr.add(self.toggle_actor_anim_state, G.AUTO_WALKER_TASK)
+            taskMgr.add(self.toggle_actor_anim_state, AUTO_WALKER_TASK)
 
     def toggle_actor_anim_state(self, task):
         if (self.actor.get_pos() != self.previous_pos or

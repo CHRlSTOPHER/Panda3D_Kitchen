@@ -41,8 +41,8 @@ class KantoDex(ShowBase):
         ShowBase.__init__(self)
         self.x_pos = 0
         self.z_pos = 0
-        self.sprites = []
         self.shadows = []
+        self.sprites = []
 
         self.accept(G.ESCAPE, exit)
         base.disable_mouse()
@@ -51,7 +51,7 @@ class KantoDex(ShowBase):
 
         self.node_editor = MasterEditor()
         self.orb_cam = OrbitalCamera()
-        self.fov_wheel = FovScrollWheel(camera)
+        self.fov_wheel = FovScrollWheel()
 
         background = AnimatedSprite(SPRITE_TEX_PATH + "route-23.png")
         background.set_pos(3.5, .5, -5)

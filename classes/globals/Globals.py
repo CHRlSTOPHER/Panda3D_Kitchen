@@ -28,7 +28,7 @@ KEYBINDINGS_JSON = "keybindings.json"
 
 ORBITAL_CAM_MOUSE_SENSITIVITY = 70
 FOV_MODIFIER = 90
-FOV_SCROLL_AMOUNT = 6
+FOV_SCROLL_AMOUNT = 5
 
 ESCAPE = 'escape'
 MOUSE_WHEEL_UP = 'wheel_up'
@@ -36,10 +36,6 @@ MOUSE_WHEEL_DOWN = "wheel_down"
 LEFT_MOUSE_BUTTON = "mouse1"
 MIDDLE_MOUSE_BUTTON = "mouse2"
 RIGHT_MOUSE_BUTTON = "mouse3"
-
-ORB_CAM_TASK = "orb_cam_task"
-RAY_MOUSE_TASK = "ray_mouse_task"
-AUTO_WALKER_TASK = "auto_walker_task"
 
 SPECIAL_NODE_IFIER_FLAG = "~"
 

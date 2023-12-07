@@ -8,6 +8,7 @@ from panda3d.core import WindowProperties
 from classes.globals import Globals as G
 
 SENSITIVITY = G.ORBITAL_CAM_MOUSE_SENSITIVITY
+ORB_CAM_TASK = "orb_cam_task"
 DELAY = .001
 
 class OrbitalCamera(DirectObject):
@@ -27,9 +28,9 @@ class OrbitalCamera(DirectObject):
 
         if self.toggle_value:
             self.recenter_mouse_cursor()
-            taskMgr.doMethodLater(DELAY, self.orb_cam_task, G.ORB_CAM_TASK)
+            taskMgr.doMethodLater(DELAY, self.orb_cam_task, ORB_CAM_TASK)
         else:
-            taskMgr.remove(G.ORB_CAM_TASK)
+            taskMgr.remove(ORB_CAM_TASK)
 
         base.win.requestProperties(self.window_properties)
         self.toggle_value = not self.toggle_value
