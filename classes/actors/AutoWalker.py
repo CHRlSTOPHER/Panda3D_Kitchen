@@ -25,7 +25,8 @@ class AutoWalker():
             taskMgr.add(self.toggle_actor_anim_state, G.AUTO_WALKER_TASK)
 
     def toggle_actor_anim_state(self, task):
-        if self.actor.get_pos() != self.previous_pos or self.actor.get_hpr() != self.previous_hpr:
+        if (self.actor.get_pos() != self.previous_pos or
+                self.actor.get_hpr() != self.previous_hpr):
             self.move_anim()
         else:
             self.neutral_anim()
@@ -59,8 +60,10 @@ class AutoWalker():
         if magnitude != 1:
             direction = self.find_direction(x1, y1, z1, x2, y2, z2)
 
-        # "With both direction and magnitude! OH YEAH!!!" -Vector. https://www.youtube.com/watch?v=nw9QoYL_8tI
-        self.actor.set_play_rate(direction * magnitude, self.actor.get_current_anim())
+        # "With both direction and magnitude! OH YEAH!!!" -Vector.
+        # https://www.youtube.com/watch?v=nw9QoYL_8tI
+        playrate = direction * magnitude
+        self.actor.set_play_rate(playrate, self.actor.get_current_anim())
 
     def find_direction(self, x1, y1, z1, x2, y2, z2):
         vector = (x2 - x1) + (y2 - y1) + (z2 - z1)

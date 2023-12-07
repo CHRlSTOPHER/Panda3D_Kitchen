@@ -5,7 +5,8 @@ from panda3d.core import WindowProperties
 
 from .NodeMover import NodeMover
 from .NodeSelector import NodeSelector
-from .TransformFunctionPrinter import TransformFunctionPrinter, get_transform_data
+from .TransformFunctionPrinter import (TransformFunctionPrinter,
+                                       get_transform_data)
 from classes.windows.TransformFuncWindow import TransformFuncWindow
 from classes.windows.PropGeneratorWindow import PropGeneratorWindow
 
@@ -13,7 +14,7 @@ from classes.windows.PropGeneratorWindow import PropGeneratorWindow
 class MasterEditor():
 
     def __init__(self):
-        # Set the camera as the default node. It can be changed later through selection.
+        # Set camera as default node. It can be changed later by selection.
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)
         self.tf_printer = TransformFunctionPrinter(*get_transform_data(camera))

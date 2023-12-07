@@ -6,7 +6,7 @@ import re
 
 from classes.globals import Globals as G
 
-# Use this function to provide the necessary amount of args required for NodeDataPrinter.
+# Use this function to provide the args required for NodeDataPrinter.
 def get_transform_data(node):
     string_data = [
         node.get_name()
@@ -40,20 +40,22 @@ class TransformFunctionPrinter():
     def print_transform_func(self, index):
         unformatted_string = G.TRANSFORM_FUNCTION_STRINGS[index]
         class_attribute_dict = vars(self)
-        required_arg_names = re.findall(G.FIND_ARGS_IN_CURLY_BRACES, unformatted_string)
+        required_arg_names = re.findall(G.FIND_ARGS_IN_CURLY_BRACES,
+                                        unformatted_string)
 
         required_arg_dict = {}
         for key in required_arg_names:
             required_arg_dict[key] = class_attribute_dict[key]
 
-        required_arg_dict = self.check_for_special_node_ifier(required_arg_dict)
+        required_arg_dict = self.check_for_special_nodeifier(required_arg_dict)
         formatted_string = unformatted_string.format(**required_arg_dict)
         print(formatted_string)
 
-    def check_for_special_node_ifier(self, required_arg_dict):
-        if "name" in required_arg_dict and required_arg_dict["name"][0] == G.SPECIAL_NODE_IFIER_FLAG:
-            # If name has the special character, remove it for the data printing.
-            required_arg_dict["name"] = required_arg_dict["name"][1:]
+    def check_for_special_nodeifier(self, required_arg_dict):
+        if ("name" in required_arg_dict and
+            required_arg_dict["name"][0] == G.SPECIAL_NODE_IFIER_FLAG):
+                # If name has special character, remove it.
+                required_arg_dict["name"] = required_arg_dict["name"][1:]
 
         return required_arg_dict
 

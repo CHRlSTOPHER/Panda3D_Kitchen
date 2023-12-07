@@ -14,6 +14,7 @@ class PropGeneratorWindow(NewWindow):
         properties = base.win.getProperties()
         decorated = str(properties).split()[6]
         if decorated == "undecorated":
-            NewWindow.__init__(self, GG.PG_WINDOW_ORIGIN_B_LESS, GG.PG_WINDOW_SIZE_B_LESS)
+            NewWindow.__init__(self, GG.PG_WINDOW_ORIGIN_B_LESS,
+                                     GG.PG_WINDOW_SIZE_B_LESS)
         else:
             NewWindow.__init__(self, GG.PG_WINDOW_ORIGIN, GG.PG_WINDOW_SIZE)

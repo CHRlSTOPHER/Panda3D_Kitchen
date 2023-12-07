@@ -1,7 +1,8 @@
 """
 Creates a new window. New camera, render, render2d, and aspect2d.
 """
-from panda3d.core import WindowProperties, MouseAndKeyboard, MouseWatcher, NodePath, PGTop
+from panda3d.core import (WindowProperties, MouseAndKeyboard, MouseWatcher,
+                          NodePath, PGTop)
 
 
 class NewWindow(WindowProperties):
@@ -39,7 +40,7 @@ class NewWindow(WindowProperties):
         #: The Z position of the top border of the aspect2d screen.
         self.a2dTop = 1.0
         #: The Z position of the bottom border of the aspect2d screen.
-        self.a2dBottom = -1.0
+        self.a2dBot = -1.0
         #: The X position of the left border of the aspect2d screen.
         self.a2dLeft = -aspectRatio
         #: The X position of the right border of the aspect2d screen.
@@ -47,8 +48,8 @@ class NewWindow(WindowProperties):
 
         self.a2dTopCenter = self.aspect2d.attachNewNode("a2dTopCenter")
         self.a2dTopCenterNs = self.aspect2d.attachNewNode("a2dTopCenterNS")
-        self.a2dBottomCenter = self.aspect2d.attachNewNode("a2dBottomCenter")
-        self.a2dBottomCenterNs = self.aspect2d.attachNewNode("a2dBottomCenterNS")
+        self.a2dBotCenter = self.aspect2d.attachNewNode("a2dBotCenter")
+        self.a2dBotCenterNs = self.aspect2d.attachNewNode("a2dBotCenterNS")
         self.a2dLeftCenter = self.aspect2d.attachNewNode("a2dLeftCenter")
         self.a2dLeftCenterNs = self.aspect2d.attachNewNode("a2dLeftCenterNS")
         self.a2dRightCenter = self.aspect2d.attachNewNode("a2dRightCenter")
@@ -58,16 +59,16 @@ class NewWindow(WindowProperties):
         self.a2dTopLeftNs = self.aspect2d.attachNewNode("a2dTopLeftNS")
         self.a2dTopRight = self.aspect2d.attachNewNode("a2dTopRight")
         self.a2dTopRightNs = self.aspect2d.attachNewNode("a2dTopRightNS")
-        self.a2dBottomLeft = self.aspect2d.attachNewNode("a2dBottomLeft")
-        self.a2dBottomLeftNs = self.aspect2d.attachNewNode("a2dBottomLeftNS")
-        self.a2dBottomRight = self.aspect2d.attachNewNode("a2dBottomRight")
-        self.a2dBottomRightNs = self.aspect2d.attachNewNode("a2dBottomRightNS")
+        self.a2dBotLeft = self.aspect2d.attachNewNode("a2dBotLeft")
+        self.a2dBotLeftNs = self.aspect2d.attachNewNode("a2dBotLeftNS")
+        self.a2dBotRight = self.aspect2d.attachNewNode("a2dBotRight")
+        self.a2dBotRightNs = self.aspect2d.attachNewNode("a2dBotRightNS")
 
         # Put the nodes in their places
         self.a2dTopCenter.setPos(0, 0, self.a2dTop)
         self.a2dTopCenterNs.setPos(0, 0, self.a2dTop)
-        self.a2dBottomCenter.setPos(0, 0, self.a2dBottom)
-        self.a2dBottomCenterNs.setPos(0, 0, self.a2dBottom)
+        self.a2dBotCenter.setPos(0, 0, self.a2dBot)
+        self.a2dBotCenterNs.setPos(0, 0, self.a2dBot)
         self.a2dLeftCenter.setPos(self.a2dLeft, 0, 0)
         self.a2dLeftCenterNs.setPos(self.a2dLeft, 0, 0)
         self.a2dRightCenter.setPos(self.a2dRight, 0, 0)
@@ -77,14 +78,16 @@ class NewWindow(WindowProperties):
         self.a2dTopLeftNs.setPos(self.a2dLeft, 0, self.a2dTop)
         self.a2dTopRight.setPos(self.a2dRight, 0, self.a2dTop)
         self.a2dTopRightNs.setPos(self.a2dRight, 0, self.a2dTop)
-        self.a2dBottomLeft.setPos(self.a2dLeft, 0, self.a2dBottom)
-        self.a2dBottomLeftNs.setPos(self.a2dLeft, 0, self.a2dBottom)
-        self.a2dBottomRight.setPos(self.a2dRight, 0, self.a2dBottom)
-        self.a2dBottomRightNs.setPos(self.a2dRight, 0, self.a2dBottom)
+        self.a2dBotLeft.setPos(self.a2dLeft, 0, self.a2dBot)
+        self.a2dBotLeftNs.setPos(self.a2dLeft, 0, self.a2dBot)
+        self.a2dBotRight.setPos(self.a2dRight, 0, self.a2dBot)
+        self.a2dBotRightNs.setPos(self.a2dRight, 0, self.a2dBot)
 
     def setup_mouse_watcher(self):
-        self.mouse_keyboard = base.dataRoot.attachNewNode(MouseAndKeyboard(self.window, 0, 'NW_mk'))
-        self.mouse_watcher = self.mouse_keyboard.attachNewNode(MouseWatcher('mw'))
+        self.mouse_keyboard = base.dataRoot.attachNewNode(
+            MouseAndKeyboard(self.window, 0, 'NW_mk'))
+        self.mouse_watcher = self.mouse_keyboard.attachNewNode(
+            MouseWatcher('mw'))
         self.aspect2d.node().setMouseWatcher(self.mouse_watcher.node())
 
     def cleanup(self):

@@ -7,7 +7,8 @@ from panda3d.core import WindowProperties
 
 from classes.globals import Globals as G
 
-MOUSE_SENSITIVITY = G.ORBITAL_CAM_MOUSE_SENSITIVITY
+SENSITIVITY = G.ORBITAL_CAM_MOUSE_SENSITIVITY
+DELAY = .001
 
 class OrbitalCamera(DirectObject):
 
@@ -26,7 +27,7 @@ class OrbitalCamera(DirectObject):
 
         if self.toggle_value:
             self.recenter_mouse_cursor()
-            taskMgr.doMethodLater(G.TINY_DELAY, self.orb_cam_task, G.ORB_CAM_TASK)
+            taskMgr.doMethodLater(DELAY, self.orb_cam_task, G.ORB_CAM_TASK)
         else:
             taskMgr.remove(G.ORB_CAM_TASK)
 
@@ -34,7 +35,8 @@ class OrbitalCamera(DirectObject):
         self.toggle_value = not self.toggle_value
 
     def recenter_mouse_cursor(self):
-        mouse_x_center, mouse_y_center = [base.win.getXSize() // 2, base.win.getYSize() // 2]
+        mouse_x_center = base.win.getXSize() // 2
+        mouse_y_center = base.win.getYSize() // 2
         base.win.move_pointer(0, mouse_x_center, mouse_y_center)
 
     def orb_cam_task(self, task):
@@ -50,14 +52,11 @@ class OrbitalCamera(DirectObject):
             x_pos = base.mouseWatcherNode.get_mouse_x()
             y_pos = base.mouseWatcherNode.get_mouse_y()
 
-            # based on where the mouse has moved from the center, modify the camera orientation
-            # also factor fov into the equation.
-            # if the fov is very small, reduce the movement. Easier viewing close up.
+            # move camera based on mouse movement during frame.
+            # factor fov into the equation. small fov, reduce move speed.
             fov_mod = base.camLens.getFov()[0] / G.FOV_MODIFIER
-            new_cam_h_value = camera.getH() - (x_pos * MOUSE_SENSITIVITY * fov_mod)
-            new_cam_p_value = camera.getP() + (y_pos * MOUSE_SENSITIVITY * fov_mod)
-            #print(MOUSE_SENSITIVITY)
-            #print(new_cam_p_value)
+            new_cam_h_value = camera.getH() - (x_pos * SENSITIVITY * fov_mod)
+            new_cam_p_value = camera.getP() + (y_pos * SENSITIVITY * fov_mod)
 
             camera.setH(new_cam_h_value)
             camera.setP(new_cam_p_value)

@@ -10,6 +10,18 @@ MULTISAMPLES = "multisamples"
 FPS_METER = "show_fps_meter"
 AUTO_WALKER = "auto_walker"
 
+CHAR_3 = "phase_3/models/char/"
+CHAR_3_5 = "phase_3.5/models/char/"
+CHAR_4 = "phase_4/models/char"
+
+MAPS_3 = "phase_3/maps/"
+MAPS_3_5 = "phase_3.5/maps/"
+MAPS_4 = "phase_4/maps/"
+
+JPG = ".jpg"
+EGG = ".egg"
+BAM = ".bam"
+
 ICON_FILENAME = "panda3d-chef.ico"
 SETTINGS_JSON = 'settings.json'
 KEYBINDINGS_JSON = "keybindings.json"
@@ -50,15 +62,18 @@ TRANSFORM_FUNCTION_STRINGS = [
     "Func({name}.set_pos_hpr, {x}, {y}, {z}, {h}, {p}, {r}),",
     "Func({name}.set_scale, {sx}, {sy}, {sz}),",
 
-    "{name}.pos_hpr_interval(DURATION, ({x}, {y}, {z}), ({h}, {p}, {r}), blendType='easeInOut'),",
-    "{name}.scale_interval(DURATION, ({sx}, {sy}, {sz}), blendType='easeInOut'),",
+    "{name}.pos_hpr_interval(DURATION, ({x}, {y}, {z}), ({h}, {p}, {r}),"
+        "blendType='easeInOut'),",
+    "{name}.scale_interval(DURATION, ({sx}, {sy}, {sz}),"
+        "blendType='easeInOut'),",
 
     "{name}: [{x}, {y}, {z}, {h}, {p}, {r}]",
     "{name}: [{sx}, {sy}, {sz}]",
 
     "base.camLens.set_fov({fov})",
     "Func(base.camLens.set_fov, {fov}),",
-    "LerpFunc(base.camLens.set_fov, fromData=FOV_1, toData={fov}, duration=DURATION, blendType='noBlend'),",
+    "LerpFunc(base.camLens.set_fov, fromData=FOV_1, toData={fov},"
+        "duration=DURATION, blendType='noBlend'),",
 ]
 TRANSFORM_FUNCTION_NAMES = [
     "SET(POS)",
@@ -103,6 +118,8 @@ Find data between curly braces: "{([^}]+)}"
 }: literal curly brace following what we captured
 
 CREDIT - Kev on stackoverflow
-URL: https://stackoverflow.com/questions/413071/regex-to-get-string-between-curly-braces/413085#413085
+URL:
+https://stackoverflow.com/questions/
+413071/regex-to-get-string-between-curly-braces/413085#413085
 '''
 FIND_ARGS_IN_CURLY_BRACES = "{([^}]+)}"

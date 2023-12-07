@@ -1,6 +1,6 @@
 """
 Set a Node to move and rotate. Modify with keyboard inputs.
-The rate at which you can effect them can also be influenced by keyboard inputs.
+The rate you can effect them can also be influenced by keyboard inputs.
 """
 from direct.showbase.DirectObject import DirectObject
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
@@ -22,7 +22,7 @@ class NodeMover(NodePath, DirectObject):
         self.allow_click = True
         self.allow_tasks = True
 
-        # As a shortcut, press the assigned key below to set the camera as the node being moved by the node mover.
+        # The assigned key below will set the camera as the node being moved.
         self.accept(G.MIDDLE_MOUSE_BUTTON, self.set_node, extraArgs=[camera])
         self.set_node(node)
         self.listen_for_key_inputs()
@@ -37,7 +37,8 @@ class NodeMover(NodePath, DirectObject):
             node.set_color_scale(G.RED)
             Sequence(
                 Func(self.change_clickability), Wait(.3),
-                Func(node.set_color_scale, *og_color_scale), Func(self.change_clickability)
+                Func(node.set_color_scale, *og_color_scale),
+                Func(self.change_clickability)
             ).start()
 
     def set_move_options(self):
@@ -61,9 +62,8 @@ class NodeMover(NodePath, DirectObject):
         index = 0
         # Add input detection for node transformations.
         for key in KBS:
-            if key == "speed_up": break # stop when we run into speed modifiers.
-
-            self.accept(KBS[key], self.initiate_movement, extraArgs=[key, index])
+            if key == "speed_up": break # stop when list hits speed modifiers.
+            self.accept(KBS[key], self.start_movement, extraArgs=[key, index])
             self.accept(KBS[key] + "-up", self.stop_move_task, extraArgs=[key])
             index += 1
 
@@ -72,8 +72,9 @@ class NodeMover(NodePath, DirectObject):
             self.accept(f"{KBS[key]}", self.change_speed, extraArgs=[speed])
             self.accept(f"{KBS[key]}-up", self.change_speed, extraArgs=[1])
 
-    def initiate_movement(self, key, direction):
-        taskMgr.add(self.move_task, f"move_{key}", extraArgs=[key, direction], appendTask=True)
+    def start_movement(self, key, direction):
+        taskMgr.add(self.move_task, f"move_{key}",
+                    extraArgs=[key, direction], appendTask=True)
 
     def move_task(self, key, index, task):
         if not self.move_options or not self.allow_tasks:
@@ -82,11 +83,13 @@ class NodeMover(NodePath, DirectObject):
         move_option = self.move_options[index]
         set_transform = move_option[0]
 
-        if set_transform == self.setX or set_transform == self.setY: # These transformations need relative movement.
+        # These transformations need relative movement.
+        if set_transform == self.setX or set_transform == self.setY:
             get_speed, direction = move_option[1], move_option[2]
             set_transform(self, get_speed() * direction)
         else:
-            get_transform, get_speed, direction = move_option[1], move_option[2], move_option[3]
+            get_transform, get_speed = move_option[1], move_option[2]
+            direction = move_option[3]
             set_transform(get_transform() + get_speed() * direction)
 
         return task.again

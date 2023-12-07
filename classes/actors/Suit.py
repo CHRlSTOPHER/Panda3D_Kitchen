@@ -7,65 +7,67 @@ from . import SuitGlobals as SG
 
 class Suit(Actor, AutoWalker):
 
-    def __init__(self, suit_key, parent=None, skelecog=False, name="~Suit"):
-        self.suits = []
+    def __init__(self, suit, parent, skelecog=False, suit_name="~Suit"):
+        self.suit = suit
+        if isinstance(suit, str): # check if cog is NOT custom.
+            suit = SG.SUITS[suit]
+        self.suit_parent = parent
+
         self.skelecog = skelecog
-        self.suit_name = name
-        if isinstance(suit_key, str):
-            self.suit = SG.SUITS[suit_key]
-        self.body = self.suit[0]
-        self.dept = self.suit[1]
-        self.head_type = self.suit[2]
-        self.hand_color = self.suit[3]
-        self.head_texture = self.suit[4]
-        self.scale = self.suit[5]
+        self.suit_name = suit_name
+        self.suits = []
 
-        self.assemble_cog_parts(parent)
-        self.set_name(self.suit_name)
+        self.body = suit[0]
+        self.dept = suit[1]
+        self.head_type = suit[2]
+        self.hand_color = suit[3]
+        self.head_texture = suit[4]
+        self.scale = suit[5]
 
-    def assemble_cog_parts(self, parent, actor=None):
+        self.assemble_suit()
+
+    def assemble_suit(self, actor=None):
         Actor.__init__(self, actor)
-        self.load_suit(parent)
-
+        self.load_suit()
         AutoWalker.__init__(self, self)
         self.load_animations()
         self.load_health_meter()
         self.load_shadow()
         self.special_attributes()
-        self.loop("neutral")
-        self.suits.append(self)
 
-    def load_suit(self, parent):
-        model_path = f"phase_3.5/models/char/suit{self.body}-mod.bam"
-        self.load_model(model_path)
         self.set_scale(self.scale)
         self.set_blend(frameBlend=True)
+        self.loop("neutral")
+        self.reparent_to(self.suit_parent)
+        self.set_name(self.suit_name)
 
-        if not parent:
-            self.reparent_to(render)
-        else:
-            self.reparent_to(parent)
+        self.suits.append(self)
 
-        self.leg_tex = loader.load_texture(f"phase_3.5/maps/{self.dept}_leg.jpg")
-        self.sleeve_tex = loader.load_texture(f"phase_3.5/maps/{self.dept}_sleeve.jpg")
-        self.blazer_text = loader.load_texture(f"phase_3.5/maps/{self.dept}_blazer.jpg")
-        self.find('**/legs').set_texture(self.leg_tex, 1)
-        self.find('**/arms').set_texture(self.sleeve_tex, 1)
-        self.find('**/torso').set_texture(self.blazer_text, 1)
+    def load_suit(self):
+        suit_model_path = G.CHAR_3_5 + f"suit{self.body}-mod" + G.BAM
+        self.load_model(suit_model_path)
         self.find('**/hands').set_color(self.hand_color)
 
-        self.head = loader.load_model(f"phase_4/models/char/suit{self.body}-heads.bam").find(f'**/{self.head_type}')
+        for cloth, body_part in SG.COG_CLOTHING:
+            suit_cloth_path = G.MAPS_3_5 + f"{self.dept}_{cloth}" + G.JPG
+            clothing_texture = loader.load_texture(suit_cloth_path)
+            self.find(f"**/{body_part}").set_texture(clothing_texture, 1)
+
+        head_path = SG.HEAD_MODEL_PATH.format(self.body)
+        self.head = loader.load_model(head_path).find(f'**/{self.head_type}')
         self.head.reparent_to(self.find('**/joint_head'))
         self.head.set_name(self.suit_name + f".find('**/{self.head_type}')")
+
         if self.head_texture:
-            self.head.set_texture(loader.load_texture(self.head_texture), 1)
+            head_texture_path = G.MAPS_4 + SG.HEADS[self.suit] + G.JPG
+            self.head.set_texture(loader.load_texture(head_texture_path), 1)
 
     def load_animations(self):
-        anim_name_dict = SG.SUIT_ANIMS[self.body]
+        anim_path_dict = SG.SUIT_ANIMS[self.body]
         anim_dict = {}
-        for anim in anim_name_dict:
-            num = anim_name_dict[anim]
-            anim_dict[anim] = f'phase_{num}/models/char/suit{self.body}-{anim}.bam'
+        for anim, phase_number in anim_path_dict.items():
+            anim_path = 'phase_{}/models/char/suit{}-{}.bam'
+            anim_dict[anim] = anim_path.format(phase_number, self.body, anim)
         self.load_anims(anim_dict)
 
     def load_health_meter(self):
@@ -79,7 +81,8 @@ class Suit(Actor, AutoWalker):
             self.head.set_color(SG.CC_COLOR)
 
         if self.head_type == "flunky" and not self.head_texture:
-            glasses = loader.loadModel('phase_4/models/char/suitC-heads.bam').find('**/glasses')
+            head_path = SG.HEAD_MODEL_PATH.format(self.body)
+            glasses = loader.loadModel(head_path).find('**/glasses')
             glasses.reparentTo(self.head)
 
     def cleanup(self):

@@ -1,8 +1,9 @@
 """
 Hover your mouse over a node. Press left mouse button to select it.
-Detect nodes using a collision ray. Move the collision ray around with the mouse.
+Detect nodes using a collision ray. Move collision ray around with the mouse.
 """
-from panda3d.core import CollisionTraverser, CollisionRay, CollisionNode, GeomNode, CollisionHandlerQueue, Point3
+from panda3d.core import (CollisionTraverser, CollisionRay, CollisionNode,
+                          GeomNode, CollisionHandlerQueue)
 from direct.showbase.DirectObject import DirectObject
 
 from classes.globals import Globals as G
@@ -33,9 +34,10 @@ class NodeSelector(DirectObject):
         if node == render or node.is_hidden():
             return None # Do NOT allow render or hidden nodes to be selected.
 
-        # the special "node"ifier flag lets you pick nodes that aren't directly reparented to render.
+        # the special flag lets you pick nodes that aren't reparented to render
         while True:
-            if node.get_parent() == render or node.get_name()[0] == G.SPECIAL_NODE_IFIER_FLAG:
+            if (node.get_parent() == render or
+                node.get_name()[0] == G.SPECIAL_NODE_IFIER_FLAG):
                 break
             node = node.get_parent()
 
@@ -46,14 +48,15 @@ class NodeSelector(DirectObject):
         self.mouse_ray.set_direction(0, 1, 0)
         self.ray_collision_node = CollisionNode("mouse_ray")
         self.ray_collision_node.add_solid(self.mouse_ray)
-        self.ray_collision_node.set_from_collide_mask(GeomNode.get_default_collide_mask())
+        self.ray_collision_node.set_from_collide_mask(
+            GeomNode.get_default_collide_mask())
 
         self.ray_node = camera.attach_new_node(self.ray_collision_node)
         self.collision_handler = CollisionHandlerQueue()
 
         if not base.cTrav:
             base.cTrav = CollisionTraverser("coll_traverser")
-            base.cTrav.addCollider(self.ray_node, self.collision_handler) # add the ray's parent to the scene
+            base.cTrav.addCollider(self.ray_node, self.collision_handler)
 
     def sync_ray_with_mouse_pos(self, task):
         if base.mouseWatcherNode.hasMouse():

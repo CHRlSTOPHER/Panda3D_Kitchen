@@ -1,4 +1,4 @@
-# This code lets you load this file directly in cmd/IDE instead of through the bat file.
+# This code lets you load this file directly in cmd/IDE instead of bat file.
 # (You will still need to use a version of python that comes with Panda3D)
 import os, sys
 
@@ -21,6 +21,7 @@ from classes.settings import Settings
 from direct.showbase.ShowBase import ShowBase
 
 from classes.actors.Suit import Suit
+from classes.actors.Toon import Toon
 from classes.camera.OrbitalCamera import OrbitalCamera
 from classes.camera.FovScrollWheel import FovScrollWheel
 from classes.editors.MasterEditor import MasterEditor
@@ -58,8 +59,9 @@ class KantoDex(ShowBase):
         background.set_scale(scale_boost, 1, scale_boost * 2.72)
         background.remove_node()
 
-        self.setup_pokemon()
+        # self.setup_pokemon()
         # self.setup_cogs()
+        self.setup_toons()
 
     def setup_pokemon(self):
         # Make Kanto Pokemon sprites. (151 Total)
@@ -73,14 +75,14 @@ class KantoDex(ShowBase):
         camera.set_pos_hpr(11.36, -8.12, -1.22, 38.38, -4.6, 0.0)
 
     def setup_cogs(self):
-        self.flunky = Suit("f", name="~self.flunky")
-        self.pusher = Suit("p", name="~self.pusher")
-        self.yesman = Suit("ym", name="~self.yesman")
-        self.micro = Suit("mm", name="~self.micro")
-        self.sizer = Suit("ds", name="~self.sizer")
-        self.hunter = Suit("hh", name="~self.hunter")
-        self.raider = Suit("cr", name="~self.raider")
-        self.cheese = Suit("tbc", name="~self.cheese")
+        self.flunky = Suit("f", render, suit_name="~self.flunky")
+        self.pusher = Suit("p", render, suit_name="~self.pusher")
+        self.yesman = Suit("ym", render, suit_name="~self.yesman")
+        self.micro = Suit("mm", render, suit_name="~self.micro")
+        self.sizer = Suit("ds", render, suit_name="~self.sizer")
+        self.hunter = Suit("hh", render, suit_name="~self.hunter")
+        self.raider = Suit("cr", render, suit_name="~self.raider")
+        self.cheese = Suit("tbc", render, suit_name="~self.cheese")
 
         self.flunky.set_pos_hpr(27.4, 4.3, 0.0, -92.29, 0.0, 0.0)
         self.pusher.set_pos_hpr(28.79, 6.68, 0.0, -127.06, 0.0, 0.0)
@@ -93,13 +95,25 @@ class KantoDex(ShowBase):
 
         camera.set_pos_hpr(34.85, 3.96, 1.59, 88.92, 20.85, 0.0)
 
+    def setup_toons(self):
+        self.pink = Toon(parent=render, gender='m',
+                         toon_name="~self.pink",
+                         head='pss', head_c=2,
+                         torso='s', shirt_t=8, shirt_c=2,
+                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
+                         legs='m', leg_c=2,
+                         bottom='shorts', bottom_t=7, bottom_c=2)
+
+        camera.set_pos_hpr(3.46, 5.78, 1.38, 148.5, -4.36, 0.0)
+
     def generate_sprites(self, start, end, dex_str):
         # For pokemon in a specified range-
         for i in range(start, end):
             # Pull their entry and generate a sprite.
             entry = KG.DEX_ENTRIES[i]
             texture_path = SPRITE_TEX_PATH + f"ani_bw_{dex_str}{i+1}.png"
-            sprite = PokemonSprite(texture_path, columns=entry[0], wait_time=.1, name=f"self.sprites[{i}]")
+            sprite = PokemonSprite(texture_path, columns=entry[0],
+                                   wait_time=.1, name=f"self.sprites[{i}]")
             sprite.uv_sequence.loop()
             sprite.set_pos(self.x_pos, 0, self.z_pos)
             self.setup_sprite_shadow(i, entry, sprite, dex_str)
@@ -114,7 +128,9 @@ class KantoDex(ShowBase):
 
     # Make a copy of the sprite as a shadow.
     def setup_sprite_shadow(self, i, entry, sprite, num):
-        sprite_shadow = AnimatedSprite(SPRITE_TEX_PATH + f"ani_bw_{num}{i+1}.png", columns=entry[0], wait_time=.1)
+        sprite_shadow = AnimatedSprite(
+            SPRITE_TEX_PATH + f"ani_bw_{num}{i+1}.png",
+            columns=entry[0], wait_time=.1)
         sprite_shadow.reparent_to(sprite)
         sprite_shadow.set_y(.2)
         sprite_shadow.set_scale(SPRITE_SCALE * 2)

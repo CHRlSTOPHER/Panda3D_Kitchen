@@ -21,7 +21,8 @@ class TransformFuncWindow(NewWindow):
         properties = base.win.getProperties()
         decorated = str(properties).split()[6]
         if decorated == "undecorated":
-            NewWindow.__init__(self, GG.TF_WINDOW_ORIGIN_B_LESS, GG.TF_WINDOW_SIZE_B_LESS)
+            NewWindow.__init__(self, GG.TF_WINDOW_ORIGIN_B_LESS,
+                                     GG.TF_WINDOW_SIZE_B_LESS)
         else:
             NewWindow.__init__(self, GG.TF_WINDOW_ORIGIN, GG.TF_WINDOW_SIZE)
 
@@ -37,7 +38,8 @@ class TransformFuncWindow(NewWindow):
 
     def generate_printer_button(self, index):
         return DirectButton(
-            text = G.TRANSFORM_FUNCTION_NAMES[index], text_align = TextNode.ALeft,
+            text = G.TRANSFORM_FUNCTION_NAMES[index],
+            text_align = TextNode.ALeft,
             command = self.print_tranform, extraArgs = [index]
         )
 
