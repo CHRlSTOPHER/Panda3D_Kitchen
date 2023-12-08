@@ -2,7 +2,9 @@ WINDOW_TITLE = "PANDA3D KITCHEN"
 
 #json variable names
 PROJECT_PATH = "project-path"
-SCREEN_RES = "screen_resolution"
+FULL_SCREEN = "full_screen"
+WINDOW_SIZE = "window_size"
+MONITOR_RES = "monitor_resolution"
 BORDERLESS = "borderless"
 BITS = "bits"
 FRAMEBUFFER_MULTISAMPLE = "framebuffer-multisample"
