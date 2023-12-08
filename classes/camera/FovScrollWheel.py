@@ -26,12 +26,10 @@ class FovScrollWheel(DirectObject):
     def zoom_in(self):
         if self.new_fov - SCROLL_AMOUNT >= MINIMUM_FOV:
             self.new_fov = self.new_fov - SCROLL_AMOUNT
-            print(self.new_fov)
 
     def zoom_out(self):
         if self.new_fov + SCROLL_AMOUNT <= MAXIMUM_FOV:
             self.new_fov = self.new_fov + SCROLL_AMOUNT
-            print(self.new_fov)
 
     def smooth_fov_transitions(self, task):
         if base.camLens.get_fov()[0] == self.new_fov:
