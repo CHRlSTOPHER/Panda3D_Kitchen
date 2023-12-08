@@ -7,8 +7,9 @@ from panda3d.core import (WindowProperties, MouseAndKeyboard, MouseWatcher,
 
 class NewWindow(WindowProperties):
 
-    def __init__(self, origin, size, undecorated=True):
+    def __init__(self, origin, size, undecorated=True, name=""):
         WindowProperties.__init__(self)
+        self.name = name
         self.setup_window(origin, size, undecorated)
         self.setup_render2d()
         self.setup_mouse_watcher()
@@ -84,10 +85,10 @@ class NewWindow(WindowProperties):
         self.a2dBotRightNs.setPos(self.a2dRight, 0, self.a2dBot)
 
     def setup_mouse_watcher(self):
-        self.mouse_keyboard = base.dataRoot.attachNewNode(
-            MouseAndKeyboard(self.window, 0, 'NW_mk'))
-        self.mouse_watcher = self.mouse_keyboard.attachNewNode(
-            MouseWatcher('mw'))
+        self.keyboard = base.dataRoot.attachNewNode(
+            MouseAndKeyboard(self.window, 0, 'NW_mk_' + self.name))
+        self.mouse_watcher = self.keyboard.attachNewNode(
+            MouseWatcher('NW_mw_' + self.name))
         self.aspect2d.node().setMouseWatcher(self.mouse_watcher.node())
 
     def cleanup(self):

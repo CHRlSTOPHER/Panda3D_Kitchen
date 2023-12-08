@@ -6,7 +6,7 @@ import re
 
 from classes.globals import Globals as G
 
-# Use this function to provide the args required for NodeDataPrinter.
+# Use this function to provide the args required for the dataclass.
 def get_transform_data(node):
     string_data = [
         node.get_name()
@@ -24,7 +24,7 @@ def get_transform_data(node):
 
 
 @dataclass
-class TransformFunctionPrinter():
+class NodeTransformPrinter():
     name: str
     x: float
     y: float

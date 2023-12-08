@@ -1,15 +1,5 @@
 # TransformFuncPrinter Window
-TF_WINDOW_SIZE = (320, 750)
-TF_WINDOW_ORIGIN = (1600, 150)
-TF_WINDOW_SIZE_B_LESS = (320, 720) # borderless
-TF_WINDOW_ORIGIN_B_LESS = (1600, 180) # borderless
-TF_BUTTON_Z = -.07
-TF_BUTTON_X = -.4
+TF_BUTTON_Z = -.36
+TF_BUTTON_X = -1.75
 TF_BUTTON_Z_INCREMENT = -.1
 TF_BUTTON_SCALE = .075
-
-# PropGeneratorWindow
-PG_WINDOW_SIZE = (320, 750)
-PG_WINDOW_ORIGIN = (0, 150)
-PG_WINDOW_SIZE_B_LESS = (320, 720) # borderless
-PG_WINDOW_ORIGIN_B_LESS = (0, 180) # borderless
