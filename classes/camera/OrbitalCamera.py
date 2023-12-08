@@ -24,20 +24,20 @@ class OrbitalCamera(DirectObject):
         self.accept(G.RIGHT_MOUSE_BUTTON, self.toggle_orb_cam)
 
     def toggle_orb_cam(self):
-        self.window_properties.setCursorHidden(self.toggle_value)
+        self.window_properties.set_cursor_hidden(self.toggle_value)
 
         if self.toggle_value:
             self.recenter_mouse_cursor()
-            taskMgr.doMethodLater(DELAY, self.orb_cam_task, ORB_CAM_TASK)
+            taskMgr.do_method_later(DELAY, self.orb_cam_task, ORB_CAM_TASK)
         else:
             taskMgr.remove(ORB_CAM_TASK)
 
-        base.win.requestProperties(self.window_properties)
+        base.win.request_properties(self.window_properties)
         self.toggle_value = not self.toggle_value
 
     def recenter_mouse_cursor(self):
-        mouse_x_center = base.win.getXSize() // 2
-        mouse_y_center = base.win.getYSize() // 2
+        mouse_x_center = base.win.get_x_size() // 2
+        mouse_y_center = base.win.get_y_size() // 2
         base.win.move_pointer(0, mouse_x_center, mouse_y_center)
 
     def orb_cam_task(self, task):
@@ -55,15 +55,15 @@ class OrbitalCamera(DirectObject):
 
             # move camera based on mouse movement during frame.
             # factor fov into the equation. small fov, reduce move speed.
-            fov_mod = base.camLens.getFov()[0] / G.FOV_MODIFIER
-            new_cam_h_value = camera.getH() - (x_pos * SENSITIVITY * fov_mod)
-            new_cam_p_value = camera.getP() + (y_pos * SENSITIVITY * fov_mod)
+            fov_mod = base.camLens.get_fov()[0] / G.FOV_MODIFIER
+            new_cam_h_value = camera.get_h() - (x_pos * SENSITIVITY * fov_mod)
+            new_cam_p_value = camera.get_p() + (y_pos * SENSITIVITY * fov_mod)
 
-            camera.setH(new_cam_h_value)
-            camera.setP(new_cam_p_value)
+            camera.set_h(new_cam_h_value)
+            camera.set_p(new_cam_p_value)
 
     def cleanup(self):
         if not self.toggle_value:
             self.toggle_orb_cam()
         self.cam_task = False
-        self.ignoreAll()
+        self.ignore_all()
