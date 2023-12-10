@@ -1,13 +1,16 @@
+"""
+Actors will inherit this class to automatically transition between
+animations like neutral and walk/run/etc..
+"""
 import json
 import math
 
 from classes.globals import Globals as G
 
 json_settings = json.loads(open(G.SETTINGS_JSON).read())
-print(json_settings)
 
-H_REVERSE_START = 45
-H_REVERSE_END = 225
+ROTATION_REVERSE_START = 45
+ROTATION_REVERSE_END = 225
 AUTO_WALKER_TASK = "auto_walker_task"
 
 
@@ -39,7 +42,8 @@ class AutoWalker():
         return task.again
 
     def move_anim(self):
-        if not self.walking and self.actor.get_current_anim() == "neutral":
+        current_animation = self.actor.get_current_anim()
+        if not self.walking and current_animation == "neutral":
             self.walking = True
             self.actor.loop("walk")
 
@@ -47,8 +51,9 @@ class AutoWalker():
         if not self.walking:
             return
 
+        current_animation = self.actor.get_current_anim()
         for anim in G.AUTOWALKER_MOVE_ANIMS: # check for movement animations
-            if self.actor.get_current_anim() == anim:
+            if current_animation == anim:
                 self.walking = False
                 self.actor.loop("neutral")
 
@@ -74,7 +79,7 @@ class AutoWalker():
             vector = 1
 
         h = self.actor.get_h() % 360
-        if h > H_REVERSE_START and h < H_REVERSE_END:
+        if h > ROTATION_REVERSE_START and h < ROTATION_REVERSE_END:
             vector *= -1
 
         return vector
