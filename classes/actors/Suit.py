@@ -1,3 +1,7 @@
+"""
+A Cog Actor. You can either pass a string through calling a suit key
+from SuitGlobals's SUIT dict or pass your own custom cog list in.
+"""
 from direct.actor.Actor import Actor
 
 from .AutoWalker import AutoWalker
@@ -78,7 +82,7 @@ class Suit(Actor, AutoWalker):
 
     def special_attributes(self):
         if self.dept == 's' and self.head_type == 'coldcaller':
-            self.head.set_color(SG.CC_COLOR)
+            self.head.set_color(SG.CC_COLOR) # Cold Caller head.
 
         if self.head_type == "flunky" and not self.head_texture:
             head_path = SG.HEAD_MODEL_PATH.format(self.body)
