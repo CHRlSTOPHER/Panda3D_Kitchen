@@ -1,6 +1,7 @@
+"""
+Defines a set space of the window and pushes the mouse back into it.
+"""
 import json
-
-from direct.showbase.DirectObject import DirectObject
 
 import mouse
 
@@ -14,7 +15,7 @@ BORDER_ADDITION = 30
 PUSH = 10
 
 
-class LockMouseInWindow(DirectObject):
+class LockMouseInWindow():
 
     def __init__(self):
         self.last_x = base.win.get_x_size() // 2
@@ -50,3 +51,6 @@ class LockMouseInWindow(DirectObject):
             self.last_y = mouse_y
 
         return task.cont
+
+    def cleanup(self):
+        taskMgr.remove(LOCK_MOUSE_TASK)
