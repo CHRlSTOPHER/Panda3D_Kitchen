@@ -11,10 +11,12 @@ loadPrcFileData("", "textures-power-2 0")
 
 class PlaneModel(NodePath):
 
-    def __init__(self, texturePath, rows=1, columns=1, name="plane_model"):
+    def __init__(self, texturePath, rows=1, columns=1, scale=(1, 1, 1),
+                 name="plane_model"):
         self.texturePath = texturePath
         self.rows = rows
         self.columns = columns
+        self.scale = scale
 
         NodePath.__init__(self, self.generate_plane_model())
         self.set_name(name)
@@ -23,6 +25,8 @@ class PlaneModel(NodePath):
         array = GeomVertexArrayFormat()
 
         array.add_column("vertex", 3, Geom.NTFloat32, Geom.CPoint)  # Vertices
+        array.add_column("normal", 3, Geom.NTFloat32, Geom.CPoint)  # Normal
+        array.add_column("color", 4, Geom.NTFloat32, Geom.CTexcoord)  # Color
         array.add_column("texcoord", 2, Geom.NTFloat32, Geom.CTexcoord)  # UV
 
         format = GeomVertexFormat()
@@ -31,11 +35,13 @@ class PlaneModel(NodePath):
 
         # Trivia: If the model changes frequently, Geom.UHDynamic can be used to not cache data
         vdata = GeomVertexData('name', format, Geom.UHStatic)
-        vdata.set_num_rows(3)
+        vdata.set_num_rows(4)
         vertex = GeomVertexWriter(vdata, 'vertex')
+        normal = GeomVertexWriter(vdata, 'normal')
+        color = GeomVertexWriter(vdata, 'color')
         texcoord = GeomVertexWriter(vdata, 'texcoord')
 
-        self.add_vertex_and_uv_coords(vertex, texcoord)
+        self.add_vertex_and_uv_coords(vertex, texcoord, normal, color)
 
         # create GeomPrimitive object
         prim = GeomTriangles(Geom.UHStatic)
@@ -57,16 +63,24 @@ class PlaneModel(NodePath):
 
         return plane_model
 
-    def add_vertex_and_uv_coords(self, vertex, texcoord):
-        # Divide by column/row amount to narrow down the uv scale (origin is bottom left)
+    def add_vertex_and_uv_coords(self, vertex, texcoord, normal, color):
+        # Divide by column/row to narrow the uv scale (origin is bottom left)
         vertex.add_data3(1, 0, 1)
+        normal.add_data3(0, 0, 1)
+        color.add_data4(1, 1, 1, 1)
         texcoord.add_data2(1 / self.columns, 1 / self.rows)
 
         vertex.add_data3(-1, 0, 1)
+        normal.add_data3(0, 0, 1)
+        color.add_data4(1, 1, 1, 1)
         texcoord.add_data2(0, 1 / self.rows)
 
         vertex.add_data3(1, 0, -1)
+        normal.add_data3(0, 0, 1)
+        color.add_data4(1, 1, 1, 1)
         texcoord.add_data2(1 / self.columns, 0)
 
         vertex.add_data3(-1, 0, -1)
+        normal.add_data3(0, 0, 1)
+        color.add_data4(1, 1, 1, 1)
         texcoord.add_data2(0, 0)
