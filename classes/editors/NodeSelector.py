@@ -26,13 +26,19 @@ class NodeSelector(DirectObject):
 
     def select_node(self):
         base.cTrav.traverse(render)
-        if self.node_mover and self.collision_handler.get_num_entries() > 0:
-            node = self.get_node_from_handler()
-            self.node_mover.set_node(node)
+        if not self.node_mover or not self.collision_handler.get_num_entries():
+            return
 
-    def get_node_from_handler(self):
         self.collision_handler.sort_entries()
-        node = self.collision_handler.getEntry(0).get_into_node_path()
+        # Look through entries for the closest selected node that is valid.
+        for entry in range(0, self.collision_handler.get_num_entries()):
+            node = self.get_node_from_handler(entry)
+            if node:
+                self.node_mover.set_node(node)
+                break
+
+    def get_node_from_handler(self, index):
+        node = self.collision_handler.getEntry(index).get_into_node_path()
         if node == render or node.is_hidden():
             return None # Do NOT allow render or hidden nodes to be selected.
 

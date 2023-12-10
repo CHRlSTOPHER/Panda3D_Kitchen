@@ -1,8 +1,13 @@
+"""
+Toon from Toontown. WIP
+"""
 from direct.actor.Actor import Actor
 
 from .AutoWalker import AutoWalker
 from classes.globals import Globals as G
 from . import ToonGlobals as TG
+
+COLORS = TG.COLORS
 
 
 class Toon(Actor, AutoWalker):
@@ -64,18 +69,14 @@ class Toon(Actor, AutoWalker):
         self.attach(TG.TORSO, TG.LEGS, TG.JOINT_HIPS)
         self.set_shirt_textures(self.shirt_t, self.sleeve_t)
         self.set_bottom_texture(self.bottom_t)
-        self.find(f'**/{TG.NECK}').set_color(TG.COLORS[self.arm_c] + (1,))
-        self.find(f'**/{TG.ARMS}').set_color(TG.COLORS[self.arm_c] + (1,))
-        self.find(f'**/{TG.GLOVES}').set_color(TG.COLORS[self.glove_c] + (1,))
+
+        arm_color, glove_color = [COLORS[self.arm_c], COLORS[self.glove_c]]
+        self.find(f'**/{TG.NECK}').set_color(arm_color + (1,))
+        self.find(f'**/{TG.ARMS}').set_color(arm_color + (1,))
+        self.find(f'**/{TG.GLOVES}').set_color(glove_color + (1,))
 
     def load_head(self):
-        return # WIP
-        self.species, self.forehead, self.cheeks
-
-        model_string = G.CHAR_3 + TG.TOON_MODEL_FILE.format(
-            self.head, self.bottom, TG.HEAD, self.lod) + G.BAM
-        self.load_model(model_string, TG.HEAD)
-        self.attach(TG.HEAD, TG.TORSO, TG.JOINT_HEAD)
+        pass
 
     def load_toon_anims(self, body_part_type, body_part):
         anim_dict = {}

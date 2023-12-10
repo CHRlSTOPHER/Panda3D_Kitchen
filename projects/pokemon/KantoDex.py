@@ -1,7 +1,11 @@
-# This code lets you load this file directly in cmd/IDE instead of bat file.
-# (You will still need to use a version of python that comes with Panda3D)
-import os, sys
+"""
+Mainly used to generate sprites of the one-hundred and fifty one Pokemon
+discovered in the Kanto region. Also used for testing other things.
+"""
 
+import os, sys
+# The code below lets you load the py file directly in cmd/IDE.
+# (You will still need to use a version of python that comes with Panda3D)
 current_path = os.getcwd()
 project_path = ""
 for folder in current_path.split("\\"):
@@ -22,8 +26,6 @@ from direct.showbase.ShowBase import ShowBase
 
 from classes.actors.Suit import Suit
 from classes.actors.Toon import Toon
-from classes.camera.OrbitalCamera import OrbitalCamera
-from classes.camera.FovScrollWheel import FovScrollWheel
 from classes.editors.MasterEditor import MasterEditor
 from classes.props.AnimatedSprite import AnimatedSprite
 from classes.props.PokemonSprite import PokemonSprite
@@ -49,9 +51,7 @@ class KantoDex(ShowBase):
         base.set_background_color(.1, .1, .1, 1)
         base.camLens.set_fov(56.0)
 
-        self.node_editor = MasterEditor()
-        self.orb_cam = OrbitalCamera()
-        self.fov_wheel = FovScrollWheel()
+        self.master_editor = MasterEditor()
 
         background = AnimatedSprite(SPRITE_TEX_PATH + "route-23.png")
         background.set_pos(3.5, .5, -5)
