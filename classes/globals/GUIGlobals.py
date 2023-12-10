@@ -1,5 +1,4 @@
+from . import Globals as G
+
+CAFE_FONT = "cafe-francoise.ttf"
 # TransformFuncPrinter Window
-TF_BUTTON_Z = -.36
-TF_BUTTON_X = -1.75
-TF_BUTTON_Z_INCREMENT = -.1
-TF_BUTTON_SCALE = .075
