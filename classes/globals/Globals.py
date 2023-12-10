@@ -12,6 +12,8 @@ MULTISAMPLES = "multisamples"
 FPS_METER = "show_fps_meter"
 AUTO_WALKER = "auto_walker"
 
+FONTS = "phase_3/fonts/"
+
 CHAR_3 = "phase_3/models/char/"
 CHAR_3_5 = "phase_3.5/models/char/"
 CHAR_4 = "phase_4/models/char"
@@ -51,47 +53,49 @@ AUTOWALKER_MOVE_ANIMS = ["walk", "run"]
 RED = (1, 0, 0, 1)
 
 TRANSFORM_FUNCTION_STRINGS = [
+    None, # SET:
     "{name}.set_pos({x}, {y}, {z})",
     "{name}.set_hpr({h}, {p}, {r})",
     "{name}.set_scale({sx}, {sy}, {sz})",
-    "{name}.set_pos_hpr({x}, {y}, {z}, {h}, {p}, {r})",
     "{name}.set_pos_hpr_scale({x}, {y}, {z}, {h}, {p}, {r}, {sx}, {sy}, {sz})",
-
+    "{name}.set_pos_hpr({x}, {y}, {z}, {h}, {p}, {r})",
+    "base.camLens.set_fov({fov})",
+    "",
+    None, # FUNC:
     "Func({name}.set_pos_hpr, {x}, {y}, {z}, {h}, {p}, {r}),",
     "Func({name}.set_scale, {sx}, {sy}, {sz}),",
-
+    "Func(base.camLens.set_fov, {fov}),",
+    "",
+    None, # LERPFUNC:
+    "LerpFunc(base.camLens.set_fov, fromData=FOV_1, toData={fov},"
+        "duration=DURATION, blendType='noBlend'),",
+    "",
+    None, # INTERVAL:
     "{name}.pos_hpr_interval(DURATION, ({x}, {y}, {z}), ({h}, {p}, {r}),"
         "blendType='easeInOut'),",
     "{name}.scale_interval(DURATION, ({sx}, {sy}, {sz}),"
         "blendType='easeInOut'),",
-
-    "{name}: [{x}, {y}, {z}, {h}, {p}, {r}]",
-    "{name}: [{sx}, {sy}, {sz}]",
-
-    "base.camLens.set_fov({fov})",
-    "Func(base.camLens.set_fov, {fov}),",
-    "LerpFunc(base.camLens.set_fov, fromData=FOV_1, toData={fov},"
-        "duration=DURATION, blendType='noBlend'),",
 ]
 TRANSFORM_FUNCTION_NAMES = [
-    "SET(POS)",
-    "SET(HPR)",
-    "SET(SCALE)",
-    "SET(POS HPR)",
-    "SET(POS HPR SCALE)",
-
-    "FUNC(POS HPR)",
-    "FUNC(SCALE)",
-
-    "INTERVAL(POS HPR)",
-    "INTERVAL(SCALE)",
-
-    "[POS HPR]",
-    "[SCALE]",
-
-    "SET(FOV)",
-    "FUNC(FOV)",
-    "LERPFUNC(FOV)"
+    "SET:",
+    "POSITION",
+    "ROTATION",
+    "SCALE",
+    "ALL THREE",
+    "POS & HPR",
+    "FOV",
+    "",
+    "FUNC:",
+    "POS & HPR",
+    "SCALE",
+    "FOV",
+    "",
+    "LERPFUNC:",
+    "FOV",
+    "",
+    "INTERVAL:",
+    "POS & HPR",
+    "SCALE",
 ]
 # Node Mover
 NM_SPEEDS = [
