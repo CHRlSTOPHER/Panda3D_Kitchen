@@ -27,12 +27,23 @@ SPECIES = {
     'p': "monkey",
     'b': "bear",
     's': "pig",
-    'o': "scrooge",
-    'i': "gyro",
-    'g': "riggy",
     # ttr
     'a': "crocodile",
     'q': "deer",
+}
+SCALE = {
+    'd': 0.85,
+    'c': 0.73,
+    'h': 0.85,
+    'm': 0.6,
+    'r': 0.74,
+    'f': 0.66,
+    'p': 0.68,
+    'b': 0.85,
+    's': 0.77,
+    # ttr
+    'a': 0.82,
+    'q': 0.79,
 }
 
 ANIMS = {
