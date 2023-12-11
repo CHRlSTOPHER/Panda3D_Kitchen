@@ -51,13 +51,11 @@ class NodeTransformPrinter():
         formatted_string = unformatted_string.format(**required_arg_dict)
         print(formatted_string)
 
-    def check_for_special_nodeifier(self, required_arg_dict):
-        if ("name" in required_arg_dict and
-            required_arg_dict["name"][0] == G.SPECIAL_NODE_IFIER_FLAG):
-                # If name has special character, remove it.
-                required_arg_dict["name"] = required_arg_dict["name"][1:]
+    def check_for_special_nodeifier(self, arg_dict):
+        if "name" in arg_dict: # remove special nodeifier for printing.
+            arg_dict["name"] = arg_dict["name"].replace("~", "")
 
-        return required_arg_dict
+        return arg_dict
 
     def update_transform_data(self, node):
         new_node_values = get_transform_data(node)
