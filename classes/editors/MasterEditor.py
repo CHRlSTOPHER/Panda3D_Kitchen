@@ -18,8 +18,8 @@ class MasterEditor(DirectObject):
         DirectObject.__init__(self)
         self.hide_gui = False
         self.accept("`", self.hide_editor_gui)
-        self.mouse_lock = LockMouseInWindow()
 
+        # self.mouse_lock = LockMouseInWindow()
         # Set camera as default node. It can be changed later by selection.
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)
