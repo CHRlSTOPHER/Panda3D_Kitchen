@@ -6,40 +6,41 @@ from direct.actor.Actor import Actor
 from .AutoWalker import AutoWalker
 from classes.globals import Globals as G
 from . import ToonGlobals as TG
+from .ToonHead import ToonHead
 
-COLORS = TG.COLORS
 
+class Toon(Actor, AutoWalker, ToonHead):
 
-class Toon(Actor, AutoWalker):
-
-    def __init__(self, parent, gender='m', toon_name="~Toon",
+    def __init__(self, parent, gender='m', toon_name="~Toon", lod=1000,
                  head='dss', head_c=0,
                  torso='s', shirt_t=0, shirt_c=0,
                  sleeve_t=0, sleeve_c=0, arm_c=0, glove_c=0,
                  legs='s', leg_c=0, bottom='shorts', bottom_t=0, bottom_c=0):
-        self.lod = 1000
         self.gender = gender
         self.toon_name = toon_name
+        self.lod = lod
         self.species = head[0]
 
         self.head = head
-        self.head_c = head_c
         self.forehead = head[1]
-        self.cheeks = head[2]
+        self.muzzle = head[2]
+        self.toon_head = None
 
         self.torso = torso
         self.shirt_t = shirt_t
-        self.shirt_c = shirt_c
         self.sleeve_t = sleeve_t
-        self.sleeve_c = sleeve_c
-        self.arm_c = arm_c
-        self.glove_c = glove_c
-
-        self.legs = legs
-        self.leg_c = leg_c
         self.bottom = bottom
         self.bottom_t = bottom_t
-        self.bottom_c = bottom_c
+
+        self.legs = legs
+
+        self.head_c = TG.COLORS[head_c] + (1,)
+        self.arm_c = TG.COLORS[arm_c] + (1,)
+        self.glove_c = TG.COLORS[glove_c] + (1,)
+        self.sleeve_c = TG.COLORS[sleeve_c] + (1,)
+        self.shirt_c = TG.COLORS[shirt_c] + (1,)
+        self.bottom_c = TG.COLORS[bottom_c] + (1,)
+        self.leg_c = TG.COLORS[leg_c] + (1,)
 
         self.assemble_toon()
         self.set_name(toon_name)
@@ -48,11 +49,19 @@ class Toon(Actor, AutoWalker):
     def assemble_toon(self, actor=None):
         Actor.__init__(self, actor)
         self.load_legs()
-        self.load_torso()
-        self.load_head()
         self.load_toon_anims(self.legs, TG.LEGS)
+
+        self.load_torso()
         self.load_toon_anims(self.torso, TG.TORSO)
-        # self.load_toon_anims(self.head, TG.HEAD)
+
+        ToonHead.__init__(self, self)
+        self.attach(TG.HEAD, TG.TORSO, TG.JOINT_HEAD)
+        head_nodeifier = '~.get_part("head")'
+        self.get_part(TG.HEAD).set_name(f"{self.toon_name}{head_nodeifier}")
+
+        AutoWalker.__init__(self, self, run_anim="run", run_div=2.75)
+        self.set_blend(frameBlend=True)
+        self.set_scale(TG.SCALE[self.species])
         self.loop("neutral")
 
     def load_legs(self):
@@ -70,26 +79,25 @@ class Toon(Actor, AutoWalker):
         self.set_shirt_textures(self.shirt_t, self.sleeve_t)
         self.set_bottom_texture(self.bottom_t)
 
-        arm_color, glove_color = [COLORS[self.arm_c], COLORS[self.glove_c]]
-        self.find(f'**/{TG.NECK}').set_color(arm_color + (1,))
-        self.find(f'**/{TG.ARMS}').set_color(arm_color + (1,))
-        self.find(f'**/{TG.GLOVES}').set_color(glove_color + (1,))
-
-    def load_head(self):
-        pass
+        arm_color, glove_color = [self.arm_c, self.glove_c]
+        self.find(f'**/{TG.NECK}').set_color(arm_color)
+        self.find(f'**/{TG.ARMS}').set_color(arm_color)
+        self.find(f'**/{TG.GLOVES}').set_color(glove_color)
 
     def load_toon_anims(self, body_part_type, body_part):
         anim_dict = {}
         for phase_file, anims in TG.ANIMS.items():
             for anim in anims:
-                anim_dict[anim] = G.CHAR_3 + TG.TOON_MODEL_FILE.format(
-                    body_part_type, self.bottom, body_part, anim) + G.BAM
-                    # "tt_a_chr_dg{}_{}_{}_{}"
+                phase_path = f"phase_{phase_file}/models/char/"
+                anim_file = f"""{TG.TOON_MODEL_FILE.format(
+                    body_part_type, self.bottom, body_part, anim)}"""
+                anim_dict[anim] = phase_path + anim_file + G.BAM
+                # "tt_a_chr_dg{}_{}_{}_{}"
 
         self.load_anims(anim_dict, body_part)
 
     def set_leg_color(self):
-        color = TG.COLORS[self.leg_c] + (1,)
+        color = self.leg_c
         for part in TG.LEG_PARTS:  # color legs
             self.find(f'**/{part}').set_color(color)
 
@@ -106,7 +114,7 @@ class Toon(Actor, AutoWalker):
     def set_bottom_texture(self, bottom_tex_index):
         if self.bottom == TG.SHORTS:
             bottom_tex = loader.load_texture(TG.SHORTS_TEX[bottom_tex_index])
-        elif self.bottom == TG.SKIRT:
+        else:
             bottom_tex = loader.load_texture(TG.SKIRT_TEX[bottom_tex_index])
 
         self.find(f'**/{TG.TORSO_BOTTOM}').set_texture(bottom_tex, 1)
