@@ -1,6 +1,7 @@
 """
 Actors will inherit this class to automatically transition between
 animations like neutral and walk/run/etc..
+Only 'neutral' and 'walk' animations are set by default.
 """
 import json
 import math
@@ -16,48 +17,30 @@ AUTO_WALKER_TASK = "auto_walker_task"
 
 class AutoWalker():
 
-    def __init__(self, actor, speed=13, run_anim="run", run_threshold=1.5):
+    def __init__(self, actor, speed=13, neutral_anim="neutral",
+                 walk_anim="walk",
+                 run_anim=None, run_threshold=1.25, run_div=2.0):
         self.actor = actor
         self.speed = speed
+        self.neutral_anim = neutral_anim
+        self.walk_anim = walk_anim
         self.run_anim = run_anim
         self.run_threshold = run_threshold
+        self.run_div = run_div
 
         self.previous_pos = actor.get_pos()
         self.previous_hpr = actor.get_hpr()
-        self.walking = False
         if json_settings[G.AUTO_WALKER]:
-            taskMgr.add(self.toggle_actor_anim_state, AUTO_WALKER_TASK)
+            taskMgr.add(self.update_actor_anim_task, AUTO_WALKER_TASK)
 
-    def toggle_actor_anim_state(self, task):
-        if (self.actor.get_pos() != self.previous_pos or
-                self.actor.get_hpr() != self.previous_hpr):
-            self.move_anim()
-        else:
-            self.neutral_anim()
-
-        self.update_playrate()
+    def update_actor_anim_task(self, task):
+        self.update_actor_anim()
 
         self.previous_pos = self.actor.get_pos()
         self.previous_hpr = self.actor.get_hpr()
         return task.again
 
-    def move_anim(self):
-        current_animation = self.actor.get_current_anim()
-        if not self.walking and current_animation == "neutral":
-            self.walking = True
-            self.actor.loop("walk")
-
-    def neutral_anim(self):
-        if not self.walking:
-            return
-
-        current_animation = self.actor.get_current_anim()
-        for anim in G.AUTOWALKER_MOVE_ANIMS: # check for movement animations
-            if current_animation == anim:
-                self.walking = False
-                self.actor.loop("neutral")
-
-    def update_playrate(self):
+    def update_actor_anim(self):
         x1, y1, z1 = self.previous_pos
         x2, y2, z2 = self.actor.get_pos()
 
@@ -69,6 +52,19 @@ class AutoWalker():
         # "With both direction and magnitude! OH YEAH!!!" -Vector.
         # https://www.youtube.com/watch?v=nw9QoYL_8tI
         playrate = direction * magnitude
+
+        current_anim = self.actor.get_current_anim()
+        if magnitude == 1.0 and current_anim != self.neutral_anim:
+            self.loop(self.neutral_anim)
+        elif magnitude >= self.run_threshold and current_anim != self.run_anim:
+            if self.run_anim:
+                self.loop(self.run_anim)
+        elif (magnitude < self.run_threshold and current_anim != self.walk_anim
+              and magnitude != 1):
+            self.loop(self.walk_anim)
+
+        if self.actor.get_current_anim() == self.run_anim:
+            playrate /= self.run_div
         self.actor.set_play_rate(playrate, self.actor.get_current_anim())
 
     def find_direction(self, x1, y1, z1, x2, y2, z2):
