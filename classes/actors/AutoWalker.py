@@ -53,15 +53,7 @@ class AutoWalker():
         # https://www.youtube.com/watch?v=nw9QoYL_8tI
         playrate = direction * magnitude
 
-        current_anim = self.actor.get_current_anim()
-        if magnitude == 1.0 and current_anim != self.neutral_anim:
-            self.loop(self.neutral_anim)
-        elif magnitude >= self.run_threshold and current_anim != self.run_anim:
-            if self.run_anim:
-                self.loop(self.run_anim)
-        elif (magnitude < self.run_threshold and current_anim != self.walk_anim
-              and magnitude != 1):
-            self.loop(self.walk_anim)
+        self.check_anim_state(magnitude)
 
         if self.actor.get_current_anim() == self.run_anim:
             playrate /= self.run_div
@@ -87,6 +79,19 @@ class AutoWalker():
             magnitude = 1 / self.speed
 
         return magnitude * self.speed
+
+    def check_anim_state(self, magnitude):
+        current_anim = self.actor.get_current_anim()
+        if magnitude == 1.0 and current_anim != self.neutral_anim:
+            self.loop(self.neutral_anim)
+
+        elif (magnitude >= self.run_threshold and
+              self.run_anim and current_anim != self.run_anim):
+            self.loop(self.run_anim)
+
+        elif (magnitude < self.run_threshold and
+              current_anim != self.walk_anim and magnitude != 1):
+            self.loop(self.walk_anim)
 
     def set_multiplier(self, speed):
         self.speed = speed
