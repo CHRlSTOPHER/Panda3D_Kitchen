@@ -10,7 +10,7 @@ from classes.props.PlaneModel import PlaneModel
 
 REVEAL_TASK = "reveal_task"
 HIDE_TASK = "hide_task"
-INCREMENT = 0.02
+INCREMENT = 0.05
 
 
 class RevealerGUI(DirectFrame):
