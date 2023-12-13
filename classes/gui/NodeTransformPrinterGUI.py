@@ -22,13 +22,14 @@ DETECTION_TEXTURE = "windows/handle.png"
 BUTTON_START_Z = .625
 BUTTON_X = .2
 BUTTON_Z_INCREMENT = -.08
-BUTTON_SCALE = (.075, 1, .065)
+BUTTON_SCALE = (.075, 1, .06)
 BUTTON_SHADOW = (.25, .2, 0, .75)
 
 TITLE_TEXT_SCALE = (1.2, 1.2, 1.2)
 UNDER_TEXT_SCALE = (1, 1, 1)
 TITLE_COLOR = (1, .8, .2, 1)
 UNDER_COLOR = (1, 1, .8, 1)
+HIGHLIGHT = (1, .5, 0, 1)
 
 
 class NodeTransformPrinterGUI(RevealerGUI):
@@ -51,9 +52,9 @@ class NodeTransformPrinterGUI(RevealerGUI):
                 z += BUTTON_Z_INCREMENT / 2.0
                 continue
             button = self.generate_printer_button(index)
-            button.reparent_to(self)
+            button.bind(DGG.WITHIN, self.highlight_text, extraArgs=[button])
+            button.bind(DGG.WITHOUT, self.darken_text, extraArgs=[button])
             button.set_pos(BUTTON_X, 0, z)
-            button.set_scale(BUTTON_SCALE)
             self.printer_buttons.append(button)
             z += BUTTON_Z_INCREMENT
 
@@ -69,6 +70,7 @@ class NodeTransformPrinterGUI(RevealerGUI):
             text_fg = UNDER_COLOR
 
         button =  DirectButton(
+            parent=self, scale=BUTTON_SCALE,
             text = G.TRANSFORM_FUNCTION_NAMES[index], text_fg=text_fg,
             text_align = TextNode.ACenter, text_font = self.text_font,
             text_scale=text_scale, text_shadow=BUTTON_SHADOW,
@@ -77,6 +79,12 @@ class NodeTransformPrinterGUI(RevealerGUI):
         )
         button.set_transparency(TransparencyAttrib.MBinary)
         return button
+
+    def highlight_text(self, button, entry):
+        button['text_fg'] = HIGHLIGHT
+
+    def darken_text(self, button, entry):
+        button['text_fg'] = UNDER_COLOR
 
     def print_tranform(self, index):
         self.func_printer.update_transform_data(self.node_mover)
