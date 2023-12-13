@@ -3,6 +3,7 @@ A Cog Actor. You can either pass a string through calling a suit key
 from SuitGlobals's SUIT dict or pass your own custom cog list in.
 """
 from direct.actor.Actor import Actor
+from panda3d.core import OmniBoundingVolume
 
 from .AutoWalker import AutoWalker
 from classes.globals import Globals as G
@@ -46,6 +47,8 @@ class Suit(Actor, AutoWalker):
 
         self.set_scale(self.scale)
         self.set_blend(frameBlend=True)
+        self.node().set_bounds(OmniBoundingVolume())
+        self.node().set_final(1)
         self.loop("neutral")
         self.reparent_to(self.suit_parent)
         self.set_name(self.suit_name)
@@ -71,6 +74,9 @@ class Suit(Actor, AutoWalker):
             head_texture_path = G.MAPS_4 + SG.HEADS[self.suit] + G.JPG
             self.head.set_texture(loader.load_texture(head_texture_path), 1)
 
+        for texture in self.head.find_all_textures():
+            texture.set_anisotropic_degree(16)  # fixes face blur
+
     def load_animations(self):
         anim_path_dict = SG.SUIT_ANIMS[self.body]
         anim_dict = {}
@@ -95,8 +101,10 @@ class Suit(Actor, AutoWalker):
             self.glasses.reparentTo(self.head)
             self.glasses.set_name(f"{self.suit_name}.glasses")
 
-            self.left_eye = self.glasses.find("**/left_eye")
-            self.right_eye = self.glasses.find('**/right_eye')
+        if (self.head_type == 'flunky' and not self.head_texture
+        or self.head_type == 'bigcheese'):
+            self.left_eye = self.head.find("**/left_eye")
+            self.right_eye = self.head.find('**/right_eye')
             self.left_eye.set_name(f"{self.suit_name}.left_eye")
             self.right_eye.set_name(f"{self.suit_name}.right_eye")
 
