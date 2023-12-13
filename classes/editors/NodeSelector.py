@@ -44,7 +44,9 @@ class NodeSelector(DirectObject):
 
         # the special flag lets you pick nodes that aren't reparented to render
         while True:
-            if (node.get_parent() == render or
+            if node.get_name() == "":
+                """Ignore nodes without names."""
+            elif (node.get_parent() == render or
                 node.get_name()[0] == G.SPECIAL_NODE_IFIER_FLAG):
                 break
             node = node.get_parent()
