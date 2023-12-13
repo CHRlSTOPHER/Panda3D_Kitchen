@@ -9,7 +9,7 @@ from .NodeMover import NodeMover
 from .NodeSelector import NodeSelector
 from .NodeTransformPrinter import (NodeTransformPrinter, get_transform_data)
 from classes.gui.NodeTransformPrinterGUI import NodeTransformPrinterGUI
-from classes.windows.LockMouseInWindow import LockMouseInWindow
+from classes.gui.MouseWindowLock import MouseWindowLock
 
 
 class MasterEditor(DirectObject):
@@ -19,7 +19,7 @@ class MasterEditor(DirectObject):
         self.hide_gui = False
         self.accept("`", self.hide_editor_gui)
 
-        # self.mouse_lock = LockMouseInWindow()
+        self.mouse_lock = MouseWindowLock()
         # Set camera as default node. It can be changed later by selection.
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)

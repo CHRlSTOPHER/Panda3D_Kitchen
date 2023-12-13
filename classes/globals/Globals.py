@@ -11,6 +11,7 @@ FRAMEBUFFER_MULTISAMPLE = "framebuffer-multisample"
 MULTISAMPLES = "multisamples"
 FPS_METER = "show_fps_meter"
 AUTO_WALKER = "auto_walker"
+MOUSE_LOCK = "mouse_lock"
 
 FONTS = "phase_3/fonts/"
 
@@ -99,9 +100,10 @@ TRANSFORM_FUNCTION_NAMES = [
 ]
 # Node Mover
 NM_SPEEDS = [
-    ("speed_up", 0.33),
-    ("slow_down", 2.25),
-    ("snail_speed", 4.50),
+    ("faster", 0.33),
+    ("slower", 2.25),
+    ("much_slower", 4.50),
+    ("molasses", 40.0)
 ]
 NM_BASE_MOVE_RATE = .1
 NM_BASE_TURN_RATE = .5
