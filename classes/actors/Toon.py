@@ -56,8 +56,7 @@ class Toon(Actor, AutoWalker, ToonHead):
 
         ToonHead.__init__(self, self)
         self.attach(TG.HEAD, TG.TORSO, TG.JOINT_HEAD)
-        head_nodeifier = '~.get_part("head")'
-        self.get_part(TG.HEAD).set_name(f"{self.toon_name}{head_nodeifier}")
+        self.name_body_parts()
 
         AutoWalker.__init__(self, self, run_anim="run", run_div=2.75)
         self.set_blend(frameBlend=True)
@@ -95,6 +94,13 @@ class Toon(Actor, AutoWalker, ToonHead):
                 # "tt_a_chr_dg{}_{}_{}_{}"
 
         self.load_anims(anim_dict, body_part)
+
+    def name_body_parts(self):
+        head_nodeifier = '~.get_part("head")'
+        self.get_part(TG.HEAD).set_name(f"{self.toon_name}{head_nodeifier}")
+        # l and r eye are defined in ToonHead
+        self.left_eye.set_name(f"{self.toon_name}.left_eye")
+        self.right_eye.set_name(f"{self.toon_name}.right_eye")
 
     def set_leg_color(self):
         color = self.leg_c

@@ -16,6 +16,10 @@ GLOVES = "hands"
 TOON_MODEL_FILE = "tt_a_chr_dg{}_{}_{}_{}"
 LEG_PARTS = ["legs", "feet"]
 SHOE_PARTS = ["shoes", "boots_short", "boots_long"]
+SIZE = {
+    "l": "long",
+    "s": "short"
+}
 
 SPECIES = {
     'd': "dog",

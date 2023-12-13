@@ -7,10 +7,6 @@ Toon Exception Notes-
 from classes.globals import Globals as G
 from classes.actors import ToonGlobals as TG
 
-SIZE = {
-    "l": "long",
-    "s": "short"
-}
 EXPRESSIONS = ["neutral", "sad", "angry", "laugh", "surprise", "smile"]
 DOG_PARTS = {
     'dss': ["tt_a_chr_dgm_skirt_head_{}", "dogMM_Skirt-headMuzzles-{}"],
@@ -24,6 +20,7 @@ HEAD_COLOR_PARTS = ['head-', 'head-front-', 'ears-']
 EYE_NODE_PARTS = ['**/joint_pupilL_', '**/joint_pupilR_', '**/eyes-']
 ANIMATED_HEADS = ['d']
 
+
 class ToonHead():
 
     def __init__(self, toon):
@@ -31,9 +28,11 @@ class ToonHead():
         self.head = toon.head
         self.head_c = toon.head_c
         self.forehead = toon.forehead
-        self.muzzle_size = SIZE[toon.muzzle]
+        self.muzzle_size = TG.SIZE[toon.muzzle]
         self.lod = toon.lod
         self.species = toon.head[0]
+        self.l_eye = None
+        self.r_eye = None
 
         self.head_nodes = HEAD_NODE_PARTS
         self.head_color_nodes = HEAD_COLOR_PARTS
@@ -67,7 +66,10 @@ class ToonHead():
         define_head_features = self.get_head_features()[self.species]
         if define_head_features: define_head_features()
 
-        forehead = SIZE[self.head[1]]
+        forehead = TG.SIZE[self.head[1]]
+        self.left_eye = self.toon.find(f"**/{self.eye_nodes[0]}{forehead}")
+        self.right_eye = self.toon.find(f"**/{self.eye_nodes[1]}{forehead}")
+
         for node in self.head_nodes:
             self.toon.find(f"**/{node}{forehead}").show()
 
@@ -93,6 +95,11 @@ class ToonHead():
         self.toon.load_anims(self.load_dog_anims(), TG.HEAD)
         self.muzzle_model = loader.load_model(f'{G.CHAR_3}{muzzle_path}{G.BAM}')
         self.muzzle_model.reparent_to(self.toon.get_part(TG.HEAD))
+
+        self.toon.control_joint(None, TG.HEAD, "def_left_pupil")
+        self.toon.control_joint(None, TG.HEAD, "def_right_pupil")
+        self.left_eye = self.toon.find("**/def_left_pupil")
+        self.right_eye = self.toon.find("**/def_right_pupil")
 
         for node in ['head', 'head-front']:
             self.toon.find(f'**/{node}').set_color(self.head_c)
