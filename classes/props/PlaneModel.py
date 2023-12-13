@@ -1,12 +1,10 @@
 """
 Creates a procedurally generated plane in a 3D space.
 """
-from panda3d.core import loadPrcFileData, NodePath, SamplerState, TransparencyAttrib
+from panda3d.core import NodePath, SamplerState, TransparencyAttrib
 from panda3d.core import GeomVertexArrayFormat, Geom, GeomVertexFormat
-from panda3d.core import GeomVertexData, GeomVertexWriter, GeomTriangles, GeomNode
-
-# make pixel art look more clear
-loadPrcFileData("", "textures-power-2 0")
+from panda3d.core import (GeomVertexData, GeomVertexWriter, GeomTriangles,
+                          GeomNode)
 
 
 class PlaneModel(NodePath):

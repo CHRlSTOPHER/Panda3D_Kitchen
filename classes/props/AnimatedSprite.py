@@ -4,9 +4,12 @@ Takes a procedurally generated plane and applies a texture offset sequence.
 to trick the eye into thinking movement is occurring)
 """
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
-from panda3d.core import TextureStage
+from panda3d.core import loadPrcFileData, TextureStage
 
-from .PlaneModel import PlaneModel
+from classes.props.PlaneModel import PlaneModel
+
+# make pixel art look more clear
+loadPrcFileData("", "textures-power-2 0")
 
 
 class AnimatedSprite(PlaneModel):
