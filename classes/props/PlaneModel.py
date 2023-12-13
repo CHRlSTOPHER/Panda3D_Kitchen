@@ -12,13 +12,15 @@ loadPrcFileData("", "textures-power-2 0")
 class PlaneModel(NodePath):
 
     def __init__(self, texturePath, rows=1, columns=1, scale=(1, 1, 1),
-                 name="plane_model"):
+                 parent=None, name="plane_model"):
         self.texturePath = texturePath
         self.rows = rows
         self.columns = columns
-        self.scale = scale
+        self.node_parent = parent
 
         NodePath.__init__(self, self.generate_plane_model())
+        self.apply_texture()
+        self.set_scale(scale)
         self.set_name(name)
 
     def generate_plane_model(self):
@@ -43,25 +45,20 @@ class PlaneModel(NodePath):
 
         self.add_vertex_and_uv_coords(vertex, texcoord, normal, color)
 
-        # create GeomPrimitive object
         prim = GeomTriangles(Geom.UHStatic)
         prim.add_vertices(0, 1, 2)
         prim.add_vertices(1, 3, 2)
 
-        # add the GeomVertexData & GeomPrimitive object to a GeomNode. Add the GeomNode to the scene.
+        # add the GeomVertexData & GeomPrimitive object to a GeomNode.
+        # Return the GeomNode as NodePath's __init__ arg.
         geom = Geom(vdata)
         geom.add_primitive(prim)
         node = GeomNode('gnode')
         node.add_geom(geom)
-        plane_model = render.attach_new_node(node)
+        if self.node_parent:
+            node = self.node_parent.attach_new_node(node)
 
-        texture = loader.load_texture(self.texturePath)
-        plane_model.set_texture(texture, 1)
-        # improve the texture rendering
-        texture.set_magfilter(SamplerState.FT_nearest)
-        plane_model.set_transparency(TransparencyAttrib.MDual)
-
-        return plane_model
+        return node
 
     def add_vertex_and_uv_coords(self, vertex, texcoord, normal, color):
         # Divide by column/row to narrow the uv scale (origin is bottom left)
@@ -84,3 +81,10 @@ class PlaneModel(NodePath):
         normal.add_data3(0, 0, 1)
         color.add_data4(1, 1, 1, 1)
         texcoord.add_data2(0, 0)
+
+    def apply_texture(self):
+        texture = loader.load_texture(self.texturePath)
+        self.set_texture(texture, 1)
+        # improve the texture rendering
+        texture.set_magfilter(SamplerState.FT_nearest)
+        self.set_transparency(TransparencyAttrib.MDual)

@@ -59,8 +59,8 @@ class KantoDex(ShowBase):
         background.set_scale(scale_boost, 1, scale_boost * 2.72)
         background.remove_node()
 
-        # self.setup_pokemon()
-        self.setup_cogs()
+        self.setup_pokemon()
+        # self.setup_cogs()
         # self.setup_toons()
 
     def setup_pokemon(self):
@@ -68,9 +68,6 @@ class KantoDex(ShowBase):
         self.generate_sprites(0, 9, "00")
         self.generate_sprites(9, 99, "0")
         self.generate_sprites(99, 151, "")
-
-        for sprite in self.sprites:
-            sprite.set_scale(SPRITE_SCALE)
 
         camera.set_pos_hpr(11.36, -8.12, -1.22, 38.38, -4.6, 0.0)
 
@@ -205,7 +202,8 @@ class KantoDex(ShowBase):
             entry = KG.DEX_ENTRIES[i]
             texture_path = SPRITE_TEX_PATH + f"ani_bw_{dex_str}{i+1}.png"
             sprite = PokemonSprite(texture_path, columns=entry[0],
-                                   wait_time=.1, name=f"self.sprites[{i}]")
+                                   wait_time=.1, scale=SPRITE_SCALE,
+                                   parent=render, name=f"self.sprites[{i}]")
             sprite.uv_sequence.loop()
             sprite.set_pos(self.x_pos, 0, self.z_pos)
             self.setup_sprite_shadow(i, entry, sprite, dex_str)

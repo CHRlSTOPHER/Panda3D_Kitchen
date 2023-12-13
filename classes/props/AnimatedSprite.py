@@ -12,8 +12,9 @@ from .PlaneModel import PlaneModel
 class AnimatedSprite(PlaneModel):
 
 	def __init__(self, texturePath, rows=1, columns=1, missing_frames=0,
-				 wait_time=.1, name="a_sprite"):
-		PlaneModel.__init__(self, texturePath, rows, columns, name)
+				 wait_time=.1, scale=(1, 1, 1), parent=None, name="a_sprite"):
+		PlaneModel.__init__(self, texturePath, rows, columns,
+							scale, parent, name)
 		self.missing_frames = missing_frames
 		self.wait_time = wait_time
 		self.uv_sequence = Sequence()
