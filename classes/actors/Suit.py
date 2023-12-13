@@ -28,8 +28,10 @@ class Suit(Actor, AutoWalker):
         self.head_texture = suit[4]
         self.scale = suit[5]
 
+        # for flunky.
         self.left_eye = None
         self.right_eye = None
+        self.glasses = None
 
         self.assemble_suit()
 
@@ -89,11 +91,12 @@ class Suit(Actor, AutoWalker):
 
         if self.head_type == "flunky" and not self.head_texture:
             head_path = SG.HEAD_MODEL_PATH.format(self.body)
-            glasses = loader.load_model(head_path).find('**/glasses')
-            glasses.reparentTo(self.head)
+            self.glasses = loader.load_model(head_path).find('**/glasses')
+            self.glasses.reparentTo(self.head)
+            self.glasses.set_name(f"{self.suit_name}.glasses")
 
-            self.left_eye = glasses.find("**/left_eye")
-            self.right_eye = glasses.find('**/right_eye')
+            self.left_eye = self.glasses.find("**/left_eye")
+            self.right_eye = self.glasses.find('**/right_eye')
             self.left_eye.set_name(f"{self.suit_name}.left_eye")
             self.right_eye.set_name(f"{self.suit_name}.right_eye")
 

@@ -93,9 +93,9 @@ class KantoDex(ShowBase):
         self.raider.set_pos_hpr(23.56, 8.52, 0.0, -116.73, 0.0, 0.0)
         self.cheese.set_pos_hpr(23.2, 4.39, 0.0, -92.45, 0.0, 0.0)
 
-        camera.set_pos_hpr(34.85, 3.96, 1.59, 88.92, 20.85, 0.0)
-        self.flunky.left_eye.set_pos(0.28, 0.58, 0.37)
-        self.flunky.right_eye.set_pos(-0.18, 0.58, 0.38)
+        camera.set_pos_hpr(30.71, 3.51, 4.33, 76.28, -0.54, 0.0)
+        self.flunky.left_eye.set_pos_hpr(0.22, 0.57, 0.47, -0.0, 0.0, -0.0)
+        self.flunky.right_eye.set_pos_hpr(-0.16, 0.58, 0.48, -0.0, 0.0, -0.0)
 
     def setup_toons(self):
         self.dog = Toon(parent=render, gender='m',
