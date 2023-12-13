@@ -28,6 +28,9 @@ class Suit(Actor, AutoWalker):
         self.head_texture = suit[4]
         self.scale = suit[5]
 
+        self.left_eye = None
+        self.right_eye = None
+
         self.assemble_suit()
 
     def assemble_suit(self, actor=None):
@@ -88,6 +91,11 @@ class Suit(Actor, AutoWalker):
             head_path = SG.HEAD_MODEL_PATH.format(self.body)
             glasses = loader.loadModel(head_path).find('**/glasses')
             glasses.reparentTo(self.head)
+
+            self.left_eye = glasses.find("**/left_eye")
+            self.right_eye = glasses.find('**/right_eye')
+            self.left_eye.set_name(f"{self.suit_name}.left_eye")
+            self.right_eye.set_name(f"{self.suit_name}.right_eye")
 
     def cleanup(self):
         taskMgr.remove(G.AUTO_WALKER_TASK)

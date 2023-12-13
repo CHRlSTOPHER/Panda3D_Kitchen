@@ -60,8 +60,8 @@ class KantoDex(ShowBase):
         background.remove_node()
 
         # self.setup_pokemon()
-        # self.setup_cogs()
-        self.setup_toons()
+        self.setup_cogs()
+        # self.setup_toons()
 
     def setup_pokemon(self):
         # Make Kanto Pokemon sprites. (151 Total)
@@ -94,6 +94,8 @@ class KantoDex(ShowBase):
         self.cheese.set_pos_hpr(23.2, 4.39, 0.0, -92.45, 0.0, 0.0)
 
         camera.set_pos_hpr(34.85, 3.96, 1.59, 88.92, 20.85, 0.0)
+        self.flunky.left_eye.set_pos(0.28, 0.58, 0.37)
+        self.flunky.right_eye.set_pos(-0.18, 0.58, 0.38)
 
     def setup_toons(self):
         self.dog = Toon(parent=render, gender='m',
