@@ -16,7 +16,7 @@ MONITOR_RES = JSON_SETTINGS[G.MONITOR_RES]
 PUSH = 10
 
 WINDOW_LOCK_TEXTURE = "windows/mouse-lock.png"
-POS = (.1, 0, .1)
+POS = (.08, 0, .08)
 
 
 class MouseWindowLock(DirectButton):
@@ -27,6 +27,7 @@ class MouseWindowLock(DirectButton):
                               scale=.07, pos=POS,
                               command=self.toggle_lock)
         self.initialiseoptions(MouseWindowLock)
+        self.guis = [self]
 
         self.last_x = base.win.get_x_size() // 2
         self.last_y = base.win.get_y_size() // 2

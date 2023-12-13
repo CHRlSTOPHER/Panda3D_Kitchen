@@ -31,7 +31,7 @@ class MasterEditor(DirectObject):
             self.node_mover, self.nt_printer, base.a2dLeftCenter)
 
         self.gui_classes = [
-            self.nt_gui,
+            self.nt_gui, self.mouse_lock
         ]
 
     def hide_editor_gui(self):
