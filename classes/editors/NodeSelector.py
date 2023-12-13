@@ -69,8 +69,8 @@ class NodeSelector(DirectObject):
             base.cTrav.addCollider(self.ray_node, self.collision_handler)
 
     def sync_ray_with_mouse_pos(self, task):
-        if base.mouseWatcherNode.hasMouse():
-            mouse = base.mouseWatcherNode.getMouse()
+        if base.mouseWatcherNode.has_mouse():
+            mouse = base.mouseWatcherNode.get_mouse()
             self.mouse_ray.set_from_lens(base.camNode, mouse.x, mouse.y)
 
         return task.again

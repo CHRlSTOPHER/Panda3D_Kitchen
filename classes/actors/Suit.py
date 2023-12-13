@@ -89,7 +89,7 @@ class Suit(Actor, AutoWalker):
 
         if self.head_type == "flunky" and not self.head_texture:
             head_path = SG.HEAD_MODEL_PATH.format(self.body)
-            glasses = loader.loadModel(head_path).find('**/glasses')
+            glasses = loader.load_model(head_path).find('**/glasses')
             glasses.reparentTo(self.head)
 
             self.left_eye = glasses.find("**/left_eye")

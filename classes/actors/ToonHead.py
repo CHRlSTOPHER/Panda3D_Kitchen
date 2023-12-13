@@ -1,8 +1,5 @@
 """
-A collection of Toon Head classes.
-
-Toon Exception Notes-
-
+Filters through all the possible exceptions and makes a Toon Head.
 """
 from classes.globals import Globals as G
 from classes.actors import ToonGlobals as TG

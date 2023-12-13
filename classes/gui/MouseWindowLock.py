@@ -37,8 +37,8 @@ class MouseWindowLock(DirectButton):
 
     def lock_mouse(self, task):
         mouse_x, mouse_y = mouse.get_position()
-        win_origin_x = base.win.getProperties().getXOrigin()
-        win_origin_y = base.win.getProperties().getYOrigin()
+        win_origin_x = base.win.get_properties().get_x_origin()
+        win_origin_y = base.win.get_properties().get_y_origin()
         win_size_x, win_size_y = [base.win.get_x_size(), base.win.get_y_size()]
 
         x_barriers = [win_origin_x, win_origin_x + win_size_x]
