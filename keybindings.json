@@ -13,7 +13,8 @@
 	"turn_right_vertical":   "e",
 	"turn_left_vertical":    "q",
 
-	"speed_up":    0,
-	"slow_down":   1,
-	"snail_speed": 2
+	"faster":    0,
+	"slower":   1,
+	"much_slower": 2,
+	"molasses":    3
 }

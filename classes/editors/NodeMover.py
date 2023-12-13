@@ -62,7 +62,7 @@ class NodeMover(NodePath, DirectObject):
         index = 0
         # Add input detection for node transformations.
         for key in KBS:
-            if key == "speed_up": break # stop when list hits speed modifiers.
+            if key == G.NM_SPEEDS[0][0]: break # stop at speed modifiers.
             self.accept(KBS[key], self.start_movement, extraArgs=[key, index])
             self.accept(KBS[key] + "-up", self.stop_move_task, extraArgs=[key])
             index += 1
