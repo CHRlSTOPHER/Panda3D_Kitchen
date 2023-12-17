@@ -48,6 +48,8 @@ class AutoWalker():
         direction = 1 # default to 1 if there is no movement.
         if magnitude != 1:
             direction = self.find_direction(x1, y1, z1, x2, y2, z2)
+            # scale plays a role in the magnitude calc surprisingly
+            magnitude /= self.actor.get_sy()
 
         # "With both direction and magnitude! OH YEAH!!!" -Vector.
         # https://www.youtube.com/watch?v=nw9QoYL_8tI
@@ -82,16 +84,24 @@ class AutoWalker():
 
     def check_anim_state(self, magnitude):
         current_anim = self.actor.get_current_anim()
+        # check if actor stopped moving.
         if magnitude == 1.0 and current_anim != self.neutral_anim:
             self.loop(self.neutral_anim)
-
-        elif (magnitude >= self.run_threshold and
-              self.run_anim and current_anim != self.run_anim):
-            self.loop(self.run_anim)
-
-        elif (magnitude < self.run_threshold and
-              current_anim != self.walk_anim and magnitude != 1):
+        # check if actor started moving while under run limit
+        elif (magnitude < self.run_threshold
+              and current_anim != self.walk_anim
+              and magnitude != 1):
             self.loop(self.walk_anim)
+        # check if actor started moving without a run anim (default to walking)
+        elif (not self.run_anim
+              and current_anim != self.walk_anim
+              and magnitude != 1):
+            self.loop(self.walk_anim)
+        # check if actor started going over run speed limit
+        elif (magnitude >= self.run_threshold
+              and self.run_anim
+              and current_anim != self.run_anim):
+            self.loop(self.run_anim)
 
     def set_multiplier(self, speed):
         self.speed = speed

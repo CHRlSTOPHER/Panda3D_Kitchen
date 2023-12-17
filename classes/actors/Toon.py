@@ -60,7 +60,7 @@ class Toon(Actor, AutoWalker, ToonHead):
         self.attach(TG.HEAD, TG.TORSO, TG.JOINT_HEAD)
         self.name_body_parts()
 
-        AutoWalker.__init__(self, self, run_anim="run", run_div=2.75)
+        AutoWalker.__init__(self, self, speed=15, run_anim="run", run_div=2.0)
         self.set_blend(frameBlend=True)
         self.set_scale(TG.SCALE[self.species])
         self.loop("neutral")

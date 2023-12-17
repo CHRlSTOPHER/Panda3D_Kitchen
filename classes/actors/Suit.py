@@ -39,7 +39,7 @@ class Suit(Actor, AutoWalker):
     def assemble_suit(self, actor=None):
         Actor.__init__(self, actor)
         self.load_suit()
-        AutoWalker.__init__(self, self)
+        AutoWalker.__init__(self, self, speed=14)
         self.load_animations()
         self.load_health_meter()
         self.load_shadow()
