@@ -7,11 +7,11 @@ from panda3d.core import WindowProperties
 
 from classes.globals import Globals as G
 
-SENSITIVITY = G.ORBITAL_CAM_MOUSE_SENSITIVITY
-ORB_CAM_TASK = "orb_cam_task"
+SENSITIVITY = G.ROTATIONAL_CAM_MOUSE_SENSITIVITY
+ROT_CAM_TASK = "rot_cam_task"
 DELAY = .001
 
-class OrbitalCamera(DirectObject):
+class RotationalCamera(DirectObject):
 
     def __init__(self):
         DirectObject.__init__(self)
@@ -28,9 +28,9 @@ class OrbitalCamera(DirectObject):
 
         if self.toggle_value:
             self.recenter_mouse_cursor()
-            taskMgr.do_method_later(DELAY, self.orb_cam_task, ORB_CAM_TASK)
+            taskMgr.do_method_later(DELAY, self.rot_cam_task, ROT_CAM_TASK)
         else:
-            taskMgr.remove(ORB_CAM_TASK)
+            taskMgr.remove(ROT_CAM_TASK)
 
         base.win.request_properties(self.window_properties)
         self.toggle_value = not self.toggle_value
@@ -40,7 +40,7 @@ class OrbitalCamera(DirectObject):
         mouse_y_center = base.win.get_y_size() // 2
         base.win.move_pointer(0, mouse_x_center, mouse_y_center)
 
-    def orb_cam_task(self, task):
+    def rot_cam_task(self, task):
         if self.cam_task:
             self.recenter_mouse_cursor()
             self.update_cam_orientation()

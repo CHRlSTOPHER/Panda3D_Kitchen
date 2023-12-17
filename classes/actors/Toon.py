@@ -8,6 +8,8 @@ from classes.globals import Globals as G
 from . import ToonGlobals as TG
 from .ToonHead import ToonHead
 
+ALPHA = (1,)
+
 
 class Toon(Actor, AutoWalker, ToonHead):
 
@@ -34,13 +36,13 @@ class Toon(Actor, AutoWalker, ToonHead):
 
         self.legs = legs
 
-        self.head_c = TG.COLORS[head_c] + (1,)
-        self.arm_c = TG.COLORS[arm_c] + (1,)
-        self.glove_c = TG.COLORS[glove_c] + (1,)
-        self.sleeve_c = TG.COLORS[sleeve_c] + (1,)
-        self.shirt_c = TG.COLORS[shirt_c] + (1,)
-        self.bottom_c = TG.COLORS[bottom_c] + (1,)
-        self.leg_c = TG.COLORS[leg_c] + (1,)
+        self.head_c = TG.COLORS[head_c] + ALPHA
+        self.arm_c = TG.COLORS[arm_c] + ALPHA
+        self.glove_c = TG.COLORS[glove_c] + ALPHA
+        self.sleeve_c = TG.COLORS[sleeve_c] + ALPHA
+        self.shirt_c = TG.COLORS[shirt_c] + ALPHA
+        self.bottom_c = TG.COLORS[bottom_c] + ALPHA
+        self.leg_c = TG.COLORS[leg_c] + ALPHA
 
         self.assemble_toon()
         self.set_name(toon_name)

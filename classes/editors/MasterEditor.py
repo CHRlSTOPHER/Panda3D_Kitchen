@@ -3,7 +3,7 @@ A collection of different classes. Mashes them together into an editor.
 """
 from direct.showbase.DirectObject import DirectObject
 
-from classes.camera.OrbitalCamera import OrbitalCamera
+from classes.camera.RotationalCamera import RotationalCamera
 from classes.camera.FovScrollWheel import FovScrollWheel
 from .NodeMover import NodeMover
 from .NodeSelector import NodeSelector
@@ -24,7 +24,7 @@ class MasterEditor(DirectObject):
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)
         self.nt_printer = NodeTransformPrinter(*get_transform_data(camera))
-        self.orb_cam = OrbitalCamera()
+        self.rot_cam = RotationalCamera()
         self.fov_wheel = FovScrollWheel()
 
         self.nt_gui = NodeTransformPrinterGUI(
