@@ -50,6 +50,8 @@ class AutoWalker():
             direction = self.find_direction(x1, y1, z1, x2, y2, z2)
             # scale plays a role in the magnitude calc surprisingly
             magnitude /= self.actor.get_sy()
+        elif self.actor.get_hpr() != self.previous_hpr:
+            magnitude = self.find_turn_rate()
 
         # "With both direction and magnitude! OH YEAH!!!" -Vector.
         # https://www.youtube.com/watch?v=nw9QoYL_8tI
@@ -81,6 +83,12 @@ class AutoWalker():
             magnitude = 1 / self.speed
 
         return magnitude * self.speed
+
+    def find_turn_rate(self):
+        h1, p1, r1 = self.previous_hpr
+        h2, p2, r2 = self.actor.get_hpr()
+        magnitude = math.sqrt((h2 - h1) ** 2 + (p2 - p1) ** 2 + (r2 - r1) ** 2)
+        return magnitude
 
     def check_anim_state(self, magnitude):
         current_anim = self.actor.get_current_anim()
