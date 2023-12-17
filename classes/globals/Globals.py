@@ -103,7 +103,8 @@ NM_SPEEDS = [
     ("faster", 0.33),
     ("slower", 2.25),
     ("much_slower", 4.50),
-    ("molasses", 40.0)
+    ("molasses", 40.0),
+    ("default", 1.5),
 ]
 NM_BASE_MOVE_RATE = .1
 NM_BASE_TURN_RATE = .5

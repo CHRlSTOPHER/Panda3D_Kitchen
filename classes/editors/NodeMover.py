@@ -42,20 +42,21 @@ class NodeMover(NodePath, DirectObject):
             ).start()
 
     def set_move_options(self):
+        base_speed = G.NM_SPEEDS[-1][1]
         self.move_options = [
-            [self.setY, self.get_move_speed, 1],
-            [self.setX, self.get_move_speed, -1],
-            [self.setY, self.get_move_speed, -1],
-            [self.setX, self.get_move_speed, 1],
-            [self.setZ, self.getZ, self.get_move_speed, 1],
-            [self.setZ, self.getZ, self.get_move_speed, -1],
+            [self.setY, self.get_move_speed, base_speed],
+            [self.setX, self.get_move_speed, -base_speed],
+            [self.setY, self.get_move_speed, -base_speed],
+            [self.setX, self.get_move_speed, base_speed],
+            [self.setZ, self.getZ, self.get_move_speed, base_speed],
+            [self.setZ, self.getZ, self.get_move_speed, -base_speed],
 
-            [self.setP, self.getP, self.get_turn_speed, 1],
-            [self.setP, self.getP, self.get_turn_speed, -1],
-            [self.setH, self.getH, self.get_turn_speed, 1],
-            [self.setH, self.getH, self.get_turn_speed, -1],
-            [self.setR, self.getR, self.get_turn_speed, 1],
-            [self.setR, self.getR, self.get_turn_speed, -1],
+            [self.setP, self.getP, self.get_turn_speed, base_speed],
+            [self.setP, self.getP, self.get_turn_speed, -base_speed],
+            [self.setH, self.getH, self.get_turn_speed, base_speed],
+            [self.setH, self.getH, self.get_turn_speed, -base_speed],
+            [self.setR, self.getR, self.get_turn_speed, base_speed],
+            [self.setR, self.getR, self.get_turn_speed, -base_speed],
         ]
 
     def listen_for_key_inputs(self):
@@ -69,6 +70,7 @@ class NodeMover(NodePath, DirectObject):
 
         # Add input detection for speeds adjustments.
         for key, speed in G.NM_SPEEDS:
+            if key == G.NM_SPEEDS[-1][0]: break # stop at the default speed.
             self.accept(f"{KBS[key]}", self.change_speed, extraArgs=[speed])
             self.accept(f"{KBS[key]}-up", self.change_speed, extraArgs=[1])
 
