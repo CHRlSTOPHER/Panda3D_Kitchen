@@ -6,12 +6,11 @@ Only 'neutral' and 'walk' animations are set by default.
 import json
 import math
 
+from panda3d.core import Vec3
+
 from classes.globals import Globals as G
 
 json_settings = json.loads(open(G.SETTINGS_JSON).read())
-
-ROTATION_REVERSE_START = 45
-ROTATION_REVERSE_END = 225
 AUTO_WALKER_TASK = "auto_walker_task"
 
 
@@ -41,15 +40,12 @@ class AutoWalker():
         return task.again
 
     def update_actor_anim(self):
-        x1, y1, z1 = self.previous_pos
-        x2, y2, z2 = self.actor.get_pos()
-
-        magnitude = self.find_magnitude(x1, y1, z1, x2, y2, z2)
-        direction = 1 # default to 1 if there is no movement.
+        magnitude = self.find_magnitude()
+        direction = 1 # 1 is the default value for no movement.
         if magnitude != 1:
-            direction = self.find_direction(x1, y1, z1, x2, y2, z2)
-            # scale plays a role in the magnitude calc surprisingly
+            # big scale moves farther. small scale moves not as far.
             magnitude /= self.actor.get_sy()
+            direction = self.find_direction()
         elif self.actor.get_hpr() != self.previous_hpr:
             magnitude = self.find_turn_rate()
 
@@ -63,21 +59,22 @@ class AutoWalker():
             playrate /= self.run_div
         self.actor.set_play_rate(playrate, self.actor.get_current_anim())
 
-    def find_direction(self, x1, y1, z1, x2, y2, z2):
-        vector = (x2 - x1) + (y2 - y1) + (z2 - z1)
-        if vector < 0:
-            vector = -1
+    def find_direction(self): # Thanks to Ashy for being a bro :)
+        forward_vector = Vec3(0, 1, 0)
+        forward_vector = render.getRelativeVector(self.actor, forward_vector)
+        velocity = self.actor.get_pos() - self.previous_pos
+        direction = forward_vector.dot(velocity)
+        if direction < 0:
+            direction = -1
         else:
-            vector = 1
+            direction = 1
 
-        h = self.actor.get_h() % 360
-        if h > ROTATION_REVERSE_START and h < ROTATION_REVERSE_END:
-            vector *= -1
+        return direction
 
-        return vector
-
-    def find_magnitude(self, x1, y1, z1, x2, y2, z2):
+    def find_magnitude(self):
         # the distance formula lmao
+        x1, y1, z1 = self.previous_pos
+        x2, y2, z2 = self.actor.get_pos()
         magnitude = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
         if not magnitude:
             magnitude = 1 / self.speed
