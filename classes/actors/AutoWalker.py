@@ -34,16 +34,15 @@ class AutoWalker():
 
     def update_actor_anim_task(self, task):
         self.update_actor_anim()
-
         self.previous_pos = self.actor.get_pos()
         self.previous_hpr = self.actor.get_hpr()
         return task.again
 
     def update_actor_anim(self):
         magnitude = self.find_magnitude()
-        direction = 1 # 1 is the default value for no movement.
+        direction = 1 # Default value. No movement is occurring.
         if magnitude != 1:
-            # big scale moves farther. small scale moves not as far.
+            # big scale moves farther. small scale moves not as much.
             magnitude /= self.actor.get_sy()
             direction = self.find_direction()
         elif self.actor.get_hpr() != self.previous_hpr:
@@ -59,18 +58,6 @@ class AutoWalker():
             playrate /= self.run_div
         self.actor.set_play_rate(playrate, self.actor.get_current_anim())
 
-    def find_direction(self): # Thanks to Ashy for being a bro :)
-        forward_vector = Vec3(0, 1, 0)
-        forward_vector = render.getRelativeVector(self.actor, forward_vector)
-        velocity = self.actor.get_pos() - self.previous_pos
-        direction = forward_vector.dot(velocity)
-        if direction < 0:
-            direction = -1
-        else:
-            direction = 1
-
-        return direction
-
     def find_magnitude(self):
         # the distance formula lmao
         x1, y1, z1 = self.previous_pos
@@ -81,6 +68,17 @@ class AutoWalker():
 
         return magnitude * self.speed
 
+    def find_direction(self): # Thanks to Ashy for those fat math solutions lol
+        forward_vector = Vec3(0, 1, 0)
+        forward_vector = render.getRelativeVector(self.actor, forward_vector)
+        velocity = self.actor.get_pos() - self.previous_pos
+        actor_direction = forward_vector.dot(velocity)
+        direction = 1
+        if actor_direction < 0:
+            direction = -1
+
+        return direction
+
     def find_turn_rate(self):
         h1, p1, r1 = self.previous_hpr
         h2, p2, r2 = self.actor.get_hpr()
@@ -88,25 +86,31 @@ class AutoWalker():
         return magnitude
 
     def check_anim_state(self, magnitude):
-        current_anim = self.actor.get_current_anim()
+        anim = self.actor.get_current_anim()
         # check if actor stopped moving.
-        if magnitude == 1.0 and current_anim != self.neutral_anim:
-            self.loop(self.neutral_anim)
+        if magnitude == 1.0 and anim != self.neutral_anim:
+            self.apply_anim(self.neutral_anim, self.walk_anim, self.run_anim)
         # check if actor started moving while under run limit
         elif (magnitude < self.run_threshold
-              and current_anim != self.walk_anim
+              and anim != self.walk_anim
               and magnitude != 1):
-            self.loop(self.walk_anim)
+            self.apply_anim(self.walk_anim, self.neutral_anim, self.run_anim)
         # check if actor started moving without a run anim (default to walking)
         elif (not self.run_anim
-              and current_anim != self.walk_anim
+              and anim != self.walk_anim
               and magnitude != 1):
-            self.loop(self.walk_anim)
+            self.apply_anim(self.walk_anim, self.neutral_anim, self.run_anim)
         # check if actor started going over run speed limit
         elif (magnitude >= self.run_threshold
               and self.run_anim
-              and current_anim != self.run_anim):
-            self.loop(self.run_anim)
+              and anim != self.run_anim):
+            self.apply_anim(self.run_anim, self.neutral_anim, self.walk_anim)
+
+    def apply_anim(self, new_anim, prev_anim_1, prev_anim_2):
+        anim = self.actor.get_current_anim()
+        # change the animation if a specified animation is currently playing.
+        if anim == prev_anim_1 or anim == prev_anim_2:
+            self.loop(new_anim)
 
     def set_multiplier(self, speed):
         self.speed = speed
