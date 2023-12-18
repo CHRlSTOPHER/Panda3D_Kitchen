@@ -11,7 +11,6 @@ from panda3d.core import Vec3
 from classes.globals import Globals as G
 
 json_settings = json.loads(open(G.SETTINGS_JSON).read())
-AUTO_WALKER_TASK = "auto_walker_task"
 
 
 class AutoWalker():
@@ -30,7 +29,7 @@ class AutoWalker():
         self.previous_pos = actor.get_pos()
         self.previous_hpr = actor.get_hpr()
         if json_settings[G.AUTO_WALKER]:
-            taskMgr.add(self.update_actor_anim_task, AUTO_WALKER_TASK)
+            taskMgr.add(self.update_actor_anim_task, G.AUTO_WALKER_TASK)
 
     def update_actor_anim_task(self, task):
         self.update_actor_anim()

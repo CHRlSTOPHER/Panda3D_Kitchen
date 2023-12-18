@@ -49,7 +49,7 @@ MINIMUM_SCROLL_FOV = 0
 MAXIMUM_SCROLL_FOV = 180
 TINY_DELAY = .001
 
-AUTOWALKER_MOVE_ANIMS = ["walk", "run"]
+AUTO_WALKER_TASK = "auto_walker_task"
 
 RED = (1, 0, 0, 1)
 

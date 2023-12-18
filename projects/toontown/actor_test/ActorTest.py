@@ -36,22 +36,8 @@ class ActorTest(ShowBase):
 
     def setup_cogs(self):
         self.flunky = Suit("f", render, suit_name="~self.flunky")
-        self.pusher = Suit("p", render, suit_name="~self.pusher")
-        self.yesman = Suit("ym", render, suit_name="~self.yesman")
-        self.micro = Suit("mm", render, suit_name="~self.micro")
-        self.sizer = Suit("ds", render, suit_name="~self.sizer")
-        self.hunter = Suit("hh", render, suit_name="~self.hunter")
-        self.raider = Suit("cr", render, suit_name="~self.raider")
+        self.penny = Suit("pp", render, suit_name="~self.penny")
         self.cheese = Suit("tbc", render, suit_name="~self.cheese")
-
-        self.flunky.set_pos_hpr(27.4, 4.3, 0.0, -92.29, 0.0, 0.0)
-        self.pusher.set_pos_hpr(28.79, 6.68, 0.0, -127.06, 0.0, 0.0)
-        self.yesman.set_pos_hpr(26.58, 6.27, 0.0, -103.71, 0.0, 0.0)
-        self.micro.set_pos_hpr(29.5, 2.18, 0.0, -57.17, 0.0, 0.0)
-        self.sizer.set_pos_hpr(26.55, 2.07, 0.0, -80.77, 0.0, 0.0)
-        self.hunter.set_pos_hpr(25.72, 0.74, 0.0, -61.55, 0.0, 0.0)
-        self.raider.set_pos_hpr(23.56, 8.52, 0.0, -116.73, 0.0, 0.0)
-        self.cheese.set_pos_hpr(23.2, 4.39, 0.0, -92.45, 0.0, 0.0)
 
         camera.set_pos_hpr(30.71, 3.51, 4.33, 76.28, -0.54, 0.0)
 

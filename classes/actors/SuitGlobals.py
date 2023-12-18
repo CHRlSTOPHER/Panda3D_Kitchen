@@ -23,8 +23,15 @@ HEADS = {
     'sd': 'spin-doctor',
     'cr': 'corporate-raider'
 }
+ALL_SEEING_HEADS = ['bigcheese', 'pennypincher']
+
 SUIT_PATH = "phase_3.5/models/char/suit{}-mod"
 HEAD_MODEL_PATH = "phase_4/models/char/suit{}-heads.bam"
+ANIM_PATH = 'phase_{}/models/char/suit{}-{}.bam'
+
+GLASSES = '**/glasses'
+LEFT_EYE = "**/left_eye"
+RIGHT_EYE = "**/right_eye"
 
 # suit type, department, head type, hand color, head texture, scale.
 SUITS = {

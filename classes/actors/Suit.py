@@ -81,7 +81,7 @@ class Suit(Actor, AutoWalker):
         anim_path_dict = SG.SUIT_ANIMS[self.body]
         anim_dict = {}
         for anim, phase_number in anim_path_dict.items():
-            anim_path = 'phase_{}/models/char/suit{}-{}.bam'
+            anim_path = SG.ANIM_PATH
             anim_dict[anim] = anim_path.format(phase_number, self.body, anim)
         self.load_anims(anim_dict)
 
@@ -97,14 +97,14 @@ class Suit(Actor, AutoWalker):
 
         if self.head_type == "flunky" and not self.head_texture:
             head_path = SG.HEAD_MODEL_PATH.format(self.body)
-            self.glasses = loader.load_model(head_path).find('**/glasses')
+            self.glasses = loader.load_model(head_path).find(SG.GLASSES)
             self.glasses.reparentTo(self.head)
             self.glasses.set_name(f"{self.suit_name}.glasses")
 
         if (self.head_type == 'flunky' and not self.head_texture
-        or self.head_type == 'bigcheese'):
-            self.left_eye = self.head.find("**/left_eye")
-            self.right_eye = self.head.find('**/right_eye')
+        or self.head_type in SG.ALL_SEEING_HEADS):
+            self.left_eye = self.head.find(SG.LEFT_EYE)
+            self.right_eye = self.head.find(SG.RIGHT_EYE)
             self.left_eye.set_name(f"{self.suit_name}.left_eye")
             self.right_eye.set_name(f"{self.suit_name}.right_eye")
 
