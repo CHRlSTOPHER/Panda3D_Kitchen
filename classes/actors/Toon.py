@@ -126,3 +126,6 @@ class Toon(Actor, AutoWalker, ToonHead):
             bottom_tex = loader.load_texture(TG.SKIRT_TEX[bottom_tex_index])
 
         self.find(f'**/{TG.TORSO_BOTTOM}').set_texture(bottom_tex, 1)
+
+    def cleanup(self):
+        self.cleanup_walker()

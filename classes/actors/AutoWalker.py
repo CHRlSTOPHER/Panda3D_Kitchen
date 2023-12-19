@@ -12,6 +12,14 @@ from classes.globals import Globals as G
 
 json_settings = json.loads(open(G.SETTINGS_JSON).read())
 
+AUTO_WALKER_TASK = "auto_walker_task"
+ANIM_TRANSITION_TASK = "anim_transition_task"
+
+NEUTRAL = 0
+WALKING = 1
+RUNNING = 2
+CONTROL_NUM = .1
+
 
 class AutoWalker():
 
@@ -26,10 +34,16 @@ class AutoWalker():
         self.run_threshold = run_threshold
         self.run_div = run_div
 
+        self.old_anim_state = 0
+        self.new_anim_state = 0
+        self.old_anim_control = 0
+        self.new_anim_control = 0
+        self.anims = [neutral_anim, walk_anim, run_anim]
+
         self.previous_pos = actor.get_pos()
         self.previous_hpr = actor.get_hpr()
         if json_settings[G.AUTO_WALKER]:
-            taskMgr.add(self.update_actor_anim_task, G.AUTO_WALKER_TASK)
+            taskMgr.add(self.update_actor_anim_task, AUTO_WALKER_TASK)
 
     def update_actor_anim_task(self, task):
         self.update_actor_anim()
@@ -53,9 +67,10 @@ class AutoWalker():
 
         self.check_anim_state(magnitude)
 
-        if self.actor.get_current_anim() == self.run_anim:
+        if self.new_anim_state == RUNNING:
             playrate /= self.run_div
-        self.actor.set_play_rate(playrate, self.actor.get_current_anim())
+        for anim in self.anims:
+            self.actor.set_play_rate(playrate, anim)
 
     def find_magnitude(self):
         # the distance formula lmao
@@ -87,29 +102,65 @@ class AutoWalker():
     def check_anim_state(self, magnitude):
         anim = self.actor.get_current_anim()
         # check if actor stopped moving.
-        if magnitude == 1.0 and anim != self.neutral_anim:
-            self.apply_anim(self.neutral_anim, self.walk_anim, self.run_anim)
+        if magnitude == 1.0 and self.new_anim_state != NEUTRAL:
+            self.new_anim_state = NEUTRAL
         # check if actor started moving while under run limit
         elif (magnitude < self.run_threshold
-              and anim != self.walk_anim
+              and self.new_anim_state != WALKING
               and magnitude != 1):
-            self.apply_anim(self.walk_anim, self.neutral_anim, self.run_anim)
+            self.new_anim_state = WALKING
         # check if actor started moving without a run anim (default to walking)
         elif (not self.run_anim
-              and anim != self.walk_anim
+              and self.new_anim_state != WALKING
               and magnitude != 1):
-            self.apply_anim(self.walk_anim, self.neutral_anim, self.run_anim)
+            self.new_anim_state = WALKING
         # check if actor started going over run speed limit
         elif (magnitude >= self.run_threshold
               and self.run_anim
-              and anim != self.run_anim):
-            self.apply_anim(self.run_anim, self.neutral_anim, self.walk_anim)
+              and self.new_anim_state != RUNNING):
+            self.new_anim_state = RUNNING
 
-    def apply_anim(self, new_anim, prev_anim_1, prev_anim_2):
-        anim = self.actor.get_current_anim()
-        # change the animation if a specified animation is currently playing.
-        if anim == prev_anim_1 or anim == prev_anim_2:
-            self.loop(new_anim)
+        self.apply_anim()
+
+    def apply_anim(self):
+        if self.old_anim_state == self.new_anim_state:
+            return # stop the main task from constantly applying the anim
+
+        old_anim = self.anims[self.old_anim_state]
+        new_anim = self.anims[self.new_anim_state]
+        self.old_anim_state = self.new_anim_state
+
+        # stop any currently running tasks and reset controls.
+        taskMgr.remove(ANIM_TRANSITION_TASK)
+        if self.old_anim_control == 0:
+            self.old_anim_control = 1
+            self.new_anim_control = 0
+        else:
+            self.old_anim_control = 1 - self.old_anim_control
+            self.new_anim_control = 1 - self.new_anim_control
+
+        # enable blend for a short time and transition between animations.
+        self.actor.enable_blend()
+        self.actor.loop(old_anim, 0) # 0 lets the anim start at current pose.
+        self.actor.loop(new_anim, 0)
+        taskMgr.add(self.transition_between_anims, ANIM_TRANSITION_TASK,
+                    extraArgs=[old_anim, new_anim], appendTask=True)
+
+    def transition_between_anims(self, old_anim, new_anim, task):
+        if self.new_anim_control > 0.99:
+            self.actor.disable_blend()
+            return task.done
+
+        self.old_anim_control = round(self.old_anim_control - CONTROL_NUM, 2)
+        self.new_anim_control = round(self.new_anim_control + CONTROL_NUM, 2)
+        self.actor.set_control_effect(old_anim, self.old_anim_control)
+        self.actor.set_control_effect(new_anim, self.new_anim_control)
+
+        return task.cont
 
     def set_multiplier(self, speed):
         self.speed = speed
+
+    def cleanup_walker(self):
+        taskMgr.remove(AUTO_WALKER_TASK)
+        taskMgr.remove(ANIM_TRANSITION_TASK)

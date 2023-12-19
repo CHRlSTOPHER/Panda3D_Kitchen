@@ -31,8 +31,8 @@ class ActorTest(ShowBase):
         self.accept(G.ESCAPE, exit)
         self.master_editor = MasterEditor()
 
-        self.setup_cogs()
-        # self.setup_toons()
+        # self.setup_cogs()
+        self.setup_toons()
 
     def setup_cogs(self):
         self.flunky = Suit("f", render, suit_name="~self.flunky")

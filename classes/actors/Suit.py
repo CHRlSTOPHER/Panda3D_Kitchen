@@ -109,4 +109,4 @@ class Suit(Actor, AutoWalker):
             self.right_eye.set_name(f"{self.suit_name}.right_eye")
 
     def cleanup(self):
-        taskMgr.remove(G.AUTO_WALKER_TASK)
+        self.cleanup_walker()
