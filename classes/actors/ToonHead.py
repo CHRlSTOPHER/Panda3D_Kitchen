@@ -1,8 +1,7 @@
 """
 Filters through all the possible exceptions and makes a Toon Head.
 """
-from classes.globals import Globals as G
-from classes.actors import ToonGlobals as TG
+from classes.globals import Globals as G, ToonGlobals as TG
 
 EXPRESSIONS = ["neutral", "sad", "angry", "laugh", "surprise", "smile"]
 DOG_PARTS = {
@@ -77,12 +76,22 @@ class ToonHead():
 
     def change_muzzle(self, expression):
         if self.species == 'd':
-            print("didn't code dog muzzle change yet :)")
+            self.change_dog_muzzle(expression) # OH MY DAWG
             return
 
-        for e in EXPRESSIONS:
-            self.toon.find(f'**/muzzle-{self.muzzle_size}-{e}').hide()
+        for expression in EXPRESSIONS:
+            self.toon.find(f'**/muzzle-{self.muzzle_size}-{expression}').hide()
         self.toon.find(f'**/muzzle-{self.muzzle_size}-{expression}').show()
+
+    def change_dog_muzzle(self, new_emote):
+        self.toon.find('**/muzzle').hide()
+        for expression in EXPRESSIONS[1:]:
+            self.toon.find(f'**/muzzle-{self.muzzle_size}-{expression}').hide()
+
+        if new_emote == EXPRESSIONS[0]: # the naming convention differs... >:(
+            self.toon.find('**/muzzle').show()
+        else:
+            self.toon.find(f'**/muzzle-{self.muzzle_size}-{new_emote}').show()
 
     def load_dog_head(self):
         head_path = DOG_PARTS[self.head][0].format(self.lod)
@@ -90,6 +99,7 @@ class ToonHead():
 
         self.toon.load_model(f'{G.CHAR_3}{head_path}{G.BAM}', TG.HEAD)
         self.toon.load_anims(self.load_dog_anims(), TG.HEAD)
+
         self.muzzle_model = loader.load_model(f'{G.CHAR_3}{muzzle_path}{G.BAM}')
         self.muzzle_model.reparent_to(self.toon.get_part(TG.HEAD))
 
@@ -128,6 +138,7 @@ class ToonHead():
         self.eye_nodes = ['**/joint_pupilL_', '**/joint_pupilR_']
         self.toon.find(f"**/eyes").show()
 
+        # Force the head and muzzle to match. Looks like ass otherwise.
         if self.forehead == 's':
             self.muzzle_size = 'short'
         else:
@@ -141,7 +152,7 @@ class ToonHead():
     def monkey_head_features(self):
         self.head_color_nodes = ['head-', 'head-front-']
 
-    def deer_head_features(self):
+    def deer_head_features(self): # Thanks, Rewritten.
         for node in self.head_nodes:
             self.toon.find(f"**/{node}short").show()
         self.toon.find(f'**/nose-{self.muzzle_size}').show()
