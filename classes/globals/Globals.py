@@ -102,10 +102,8 @@ NM_SPEEDS = [
     ("slower", 2.25),
     ("much_slower", 4.50),
     ("molasses", 40.0),
-    ("default", 1.5),
+    ("default", 1.5) # default needs to be last
 ]
-NM_BASE_MOVE_RATE = .1
-NM_BASE_TURN_RATE = .5
 
 '''REGEX...
 I KNOW i'm going to forgot what the hell these mean so i'll include an example

@@ -22,6 +22,7 @@ from classes.actors.Suit import Suit
 from classes.actors.Toon import Toon
 from classes.editors.MasterEditor import MasterEditor
 from classes.globals import Globals as G
+from classes.globals.ToonColors import ToonColors
 
 
 class ActorTest(ShowBase):
@@ -42,103 +43,18 @@ class ActorTest(ShowBase):
         camera.set_pos_hpr(30.71, 3.51, 4.33, 76.28, -0.54, 0.0)
 
     def setup_toons(self):
-        self.dog = Toon(parent=render, gender='m',
-                         toon_name="~self.dog",
-                         head='dss', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.cat = Toon(parent=render, gender='m',
-                         toon_name="~self.cat",
-                         head='css', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.horse = Toon(parent=render, gender='m',
-                         toon_name="~self.horse",
-                         head='hss', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.mouse = Toon(parent=render, gender='m',
-                         toon_name="~self.mouse",
-                         head='mss', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.rabbit = Toon(parent=render, gender='m',
-                         toon_name="~self.rabbit",
-                         head='rss', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.duck = Toon(parent=render, gender='m',
-                         toon_name="~self.duck",
-                         head='fss', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.monkey = Toon(parent=render, gender='m',
-                         toon_name="~self.monkey",
-                         head='pss', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.bear = Toon(parent=render, gender='m',
-                         toon_name="~self.bear",
-                         head='bss', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.pig = Toon(parent=render, gender='m',
-                         toon_name="~self.pig",
-                         head='sss', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.croc = Toon(parent=render, gender='m',
-                         toon_name="~self.croc",
-                         head='ass', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.deer = Toon(parent=render, gender='m',
-                         toon_name="~self.dear",
-                         head='qss', head_c=2,
-                         torso='s', shirt_t=8, shirt_c=2,
-                         sleeve_t=8, sleeve_c=2, arm_c=2, glove_c=0,
-                         legs='m', leg_c=2,
-                         bottom='shorts', bottom_t=7, bottom_c=2)
-
-        self.deer.change_muzzle('smile')
-
-        toons = [self.dog, self.cat, self.horse, self.mouse, self.rabbit,
-                 self.duck, self.monkey, self.bear, self.pig,
-                 self.croc, self.deer]
-        x = 0
-        for toon in toons:
-            toon.set_x(x)
-            x += 3.5
+        TC = ToonColors
+        self.pink = Toon(parent=render, gender='m',
+                           toon_name="~self.pink",
+                           head='pss', torso='s', legs='m', bottom='shorts',
+                           shirt_t=8, sleeve_t=8, bottom_t=7,
+                           head_color=TC.BRIGHT_RED,
+                           shirt_color=TC.BRIGHT_RED, #
+                           sleeve_color=TC.BRIGHT_RED, #
+                           arm_color=TC.BRIGHT_RED,
+                           glove_color=TC.WHITE,
+                           leg_color=TC.BRIGHT_RED,
+                           bottom_color=TC.BRIGHT_RED) #
 
         camera.set_pos_hpr(-4.56, 4.14, 4.65, 227.25, -16.24, 0.0)
 

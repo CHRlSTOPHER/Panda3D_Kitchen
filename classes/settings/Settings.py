@@ -14,7 +14,8 @@ loadPrcFileData("", f"window-title {G.WINDOW_TITLE}")
 loadPrcFileData("", f"icon-filename {RESOURCES}windows/{G.ICON_FILENAME}")
 
 loadPrcFileData("", f"depth-bits {G.BITS}")
-loadPrcFileData("", f"framebuffer-multisample {JSON_SETTINGS[G.FRAMEBUFFER_MULTISAMPLE]}")
+loadPrcFileData("", "framebuffer-multisample"
+                    f"{JSON_SETTINGS[G.FRAMEBUFFER_MULTISAMPLE]}")
 loadPrcFileData("", f"multisamples {JSON_SETTINGS[G.MULTISAMPLES]}")
 if JSON_SETTINGS[G.FULL_SCREEN]:
     loadPrcFileData("", "fullscreen #t")

@@ -62,17 +62,22 @@ class RevealerGUI(DirectFrame):
         taskMgr.remove(HIDE_TASK)
         taskMgr.add(self.reveal_gui_task, REVEAL_TASK)
 
+    def hide_gui(self, bind_exit):
+        taskMgr.remove(REVEAL_TASK)
+        taskMgr.add(self.hide_gui_task, HIDE_TASK)
+
     def reveal_gui_task(self, task):
         if not self.get_x() and not self.get_z():
-            return task.done
+            return task.done # 0 is the end point. the gui is fully visible.
 
         x = self.get_x()
+        z = self.get_z()
+
         if x > 0: # check if x needs to move
             self.set_x(round(x - INCREMENT, 2))
         elif x < 0:
             self.set_x(round(x + INCREMENT, 2))
 
-        z = self.get_z()
         if z > 0: # check if z needs to move
             self.set_z(round(z - INCREMENT, 2))
         elif z < 0:
@@ -83,21 +88,18 @@ class RevealerGUI(DirectFrame):
 
         return task.again
 
-    def hide_gui(self, bind_exit):
-        taskMgr.remove(REVEAL_TASK)
-        taskMgr.add(self.hide_gui_task, HIDE_TASK)
-
     def hide_gui_task(self, task):
         if self.get_pos() == self.gui_hide_pos:
             return task.done
 
         x = self.gui_hide_pos[0]
+        z = self.gui_hide_pos[2]
+
         if x > 0:
             self.set_x(round(self.get_x() + INCREMENT, 2))
         elif x < 0:
             self.set_x(round(self.get_x() - INCREMENT, 2))
 
-        z = self.gui_hide_pos[2]
         if z > 0:
             self.set_z(round(self.get_z() + INCREMENT, 2))
         elif z < 0:

@@ -10,6 +10,8 @@ import json
 from classes.globals import Globals as G
 
 KBS = json.loads(open(G.KEYBINDINGS_JSON).read())
+BASE_MOVE_RATE = .1
+BASE_TURN_RATE = .5
 
 
 class NodeMover(NodePath, DirectObject):
@@ -17,8 +19,8 @@ class NodeMover(NodePath, DirectObject):
     def __init__(self, node=None):
         DirectObject.__init__(self)
         self.move_options = None
-        self.move_speed = G.NM_BASE_MOVE_RATE
-        self.turn_speed = G.NM_BASE_TURN_RATE
+        self.move_speed = BASE_MOVE_RATE
+        self.turn_speed = BASE_TURN_RATE
         self.allow_click = True
         self.allow_tasks = True
 
@@ -100,8 +102,8 @@ class NodeMover(NodePath, DirectObject):
         taskMgr.remove(f"move_{key}")
 
     def change_speed(self, speed):
-        self.move_speed = G.NM_BASE_MOVE_RATE / speed
-        self.turn_speed = G.NM_BASE_TURN_RATE / speed
+        self.move_speed = BASE_MOVE_RATE / speed
+        self.turn_speed = BASE_TURN_RATE / speed
 
     def change_clickability(self):
         self.allow_click = not self.allow_click
