@@ -6,8 +6,7 @@ from direct.actor.Actor import Actor
 from panda3d.core import OmniBoundingVolume
 
 from .AutoWalker import AutoWalker
-from classes.globals import Globals as G
-from . import SuitGlobals as SG
+from classes.globals import Globals as G, SuitGlobals as SG
 
 
 class Suit(Actor, AutoWalker):
@@ -39,7 +38,7 @@ class Suit(Actor, AutoWalker):
     def assemble_suit(self, actor=None):
         Actor.__init__(self, actor)
         self.load_suit()
-        AutoWalker.__init__(self, self, speed=14)
+        AutoWalker.__init__(self, self, speed=SG.AUTO_WALKER_SPEED)
         self.load_animations()
         self.load_health_meter()
         self.load_shadow()
@@ -56,15 +55,18 @@ class Suit(Actor, AutoWalker):
         self.suits.append(self)
 
     def load_suit(self):
+        # Load suit model.
         suit_model_path = G.CHAR_3_5 + f"suit{self.body}-mod" + G.BAM
         self.load_model(suit_model_path)
         self.find('**/hands').set_color(self.hand_color)
 
+        # Load suit textures.
         for cloth, body_part in SG.COG_CLOTHING:
             suit_cloth_path = G.MAPS_3_5 + f"{self.dept}_{cloth}" + G.JPG
             clothing_texture = loader.load_texture(suit_cloth_path)
             self.find(f"**/{body_part}").set_texture(clothing_texture, 1)
 
+        # Load head and apply a name flag.
         head_path = SG.HEAD_MODEL_PATH.format(self.body)
         self.head = loader.load_model(head_path).find(f'**/{self.head_type}')
         self.head.reparent_to(self.find('**/joint_head'))
@@ -75,7 +77,8 @@ class Suit(Actor, AutoWalker):
             self.head.set_texture(loader.load_texture(head_texture_path), 1)
 
         for texture in self.head.find_all_textures():
-            texture.set_anisotropic_degree(16)  # fixes face blur
+            # This fixes face blur. 16 (power of 2) makes it nice and clean.
+            texture.set_anisotropic_degree(16)
 
     def load_animations(self):
         anim_path_dict = SG.SUIT_ANIMS[self.body]
@@ -92,15 +95,18 @@ class Suit(Actor, AutoWalker):
         pass
 
     def special_attributes(self):
+        # Cold Caller head.
         if self.dept == 's' and self.head_type == 'coldcaller':
-            self.head.set_color(SG.CC_COLOR) # Cold Caller head.
+            self.head.set_color(SG.CC_COLOR)
 
+        # Flunky glasses
         if self.head_type == "flunky" and not self.head_texture:
             head_path = SG.HEAD_MODEL_PATH.format(self.body)
             self.glasses = loader.load_model(head_path).find(SG.GLASSES)
             self.glasses.reparentTo(self.head)
             self.glasses.set_name(f"{self.suit_name}.glasses")
 
+        # Has separate eye nodes.
         if (self.head_type == 'flunky' and not self.head_texture
         or self.head_type in SG.ALL_SEEING_HEADS):
             self.left_eye = self.head.find(SG.LEFT_EYE)

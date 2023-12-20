@@ -1,11 +1,11 @@
 """
-Toon from Toontown. WIP
+Loads a Toon from Toontown.
 """
 from direct.actor.Actor import Actor
 
 from .AutoWalker import AutoWalker
-from classes.globals import Globals as G
-from . import ToonGlobals as TG
+from classes.globals import Globals as G, ToonGlobals as TG
+from classes.globals.ToonColors import ToonColors
 from .ToonHead import ToonHead
 
 ALPHA = (1,)
@@ -14,35 +14,37 @@ ALPHA = (1,)
 class Toon(Actor, AutoWalker, ToonHead):
 
     def __init__(self, parent, gender='m', toon_name="~Toon", lod=1000,
-                 head='dss', head_c=0,
-                 torso='s', shirt_t=0, shirt_c=0,
-                 sleeve_t=0, sleeve_c=0, arm_c=0, glove_c=0,
-                 legs='s', leg_c=0, bottom='shorts', bottom_t=0, bottom_c=0):
+                 head='dss', torso='s', legs='s', bottom='shorts',
+                 shirt_t=0, sleeve_t=0, bottom_t=0,
+                 head_color=ToonColors.WHITE,
+                 shirt_color=ToonColors.WHITE, sleeve_color=ToonColors.WHITE,
+                 arm_color=ToonColors.WHITE, glove_color=ToonColors.WHITE,
+                 leg_color=ToonColors.WHITE, bottom_color=ToonColors.WHITE):
         self.gender = gender
         self.toon_name = toon_name
         self.lod = lod
-        self.species = head[0]
 
         self.head = head
+        self.torso = torso
+        self.legs = legs
+        self.bottom = bottom
+
+        self.shirt_t = shirt_t
+        self.sleeve_t = sleeve_t
+        self.bottom_t = bottom_t
+
+        self.head_c = head_color.value + ALPHA
+        self.shirt_c = shirt_color.value + ALPHA
+        self.sleeve_c = sleeve_color.value + ALPHA
+        self.arm_c = arm_color.value + ALPHA
+        self.glove_c = glove_color.value + ALPHA
+        self.leg_c = leg_color.value + ALPHA
+        self.bottom_c = bottom_color.value + ALPHA
+
+        self.species = head[0]
         self.forehead = head[1]
         self.muzzle = head[2]
         self.toon_head = None
-
-        self.torso = torso
-        self.shirt_t = shirt_t
-        self.sleeve_t = sleeve_t
-        self.bottom = bottom
-        self.bottom_t = bottom_t
-
-        self.legs = legs
-
-        self.head_c = TG.COLORS[head_c] + ALPHA
-        self.arm_c = TG.COLORS[arm_c] + ALPHA
-        self.glove_c = TG.COLORS[glove_c] + ALPHA
-        self.sleeve_c = TG.COLORS[sleeve_c] + ALPHA
-        self.shirt_c = TG.COLORS[shirt_c] + ALPHA
-        self.bottom_c = TG.COLORS[bottom_c] + ALPHA
-        self.leg_c = TG.COLORS[leg_c] + ALPHA
 
         self.assemble_toon()
         self.set_name(toon_name)
@@ -55,6 +57,7 @@ class Toon(Actor, AutoWalker, ToonHead):
 
         self.load_torso()
         self.load_toon_anims(self.torso, TG.TORSO)
+        self.apply_clothing_colors()
 
         ToonHead.__init__(self, self)
         self.attach(TG.HEAD, TG.TORSO, TG.JOINT_HEAD)
@@ -79,11 +82,6 @@ class Toon(Actor, AutoWalker, ToonHead):
         self.attach(TG.TORSO, TG.LEGS, TG.JOINT_HIPS)
         self.set_shirt_textures(self.shirt_t, self.sleeve_t)
         self.set_bottom_texture(self.bottom_t)
-
-        arm_color, glove_color = [self.arm_c, self.glove_c]
-        self.find(f'**/{TG.NECK}').set_color(arm_color)
-        self.find(f'**/{TG.ARMS}').set_color(arm_color)
-        self.find(f'**/{TG.GLOVES}').set_color(glove_color)
 
     def load_toon_anims(self, body_part_type, body_part):
         anim_dict = {}
@@ -126,6 +124,16 @@ class Toon(Actor, AutoWalker, ToonHead):
             bottom_tex = loader.load_texture(TG.SKIRT_TEX[bottom_tex_index])
 
         self.find(f'**/{TG.TORSO_BOTTOM}').set_texture(bottom_tex, 1)
+
+    def apply_clothing_colors(self):
+        self.find(f'**/{TG.TORSO_TOP}').set_color(self.shirt_c)
+        self.find(f'**/{TG.SLEEVES}').set_color(self.sleeve_c)
+        self.find(f'**/{TG.TORSO_BOTTOM}').set_color(self.bottom_c)
+
+        arm_color, glove_color = [self.arm_c, self.glove_c]
+        self.find(f'**/{TG.NECK}').set_color(arm_color)
+        self.find(f'**/{TG.ARMS}').set_color(arm_color)
+        self.find(f'**/{TG.GLOVES}').set_color(glove_color)
 
     def cleanup(self):
         self.cleanup_walker()

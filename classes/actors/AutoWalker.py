@@ -18,7 +18,7 @@ ANIM_TRANSITION_TASK = "anim_transition_task"
 NEUTRAL = 0
 WALKING = 1
 RUNNING = 2
-CONTROL_NUM = .1
+CONTROL_RATE = .1
 
 
 class AutoWalker():
@@ -65,10 +65,11 @@ class AutoWalker():
         # https://www.youtube.com/watch?v=nw9QoYL_8tI
         playrate = direction * magnitude
 
+        # This checks if we need to change the current anim to something else.
         self.check_anim_state(magnitude)
 
         if self.new_anim_state == RUNNING:
-            playrate /= self.run_div
+            playrate /= self.run_div # run play rates are often too fast.
         for anim in self.anims:
             self.actor.set_play_rate(playrate, anim)
 
@@ -132,10 +133,10 @@ class AutoWalker():
 
         # stop any currently running tasks and reset controls.
         taskMgr.remove(ANIM_TRANSITION_TASK)
-        if self.old_anim_control == 0:
+        if self.old_anim_control == 0: # the previous transition finished.
             self.old_anim_control = 1
             self.new_anim_control = 0
-        else:
+        else: # the last anim transitioning is being interrupted.
             self.old_anim_control = 1 - self.old_anim_control
             self.new_anim_control = 1 - self.new_anim_control
 
@@ -151,8 +152,8 @@ class AutoWalker():
             self.actor.disable_blend()
             return task.done
 
-        self.old_anim_control = round(self.old_anim_control - CONTROL_NUM, 2)
-        self.new_anim_control = round(self.new_anim_control + CONTROL_NUM, 2)
+        self.old_anim_control = round(self.old_anim_control - CONTROL_RATE, 2)
+        self.new_anim_control = round(self.new_anim_control + CONTROL_RATE, 2)
         self.actor.set_control_effect(old_anim, self.old_anim_control)
         self.actor.set_control_effect(new_anim, self.new_anim_control)
 

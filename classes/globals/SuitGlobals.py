@@ -6,6 +6,7 @@ LAW_HAND = (0.75, 0.75, 0.95, 1.0)
 CASH_HAND = (0.65, 0.95, 0.85, 1.0)
 SELL_HAND = (0.95, 0.75, 0.95, 1.0)
 CC_COLOR = (0.25, 0.35, 1.0, 1.0)
+AUTO_WALKER_SPEED = 14
 
 COG_CLOTHING = [
     ["blazer", "torso"],
