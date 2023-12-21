@@ -2,16 +2,36 @@
 Loads a Toon from Toontown.
 """
 from direct.actor.Actor import Actor
+from panda3d.core import OmniBoundingVolume
 
 from .AutoWalker import AutoWalker
 from classes.globals import Globals as G, ToonGlobals as TG
 from classes.globals.ToonColors import ToonColors
+from classes.physics.Ragdoll import Ragdoll
 from .ToonHead import ToonHead
 
 ALPHA = (1,)
 
+TOP_PARENT = 0
+SECONDARY_PARENT = 1
+JOINT_HIERARCHY = {
+    # TG.HEAD: [], # might add dog options later...
+    # TG.TORSO: [],
+    TG.LEGS: [
+        TOP_PARENT, 'joint_hips',
+        SECONDARY_PARENT, 'def_left_hip',
+        'def_left_knee',
+        'def_left_ankle',
+        'def_left_ball',
+        SECONDARY_PARENT, 'def_right_hip',
+        'def_right_knee',
+        'def_right_ankle',
+        'def_right_ball',
+    ]
+}
 
-class Toon(Actor, AutoWalker, ToonHead):
+
+class Toon(Actor, ToonHead, AutoWalker, Ragdoll):
 
     def __init__(self, parent, gender='m', toon_name="~Toon", lod=1000,
                  head='dss', torso='s', legs='s', bottom='shorts',
@@ -45,6 +65,7 @@ class Toon(Actor, AutoWalker, ToonHead):
         self.forehead = head[1]
         self.muzzle = head[2]
         self.toon_head = None
+        self.joint_hierarchy = JOINT_HIERARCHY
 
         self.assemble_toon()
         self.set_name(toon_name)
@@ -65,8 +86,12 @@ class Toon(Actor, AutoWalker, ToonHead):
 
         AutoWalker.__init__(self, self, speed=15, run_anim="run", run_div=2.0)
         self.set_blend(frameBlend=True)
+        self.node().set_bounds(OmniBoundingVolume())
+        self.node().set_final(1)
         self.set_scale(TG.SCALE[self.species])
         self.loop("neutral")
+
+        Ragdoll.__init__(self, self, self.joint_hierarchy)
 
     def load_legs(self):
         model_string = G.CHAR_3 + TG.TOON_MODEL_FILE.format(

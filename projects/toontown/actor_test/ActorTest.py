@@ -17,6 +17,7 @@ Tests functionality of actors.
 from classes.settings import Settings
 
 from direct.showbase.ShowBase import ShowBase
+from direct.interval.IntervalGlobal import Sequence, Wait
 
 from classes.actors.Suit import Suit
 from classes.actors.Toon import Toon
@@ -30,7 +31,11 @@ class ActorTest(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         self.accept(G.ESCAPE, exit)
-        self.master_editor = MasterEditor()
+        base.set_background_color(.1, .1, .1, 1)
+        base.disable_mouse()
+
+        self.master_editor = MasterEditor(rot_cam=True)
+        self.node_mover = self.master_editor.get_node_mover()
 
         # self.setup_cogs()
         self.setup_toons()
@@ -56,7 +61,12 @@ class ActorTest(ShowBase):
                            leg_color=TC.BRIGHT_RED,
                            bottom_color=TC.BRIGHT_RED) #
 
-        camera.set_pos_hpr(-4.56, 4.14, 4.65, 227.25, -16.24, 0.0)
+        self.pink.get_part('torso').hide()
+        self.pink.hide()
+
+        camera.set_pos_hpr(-6.95, 6.25, 3.81, 228.22, -17.75, 0.0)
+        self.node_mover = self.master_editor.get_node_mover()
+        self.node_mover.set_node(base.box_np)
 
 
 app = ActorTest()

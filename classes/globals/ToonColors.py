@@ -58,9 +58,10 @@ def print_toon_colors():
     ANSI_text = "\33[38;2;{red};{green};{blue}m{name}"
     color_names = [color for color in ToonColors]
     for name in color_names:
-        red = int(name.value[0] * 255)
-        green = int(name.value[1] * 255)
-        blue = int(name.value[2] * 255)
+        RGB = 255
+        red = int(name.value[0] * RGB)
+        green = int(name.value[1] * RGB)
+        blue = int(name.value[2] * RGB)
         color_text = ANSI_text.format(red=red, green=green, blue=blue,
                                       name=str(name)[11:])
         print(color_text)
