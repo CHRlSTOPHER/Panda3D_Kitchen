@@ -8,25 +8,31 @@ from .AutoWalker import AutoWalker
 from classes.globals import Globals as G, ToonGlobals as TG
 from classes.globals.ToonColors import ToonColors
 from classes.physics.Ragdoll import Ragdoll
+from classes.physics.BulletTest import BulletTest
 from .ToonHead import ToonHead
 
 ALPHA = (1,)
 
-TOP_PARENT = 0
-SECONDARY_PARENT = 1
+ROOT = 0
+PARENT = 1
+# Parent joints should always be listed first.
 JOINT_HIERARCHY = {
-    # TG.HEAD: [], # might add dog options later...
-    # TG.TORSO: [],
+    TG.HEAD: [], # might add dog options later...
+    TG.TORSO: [
+
+        '0def_spineB', '1def_cageA', '2def_cageB',
+        '3def_left_shoulder', '4def_left_elbow', '5def_left_wrist',
+        '3def_right_shoulder', '4def_right_elbow', '5def_right_wrist',
+        '3def_head'
+    ],
     TG.LEGS: [
-        TOP_PARENT, 'joint_hips',
-        SECONDARY_PARENT, 'def_left_hip',
-        'def_left_knee',
-        'def_left_ankle',
-        'def_left_ball',
-        SECONDARY_PARENT, 'def_right_hip',
-        'def_right_knee',
-        'def_right_ankle',
-        'def_right_ball',
+        '0joint_hips',
+
+        '1def_left_hip', '2def_left_knee',
+        '3def_left_ankle', '4def_left_ball',
+
+        '1def_right_hip', '2def_right_knee',
+        '3def_right_ankle', '4def_right_ball',
     ]
 }
 
@@ -90,8 +96,6 @@ class Toon(Actor, ToonHead, AutoWalker, Ragdoll):
         self.node().set_final(1)
         self.set_scale(TG.SCALE[self.species])
         self.loop("neutral")
-
-        Ragdoll.__init__(self, self, self.joint_hierarchy)
 
     def load_legs(self):
         model_string = G.CHAR_3 + TG.TOON_MODEL_FILE.format(
@@ -159,6 +163,9 @@ class Toon(Actor, ToonHead, AutoWalker, Ragdoll):
         self.find(f'**/{TG.NECK}').set_color(arm_color)
         self.find(f'**/{TG.ARMS}').set_color(arm_color)
         self.find(f'**/{TG.GLOVES}').set_color(glove_color)
+
+    def load_ragdoll(self):
+        Ragdoll.__init__(self, self, self.joint_hierarchy)
 
     def cleanup(self):
         self.cleanup_walker()

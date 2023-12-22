@@ -14,14 +14,14 @@ from classes.gui.MouseWindowLock import MouseWindowLock
 
 class MasterEditor(DirectObject):
 
-    def __init__(self, mouse_lock=True, rot_cam=True):
+    def __init__(self, mouse_lock=True, rot_cam=True, fov=50):
         DirectObject.__init__(self)
         self.hide_gui = False
         self.accept("`", self.hide_editor_gui)
 
         self.mouse_lock = None
         self.rot_cam = None
-        self.fov_wheel = FovScrollWheel()
+        self.fov_wheel = FovScrollWheel(fov=fov)
         # Set camera as default node. It can be changed later by selection.
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)

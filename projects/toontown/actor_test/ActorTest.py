@@ -34,18 +34,25 @@ class ActorTest(ShowBase):
         base.set_background_color(.1, .1, .1, 1)
         base.disable_mouse()
 
-        self.master_editor = MasterEditor(rot_cam=True)
+        self.master_editor = MasterEditor(rot_cam=True, mouse_lock=True,
+                                          fov=90)
         self.node_mover = self.master_editor.get_node_mover()
 
-        # self.setup_cogs()
+        self.setup_cogs()
         self.setup_toons()
+
+        self.flunky.set_pos(7.39, -1.6, -1.35)
+        self.penny.set_pos(0.47, -5.64, -1.8)
+        self.pink.set_pos_hpr(0.31, -0.41, 1.0, 9.75, 0.0, 0.0)
+        camera.set_pos_hpr(-6.95, 6.25, 3.81, 227.61, -13.86, 0.0)
+
+        base.camLens.set_fov(70, 70)
+        self.pink.load_ragdoll()
 
     def setup_cogs(self):
         self.flunky = Suit("f", render, suit_name="~self.flunky")
         self.penny = Suit("pp", render, suit_name="~self.penny")
-        self.cheese = Suit("tbc", render, suit_name="~self.cheese")
-
-        camera.set_pos_hpr(30.71, 3.51, 4.33, 76.28, -0.54, 0.0)
+        # self.cheese = Suit("tbc", render, suit_name="~self.cheese")
 
     def setup_toons(self):
         TC = ToonColors
@@ -61,12 +68,11 @@ class ActorTest(ShowBase):
                            leg_color=TC.BRIGHT_RED,
                            bottom_color=TC.BRIGHT_RED) #
 
-        self.pink.get_part('torso').hide()
-        self.pink.hide()
+        # self.pink.get_part('torso').hide()
+        # self.pink.hide()
 
-        camera.set_pos_hpr(-6.95, 6.25, 3.81, 228.22, -17.75, 0.0)
         self.node_mover = self.master_editor.get_node_mover()
-        self.node_mover.set_node(base.box_np)
+        # self.node_mover.set_node(base.box_np)
 
 
 app = ActorTest()
