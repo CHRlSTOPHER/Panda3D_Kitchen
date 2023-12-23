@@ -21,7 +21,7 @@ class MasterEditor(DirectObject):
 
         self.mouse_lock = None
         self.rot_cam = None
-        self.fov_wheel = FovScrollWheel(fov=fov)
+        self.fov_wheel = FovScrollWheel()
         # Set camera as default node. It can be changed later by selection.
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)

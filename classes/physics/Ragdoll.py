@@ -4,7 +4,8 @@ from panda3d.ode import (OdeWorld, OdeSimpleSpace, OdeQuadTreeSpace,
                          OdeCappedCylinderGeom, OdeBallJoint,
                          OdeJointGroup, OdeBody, OdeMass,
                          )
-from panda3d.core import Quat, BitMask32, Vec4
+from panda3d.core import (Quat, BitMask32, Vec4,
+                          CollisionNode, CollisionSphere)
 import sys, os, random, time
 from math import *
 from OpenGL.GL import *
@@ -16,8 +17,11 @@ BOX_MASS = (11340, 1, 1, 1)
 ORIGIN = (0, 0, 0)
 EXTENSION = (511, 511, 0)
 DEPTH = 0
-COLL_BITS = BitMask32(0x00000011)
-CAT_BITS = BitMask32(0x00000001)
+COLL_BITS = BitMask32(0x00000001)
+CAT_BITS = BitMask32(0x00000002)
+RADIUS = .5
+
+VISUALIZER_PATH = "shapes/ball.egg"
 
 
 class PhysicsWorld(OdeWorld):
@@ -47,7 +51,8 @@ class Ragdoll():
     def __init__(self, actor, joint_hierarchy):
         self.actor = actor
         self.joint_hierarchy = joint_hierarchy
-        self.controlled_joints = {}
+        self.controlled_joints_list = []
+        self.controlled_joints_dict = {}
         self.ode_bodyparts = []
 
         self.delta_time = 0.0
@@ -57,7 +62,7 @@ class Ragdoll():
             PhysicsWorld()
 
         self.load_ragdoll_structure()
-        taskMgr.doMethodLater(1.0, self.simulation_task, "simulation_task")
+        # taskMgr.doMethodLater(1.0, self.simulation_task, "simulation_task")
 
     def load_ragdoll_structure(self):
 
@@ -66,44 +71,53 @@ class Ragdoll():
 
     def control_joints(self, modelroot, joints):
         joint_names = []
-        controlled_joints = []
+        self.controlled_joints_list = []
+        root = joints[0][1:]
+        joint_ct = self.actor.expose_joint(None, modelroot, root)
+        joint_names.append(root)
+        self.controlled_joints_list.append(joint_ct)
         for joint_name in joints:
-            joint = self.actor.control_joint(None, modelroot, joint_name[1:])
-            ode_bodypart = self.create_ode_bodypart(joint_names,
-                                                    controlled_joints,
-                                                    joint_name, joint)
+            print(joint_ct)
+            ode_bodypart, joint_ct = self.create_ode_bodypart(
+                                                        modelroot,
+                                                        joint_names,
+                                                        joint_name, joint_ct)
+
+            # Debug
+            visualizer = loader.load_model(VISUALIZER_PATH)
+            visualizer.reparent_to(joint_ct)
+            # print(visualizer.get_pos(render), joint_ex.get_pos())
+            # visualizer.set_scale(RADIUS)
 
             joint_names.append(joint_name)
-            controlled_joints.append(joint)
+            self.controlled_joints_list.append(joint_ct)
             self.ode_bodyparts.append(ode_bodypart)
 
-        self.controlled_joints[modelroot] = controlled_joints
+        self.controlled_joints_dict[modelroot] = self.controlled_joints_list
 
-    def create_ode_bodypart(self, joint_names, controlled_joints,
-                            joint_name, joint):
+    def create_ode_bodypart(self, modelroot,
+                            joint_names, joint_name, joint_ct):
         body = OdeBody(base.ode_world)
         mass = OdeMass()
 
         density = 5000
-        radius = .5
-        length = 2
-        mass.set_capsule(density, 1, radius, length)
+        mass.set_sphere(density, RADIUS)
         body.set_mass(mass)
-        body.set_position(joint.get_pos(render))
-        body.set_quaternion(joint.get_quat(render))
+        body.set_position(joint_ct.get_pos(render))
+        body.set_quaternion(joint_ct.get_quat(render))
 
-        geom = OdeCappedCylinderGeom(base.ode_space, radius, length)
+        geom = OdeSphereGeom(base.ode_space, RADIUS)
         geom.set_collide_bits(CAT_BITS)  # reverse entries
         geom.set_category_bits(COLL_BITS)
         geom.set_body(body)
 
         if int(joint_name[0]) == 0:
-            return body
+            return body, joint_ct
 
         # We reverse the list since we are going up from the bottom of the
         # tree hierarchy.
         joint_names.reverse()
-        controlled_joints.reverse()
+        self.controlled_joints_list.reverse()
         i = 0
         joint_found = False
         joint_child = int(joint_name[0])
@@ -115,17 +129,22 @@ class Ragdoll():
             if joint_child + joint_hierarchy_increase == joint_parent:
                 parent = self.ode_bodyparts[i]
                 child = body
+                child_node = joint_ct.attach_new_node(joint_name[1:])
+                print(joint_ct.get_pos(self.actor))
+                joint_ct = self.actor.control_joint(child_node,
+                                                    modelroot, joint_name[1:])
                 # Link the child joint to the parent joint.
                 ball_joint = OdeBallJoint(base.ode_world)
                 ball_joint.attach(child, parent)
-                ball_joint.set_anchor(controlled_joints[i].get_pos())
+                ball_joint.set_anchor(
+                    self.controlled_joints_list[i].get_pos(render))
                 joint_found = True
             i += 1
 
         # Put the lists back to normal so we correctly append more joints.
         joint_names.reverse()
-        controlled_joints.reverse()
-        return body
+        self.controlled_joints_list.reverse()
+        return body, joint_ct
 
     def simulation_task(self, task):
         base.ode_space.auto_collide()

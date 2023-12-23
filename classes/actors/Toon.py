@@ -17,14 +17,14 @@ ROOT = 0
 PARENT = 1
 # Parent joints should always be listed first.
 JOINT_HIERARCHY = {
-    TG.HEAD: [], # might add dog options later...
-    TG.TORSO: [
-
-        '0def_spineB', '1def_cageA', '2def_cageB',
-        '3def_left_shoulder', '4def_left_elbow', '5def_left_wrist',
-        '3def_right_shoulder', '4def_right_elbow', '5def_right_wrist',
-        '3def_head'
-    ],
+    # TG.HEAD: [], # might add dog options later...
+    # TG.TORSO: [
+    #
+    #     '0def_spineB', '1def_cageA', '2def_cageB',
+    #     '3def_left_shoulder', '4def_left_elbow', '5def_left_wrist',
+    #     '3def_right_shoulder', '4def_right_elbow', '5def_right_wrist',
+    #     '3def_head'
+    # ],
     TG.LEGS: [
         '0joint_hips',
 

@@ -34,8 +34,7 @@ class ActorTest(ShowBase):
         base.set_background_color(.1, .1, .1, 1)
         base.disable_mouse()
 
-        self.master_editor = MasterEditor(rot_cam=True, mouse_lock=True,
-                                          fov=90)
+        self.master_editor = MasterEditor(rot_cam=True, mouse_lock=True)
         self.node_mover = self.master_editor.get_node_mover()
 
         self.setup_cogs()
@@ -43,11 +42,10 @@ class ActorTest(ShowBase):
 
         self.flunky.set_pos(7.39, -1.6, -1.35)
         self.penny.set_pos(0.47, -5.64, -1.8)
-        self.pink.set_pos_hpr(0.31, -0.41, 1.0, 9.75, 0.0, 0.0)
+        # self.pink.set_pos_hpr(0.31, -0.41, 1.0, 9.75, 0.0, 0.0)
         camera.set_pos_hpr(-6.95, 6.25, 3.81, 227.61, -13.86, 0.0)
 
         base.camLens.set_fov(70, 70)
-        self.pink.load_ragdoll()
 
     def setup_cogs(self):
         self.flunky = Suit("f", render, suit_name="~self.flunky")
@@ -71,8 +69,11 @@ class ActorTest(ShowBase):
         # self.pink.get_part('torso').hide()
         # self.pink.hide()
 
+        JOINT = 2
+        self.pink.load_ragdoll()
+
         self.node_mover = self.master_editor.get_node_mover()
-        # self.node_mover.set_node(base.box_np)
+        # self.node_mover.set_node(self.pink.controlled_joints["legs"][JOINT])
 
 
 app = ActorTest()
