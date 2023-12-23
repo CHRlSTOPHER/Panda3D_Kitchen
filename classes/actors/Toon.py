@@ -13,29 +13,6 @@ from .ToonHead import ToonHead
 
 ALPHA = (1,)
 
-ROOT = 0
-PARENT = 1
-# Parent joints should always be listed first.
-JOINT_HIERARCHY = {
-    # TG.HEAD: [], # might add dog options later...
-    # TG.TORSO: [
-    #
-    #     '0def_spineB', '1def_cageA', '2def_cageB',
-    #     '3def_left_shoulder', '4def_left_elbow', '5def_left_wrist',
-    #     '3def_right_shoulder', '4def_right_elbow', '5def_right_wrist',
-    #     '3def_head'
-    # ],
-    TG.LEGS: [
-        '0joint_hips',
-
-        '1def_left_hip', '2def_left_knee',
-        '3def_left_ankle', '4def_left_ball',
-
-        '1def_right_hip', '2def_right_knee',
-        '3def_right_ankle', '4def_right_ball',
-    ]
-}
-
 
 class Toon(Actor, ToonHead, AutoWalker, Ragdoll):
 
@@ -71,7 +48,6 @@ class Toon(Actor, ToonHead, AutoWalker, Ragdoll):
         self.forehead = head[1]
         self.muzzle = head[2]
         self.toon_head = None
-        self.joint_hierarchy = JOINT_HIERARCHY
 
         self.assemble_toon()
         self.set_name(toon_name)
@@ -165,7 +141,7 @@ class Toon(Actor, ToonHead, AutoWalker, Ragdoll):
         self.find(f'**/{TG.GLOVES}').set_color(glove_color)
 
     def load_ragdoll(self):
-        Ragdoll.__init__(self, self, self.joint_hierarchy)
+        Ragdoll.__init__(self, self)
 
     def cleanup(self):
         self.cleanup_walker()

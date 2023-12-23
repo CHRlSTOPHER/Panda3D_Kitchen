@@ -17,13 +17,15 @@ Tests functionality of actors.
 from classes.settings import Settings
 
 from direct.showbase.ShowBase import ShowBase
-from direct.interval.IntervalGlobal import Sequence, Wait
+from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
 from classes.actors.Suit import Suit
 from classes.actors.Toon import Toon
 from classes.editors.MasterEditor import MasterEditor
 from classes.globals import Globals as G
 from classes.globals.ToonColors import ToonColors
+
+TC = ToonColors
 
 
 class ActorTest(ShowBase):
@@ -34,47 +36,27 @@ class ActorTest(ShowBase):
         base.set_background_color(.1, .1, .1, 1)
         base.disable_mouse()
 
-        self.master_editor = MasterEditor(rot_cam=True, mouse_lock=True)
+        self.master_editor = MasterEditor(rot_cam=True, mouse_lock=False)
         self.node_mover = self.master_editor.get_node_mover()
 
-        self.setup_cogs()
-        self.setup_toons()
-
-        self.flunky.set_pos(7.39, -1.6, -1.35)
-        self.penny.set_pos(0.47, -5.64, -1.8)
-        # self.pink.set_pos_hpr(0.31, -0.41, 1.0, 9.75, 0.0, 0.0)
         camera.set_pos_hpr(-6.95, 6.25, 3.81, 227.61, -13.86, 0.0)
 
-        base.camLens.set_fov(70, 70)
-
-    def setup_cogs(self):
-        self.flunky = Suit("f", render, suit_name="~self.flunky")
-        self.penny = Suit("pp", render, suit_name="~self.penny")
-        # self.cheese = Suit("tbc", render, suit_name="~self.cheese")
-
-    def setup_toons(self):
-        TC = ToonColors
         self.pink = Toon(parent=render, gender='m',
                            toon_name="~self.pink",
                            head='pss', torso='s', legs='m', bottom='shorts',
                            shirt_t=8, sleeve_t=8, bottom_t=7,
                            head_color=TC.BRIGHT_RED,
-                           shirt_color=TC.BRIGHT_RED, #
-                           sleeve_color=TC.BRIGHT_RED, #
+                           shirt_color=TC.BRIGHT_RED,
+                           sleeve_color=TC.BRIGHT_RED,
                            arm_color=TC.BRIGHT_RED,
                            glove_color=TC.WHITE,
                            leg_color=TC.BRIGHT_RED,
-                           bottom_color=TC.BRIGHT_RED) #
-
+                           bottom_color=TC.BRIGHT_RED)
         # self.pink.get_part('torso').hide()
-        # self.pink.hide()
+        self.pink.set_pos_hpr(-0.33, 1.45, 3.08, 17.98, -35.52, -4.5)
+        camera.set_pos_hpr(-7.4, 5.65, 7.26, 236.97, -25.74, 0.0)
 
-        JOINT = 2
         self.pink.load_ragdoll()
-
-        self.node_mover = self.master_editor.get_node_mover()
-        # self.node_mover.set_node(self.pink.controlled_joints["legs"][JOINT])
-
 
 app = ActorTest()
 app.run()
