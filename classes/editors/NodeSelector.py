@@ -19,12 +19,27 @@ class NodeSelector(DirectObject):
         self.mouse_ray = None
         self.collision_handler = None
         self.node_mover = node_mover
+        self.collision_handler = CollisionHandlerQueue()
+        if not base.cTrav:
+            base.cTrav = CollisionTraverser("coll_traverser")
 
-        self.add_coll_ray_to_traverser()
+        self.create_ray_collision()
         self.accept(G.LEFT_MOUSE_BUTTON, self.select_node)
         taskMgr.add(self.sync_ray_with_mouse_pos, RAY_MOUSE_TASK)
 
+    def create_ray_collision(self):
+        self.mouse_ray = CollisionRay()
+        self.mouse_ray.set_direction(0, 1, 0)
+        self.ray_collision_node = CollisionNode("mouse_ray")
+        self.ray_collision_node.add_solid(self.mouse_ray)
+        self.ray_collision_node.set_from_collide_mask(
+            GeomNode.get_default_collide_mask())
+
+        self.ray_node = camera.attach_new_node(self.ray_collision_node)
+
     def select_node(self):
+        # detect what is being collided.
+        base.cTrav.add_collider(self.ray_node, self.collision_handler)
         base.cTrav.traverse(render)
         if not self.node_mover or not self.collision_handler.get_num_entries():
             return
@@ -36,6 +51,9 @@ class NodeSelector(DirectObject):
             if node:
                 self.node_mover.set_node(node)
                 break
+
+        # If we keep the collider, the ray will do unnecessary extra work.
+        base.cTrav.remove_collider(self.ray_node)
 
     def get_node_from_handler(self, index):
         node = self.collision_handler.getEntry(index).get_into_node_path()
@@ -52,21 +70,6 @@ class NodeSelector(DirectObject):
             node = node.get_parent()
 
         return node
-
-    def add_coll_ray_to_traverser(self):
-        self.mouse_ray = CollisionRay()
-        self.mouse_ray.set_direction(0, 1, 0)
-        self.ray_collision_node = CollisionNode("mouse_ray")
-        self.ray_collision_node.add_solid(self.mouse_ray)
-        self.ray_collision_node.set_from_collide_mask(
-            GeomNode.get_default_collide_mask())
-
-        self.ray_node = camera.attach_new_node(self.ray_collision_node)
-        self.collision_handler = CollisionHandlerQueue()
-
-        if not base.cTrav:
-            base.cTrav = CollisionTraverser("coll_traverser")
-            base.cTrav.addCollider(self.ray_node, self.collision_handler)
 
     def sync_ray_with_mouse_pos(self, task):
         if base.mouseWatcherNode.has_mouse():
