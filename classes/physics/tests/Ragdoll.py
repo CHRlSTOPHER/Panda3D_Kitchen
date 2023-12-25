@@ -1,6 +1,7 @@
 from direct.directtools.DirectSelection import DirectBoundingBox
 from panda3d.ode import (OdeWorld, OdeSimpleSpace, OdeQuadTreeSpace,
                          OdePlaneGeom, OdeBoxGeom, OdeSphereGeom,
+                         OdeHingeJoint, OdeFixedJoint, OdeSliderJoint,
                          OdeCappedCylinderGeom, OdeBallJoint,
                          OdeJointGroup, OdeBody, OdeMass,
                          )
@@ -15,7 +16,7 @@ EXTENSION = (511, 511, 0)
 DEPTH = 0
 COLL_BITS = BitMask32(0x00000001)
 CAT_BITS = BitMask32(0x00000002)
-RADIUS = .5
+RADIUS = 2.0
 
 BAD_JOINTS = ['joint_nameTag', 'joint_shadow']
 
@@ -57,7 +58,7 @@ class Ragdoll():
             bundle = actor.get_part_bundle(part)
             self.control_joints(actor, bundle, actor, part)
 
-        # taskMgr.doMethodLater(1.0, self.simulation_task, "simulation_task")
+        taskMgr.doMethodLater(1.0, self.simulation_task, "simulation_task")
 
     def control_joints(self, actor, part, parentNode, modelroot):
         if isinstance(part, CharacterJoint):
@@ -69,8 +70,8 @@ class Ragdoll():
 
             visualizer = loader.load_model("shapes/ball.egg")
             visualizer.reparent_to(render)
-            visualizer.set_scale(.25)
-            # visualizer.hide()
+            visualizer.set_scale(RADIUS)
+            visualizer.hide()
             self.previous_body = self.create_joint_body(
                 joint_nodepath, visualizer, parentNode)
 
@@ -84,24 +85,26 @@ class Ragdoll():
 
     def create_joint_body(self, joint_nodepath, visualizer, parentNode):
         density = 1
-        radius = 1
 
         body = OdeBody(base.ode_world)
         M = OdeMass()
-        M.setSphere(density, radius)
+        M.setSphere(density, RADIUS)
         body.setMass(M)
         body.setPosition(joint_nodepath.getPos(render))
         body.setQuaternion(joint_nodepath.getQuat(render))
 
-        geom = OdeSphereGeom(base.ode_space, radius)
+        geom = OdeSphereGeom(base.ode_space, RADIUS)
         geom.setCollideBits(BitMask32(0x00000002))
         geom.setCategoryBits(BitMask32(0x00000001))
         geom.setBody(body)
 
-        if self.previous_body:
-            ode_joint = OdeBallJoint(base.ode_world)
-            ode_joint.attach(body, self.previous_body)
-            ode_joint.set_anchor(parentNode.get_pos(render))
+        # ode_joint = OdeBallJoint(base.ode_world)
+        #
+        # if self.previous_body:
+        #     ode_joint.attach(body, self.previous_body)
+        #     ode_joint.set_anchor(parentNode.get_pos(render))
+        # else:
+        #     ode_joint.attach(body, None)
 
         self.joints.append((joint_nodepath, body, visualizer))
 
