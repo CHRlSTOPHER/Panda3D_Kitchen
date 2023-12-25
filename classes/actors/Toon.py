@@ -6,23 +6,17 @@ from panda3d.core import OmniBoundingVolume
 
 from .AutoWalker import AutoWalker
 from classes.globals import Globals as G, ToonGlobals as TG
-from classes.globals.ToonColors import ToonColors
-from classes.physics.Ragdoll import Ragdoll
-from classes.physics.BulletTest import BulletTest
 from .ToonHead import ToonHead
 
 ALPHA = (1,)
 
-
-class Toon(Actor, ToonHead, AutoWalker, Ragdoll):
+class Toon(Actor, ToonHead, AutoWalker):
 
     def __init__(self, parent, gender='m', toon_name="~Toon", lod=1000,
                  head='dss', torso='s', legs='s', bottom='shorts',
                  shirt_t=0, sleeve_t=0, bottom_t=0,
-                 head_color=ToonColors.WHITE,
-                 shirt_color=ToonColors.WHITE, sleeve_color=ToonColors.WHITE,
-                 arm_color=ToonColors.WHITE, glove_color=ToonColors.WHITE,
-                 leg_color=ToonColors.WHITE, bottom_color=ToonColors.WHITE):
+                 head_color=41, shirt_color=41, sleeve_color=41,
+                 arm_color=41, glove_color=41, leg_color=41, bottom_color=41):
         self.gender = gender
         self.toon_name = toon_name
         self.lod = lod
@@ -36,13 +30,14 @@ class Toon(Actor, ToonHead, AutoWalker, Ragdoll):
         self.sleeve_t = sleeve_t
         self.bottom_t = bottom_t
 
-        self.head_c = head_color.value + ALPHA
-        self.shirt_c = shirt_color.value + ALPHA
-        self.sleeve_c = sleeve_color.value + ALPHA
-        self.arm_c = arm_color.value + ALPHA
-        self.glove_c = glove_color.value + ALPHA
-        self.leg_c = leg_color.value + ALPHA
-        self.bottom_c = bottom_color.value + ALPHA
+        colors = TG.TOON_COLORS
+        self.head_c = colors[head_color] + ALPHA
+        self.shirt_c = colors[shirt_color] + ALPHA
+        self.sleeve_c = colors[sleeve_color] + ALPHA
+        self.arm_c = colors[arm_color] + ALPHA
+        self.glove_c = colors[glove_color] + ALPHA
+        self.leg_c = colors[leg_color] + ALPHA
+        self.bottom_c = colors[bottom_color] + ALPHA
 
         self.species = head[0]
         self.forehead = head[1]
@@ -139,9 +134,6 @@ class Toon(Actor, ToonHead, AutoWalker, Ragdoll):
         self.find(f'**/{TG.NECK}').set_color(arm_color)
         self.find(f'**/{TG.ARMS}').set_color(arm_color)
         self.find(f'**/{TG.GLOVES}').set_color(glove_color)
-
-    def load_ragdoll(self):
-        Ragdoll.__init__(self, self)
 
     def cleanup(self):
         self.cleanup_walker()
