@@ -81,7 +81,11 @@ class PlaneModel(NodePath):
         texcoord.add_data2(0, 0)
 
     def apply_texture(self):
-        texture = loader.load_texture(self.texturePath)
+        if isinstance(self.texturePath, list):
+            texture = loader.load_texture(self.texturePath[0],
+                                          self.texturePath[1])
+        else:
+            texture = loader.load_texture(self.texturePath)
         self.set_texture(texture, 1)
         # improve the texture rendering
         texture.set_magfilter(SamplerState.FT_nearest)
