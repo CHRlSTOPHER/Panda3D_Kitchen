@@ -52,8 +52,11 @@ class NodeTransformPrinter():
         print(formatted_string)
 
     def check_for_special_nodeifier(self, arg_dict):
-        if "name" in arg_dict: # remove special nodeifier for printing.
-            arg_dict["name"] = arg_dict["name"].replace("~", "")
+        if not "name" in arg_dict:
+            return arg_dict
+
+        for node_ifier in G.SPECIAL_NODE_IFIER_FLAG: # remove nodeifier.
+            arg_dict["name"] = arg_dict["name"].replace(node_ifier, "")
 
         return arg_dict
 

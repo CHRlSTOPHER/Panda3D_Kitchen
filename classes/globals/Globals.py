@@ -17,7 +17,10 @@ FONTS = "phase_3/fonts/"
 
 CHAR_3 = "phase_3/models/char/"
 CHAR_3_5 = "phase_3.5/models/char/"
-CHAR_4 = "phase_4/models/char"
+CHAR_4 = "phase_4/models/char/"
+CHAR_5 = "phase_5/models/char/"
+
+DOM_5 = "phase_5/models/cogdominium/"
 
 MAPS_3 = "phase_3/maps/"
 MAPS_3_5 = "phase_3.5/maps/"
@@ -42,7 +45,7 @@ LEFT_MOUSE_BUTTON = "mouse1"
 MIDDLE_MOUSE_BUTTON = "mouse2"
 RIGHT_MOUSE_BUTTON = "mouse3"
 
-SPECIAL_NODE_IFIER_FLAG = "~"
+SPECIAL_NODE_IFIER_FLAG = ["~", "!"]
 
 BASE_FOV = 50.0
 MINIMUM_SCROLL_FOV = 0
