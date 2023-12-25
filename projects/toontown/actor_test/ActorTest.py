@@ -37,13 +37,10 @@ class ActorTest(ShowBase):
         base.disable_mouse()
 
         self.master_editor = MasterEditor(rot_cam=True, mouse_lock=False)
-        self.node_mover = self.master_editor.get_node_mover()
-
-        camera.set_pos_hpr(-6.95, 6.25, 3.81, 227.61, -13.86, 0.0)
 
         self.pink = Toon(parent=render, gender='m',
                            toon_name="~self.pink",
-                           head='pss', torso='s', legs='m', bottom='shorts',
+                           head='dss', torso='s', legs='m', bottom='shorts',
                            shirt_t=8, sleeve_t=8, bottom_t=7,
                            head_color=TC.BRIGHT_RED,
                            shirt_color=TC.BRIGHT_RED,
@@ -52,11 +49,13 @@ class ActorTest(ShowBase):
                            glove_color=TC.WHITE,
                            leg_color=TC.BRIGHT_RED,
                            bottom_color=TC.BRIGHT_RED)
-        # self.pink.get_part('torso').hide()
-        self.pink.set_pos_hpr(-0.33, 1.45, 3.08, 17.98, -35.52, -4.5)
-        camera.set_pos_hpr(-7.4, 5.65, 7.26, 236.97, -25.74, 0.0)
 
-        self.pink.load_ragdoll()
+        self.suit = Suit('pp', render, suit_name="!self.suit")
+
+        self.pink.set_pos_hpr(-0.52, 2.43, 0.0, 77.91, 0.0, 0.0)
+        self.suit.set_pos_hpr(-2.54, -0.27, 0.0, 31.5, 0.0, 0.0)
+        camera.set_pos_hpr(-12.7, 8.12, 4.45, 238.19, -9.29, 0.0)
+
 
 app = ActorTest()
 app.run()
