@@ -1,16 +1,18 @@
 """
 Creates a procedurally generated plane in a 3D space.
 """
-from panda3d.core import NodePath, SamplerState, TransparencyAttrib
-from panda3d.core import GeomVertexArrayFormat, Geom, GeomVertexFormat
-from panda3d.core import (GeomVertexData, GeomVertexWriter, GeomTriangles,
-                          GeomNode)
+from panda3d.core import (NodePath, SamplerState,
+                          TextureStage, TransparencyAttrib,
+                          GeomVertexArrayFormat, GeomVertexFormat,
+                          GeomVertexData, GeomVertexWriter,
+                          GeomTriangles, Geom, GeomNode)
+import math
 
 
 class PlaneModel(NodePath):
 
     def __init__(self, texturePath, rows=1, columns=1, scale=(1, 1, 1),
-                 parent=None, name="plane_model"):
+                 parent=None, frame=None, name="plane_model"):
         self.texturePath = texturePath
         self.rows = rows
         self.columns = columns
@@ -19,6 +21,8 @@ class PlaneModel(NodePath):
         NodePath.__init__(self, self.generate_plane_model())
         self.apply_texture()
         self.set_scale(scale)
+        if frame != None: # can't say 'not frame' because we want 0.
+            self.set_frame(frame)
         self.set_name(name)
 
     def generate_plane_model(self):
@@ -90,3 +94,17 @@ class PlaneModel(NodePath):
         # improve the texture rendering
         texture.set_magfilter(SamplerState.FT_nearest)
         self.set_transparency(TransparencyAttrib.MDual)
+
+    def set_frame(self, index):
+        # Get the remainder. Ex: if column is 4, remainder can be 0-3.
+        # We divide by the max columns to get a float between 0 and 1.
+        u = (index % self.columns) / self.columns
+
+        # ex: 6/4 = 1.5. rows only move down after all columns in a row.
+        # thus, we floor the float and only look at the integer value.
+        # when the integer value changes, the v value will shift.
+        v = math.floor(index / self.rows) / self.rows
+
+        # This will make offset origin go from the bottom left to top left.
+        v += 1.0 / self.rows
+        self.set_tex_offset(TextureStage.get_default(), u, -v)
