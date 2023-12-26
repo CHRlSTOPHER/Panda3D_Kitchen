@@ -29,6 +29,7 @@ class ToonHead():
         self.species = toon.head[0]
         self.l_eye = None
         self.r_eye = None
+        self.lashes = None
 
         self.head_nodes = HEAD_NODE_PARTS
         self.head_color_nodes = HEAD_COLOR_PARTS
@@ -65,6 +66,7 @@ class ToonHead():
         forehead = TG.SIZE[self.head[1]]
         self.left_eye = self.toon.find(f"**/{self.eye_nodes[0]}{forehead}")
         self.right_eye = self.toon.find(f"**/{self.eye_nodes[1]}{forehead}")
+        self.load_lashes()
 
         for node in self.head_nodes:
             self.toon.find(f"**/{node}{forehead}").show()
@@ -73,6 +75,13 @@ class ToonHead():
             self.toon.find(f"**/{node}{forehead}").set_color(self.toon.head_c)
 
         self.toon.find(f'**/muzzle-{self.muzzle_size}-neutral').show()
+
+    def load_lashes(self):
+        lash = f"{G.CHAR_3}{TG.SPECIES[self.species]}-lashes{G.BAM}"
+        lash_type = f"**/open-{TG.SIZE[self.forehead]}"
+        self.lashes = loader.load_model(lash).find(lash_type)
+        self.lashes.reparent_to(self.get_part(TG.HEAD))
+        self.toggle_eyelashes()
 
     def change_muzzle(self, expression):
         if self.species == 'd':
@@ -107,6 +116,7 @@ class ToonHead():
         self.toon.control_joint(None, TG.HEAD, "def_right_pupil")
         self.left_eye = self.toon.find("**/def_left_pupil")
         self.right_eye = self.toon.find("**/def_right_pupil")
+        self.load_lashes()
 
         for node in ['head', 'head-front']:
             self.toon.find(f'**/{node}').set_color(self.head_c)
@@ -161,6 +171,12 @@ class ToonHead():
         for node in self.head_color_nodes:
             self.toon.find(f"**/{node}short").set_color(self.toon.head_c)
         self.head_color_nodes = []
+
+    def toggle_eyelashes(self):
+        if self.toon.gender == 'f':
+            self.lashes.show()
+        else:
+            self.lashes.hide()
 
     def get_head_features(self):
         return {
