@@ -15,6 +15,9 @@ MOUSE_LOCK = "mouse_lock"
 
 FONTS = "phase_3/fonts/"
 
+APP_MAPS = "applications/maps/"
+APP_SFX = "applications/sfx/"
+
 CHAR_3 = "phase_3/models/char/"
 CHAR_3_5 = "phase_3.5/models/char/"
 CHAR_4 = "phase_4/models/char/"
@@ -22,11 +25,14 @@ CHAR_5 = "phase_5/models/char/"
 
 DOM_5 = "phase_5/models/cogdominium/"
 
+GUI_3 = "phase_3/gui/"
+
 MAPS_3 = "phase_3/maps/"
 MAPS_3_5 = "phase_3.5/maps/"
 MAPS_4 = "phase_4/maps/"
 
 JPG = ".jpg"
+PNG = ".png"
 EGG = ".egg"
 BAM = ".bam"
 
