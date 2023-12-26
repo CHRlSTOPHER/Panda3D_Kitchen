@@ -78,8 +78,8 @@ class ToonHead():
 
     def load_lashes(self):
         lash = f"{G.CHAR_3}{TG.SPECIES[self.species]}-lashes{G.BAM}"
-        lash_type = f"**/open-{TG.SIZE[self.forehead]}"
-        self.lashes = loader.load_model(lash).find(lash_type)
+        self.lash_type = f"**/open-{TG.SIZE[self.forehead]}"
+        self.lashes = loader.load_model(lash).find(self.lash_type)
         self.lashes.reparent_to(self.get_part(TG.HEAD))
         self.toggle_eyelashes()
 
@@ -117,6 +117,7 @@ class ToonHead():
         self.left_eye = self.toon.find("**/def_left_pupil")
         self.right_eye = self.toon.find("**/def_right_pupil")
         self.load_lashes()
+        self.toon.find(self.lash_type).setPos(0, -.02, .02)
 
         for node in ['head', 'head-front']:
             self.toon.find(f'**/{node}').set_color(self.head_c)
