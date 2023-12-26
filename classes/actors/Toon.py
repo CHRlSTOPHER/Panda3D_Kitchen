@@ -54,7 +54,7 @@ class Toon(Actor, ToonHead, AutoWalker):
         self.load_toon_anims(self.legs, TG.LEGS)
 
         self.load_torso()
-        self.load_toon_anims(self.torso, TG.TORSO)
+        self.load_toon_anims(self.torso, TG.TORSO, self.bottom)
         self.apply_clothing_colors()
 
         ToonHead.__init__(self, self)
@@ -70,7 +70,7 @@ class Toon(Actor, ToonHead, AutoWalker):
 
     def load_legs(self):
         model_string = G.CHAR_3 + TG.TOON_MODEL_FILE.format(
-            self.legs, self.bottom, TG.LEGS, self.lod) + G.BAM
+            self.legs, 'shorts', TG.LEGS, self.lod) + G.BAM
         self.load_model(model_string, TG.LEGS)
         self.set_leg_color()
         self.hide_shoes()
@@ -83,13 +83,13 @@ class Toon(Actor, ToonHead, AutoWalker):
         self.set_shirt_textures(self.shirt_t, self.sleeve_t)
         self.set_bottom_texture(self.bottom_t)
 
-    def load_toon_anims(self, body_part_type, body_part):
+    def load_toon_anims(self, body_part_type, body_part, bottom='shorts'):
         anim_dict = {}
         for phase_file, anims in TG.ANIMS.items():
             for anim in anims:
                 phase_path = f"phase_{phase_file}/models/char/"
                 anim_file = f"""{TG.TOON_MODEL_FILE.format(
-                    body_part_type, self.bottom, body_part, anim)}"""
+                    body_part_type, bottom, body_part, anim)}"""
                 anim_dict[anim] = phase_path + anim_file + G.BAM
                 # "tt_a_chr_dg{}_{}_{}_{}"
 
@@ -135,5 +135,6 @@ class Toon(Actor, ToonHead, AutoWalker):
         self.find(f'**/{TG.ARMS}').set_color(arm_color)
         self.find(f'**/{TG.GLOVES}').set_color(glove_color)
 
-    def cleanup(self):
+    def cleanup_actor(self):
         self.cleanup_walker()
+        self.delete()
