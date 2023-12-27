@@ -1,18 +1,13 @@
 # The code below lets you load the py file directly in cmd/IDE.
 # (You will still need to use a version of python that comes with Panda3D)
 import os, sys
-
-current_path = os.getcwd()
 project_path = ""
-for folder in current_path.split("\\"):
+for folder in os.getcwd().split("\\"):
     project_path += folder + "/"
-    if folder == "Panda3D_Kitchen":
-        break
-
+    if folder == "Panda3D_Kitchen": break
 sys.path.append(project_path)
 os.chdir(project_path)
 from classes.settings import Settings
-
 '''
 An application that lets you create new Toons and save them.
 Or you can load an existing Toon and edit it!
