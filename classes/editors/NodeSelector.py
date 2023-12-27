@@ -13,12 +13,12 @@ RAY_MOUSE_TASK = "ray_mouse_task"
 
 class NodeSelector(DirectObject):
 
-    def __init__(self, node_mover=None):
+    def __init__(self, class_object=None):
         DirectObject.__init__(self)
 
         self.mouse_ray = None
         self.collision_handler = None
-        self.node_mover = node_mover
+        self.class_object = class_object
         self.collision_handler = CollisionHandlerQueue()
         if not base.cTrav:
             base.cTrav = CollisionTraverser("coll_traverser")
@@ -41,15 +41,16 @@ class NodeSelector(DirectObject):
         # detect what is being collided.
         base.cTrav.add_collider(self.ray_node, self.collision_handler)
         base.cTrav.traverse(render)
-        if not self.node_mover or not self.collision_handler.get_num_entries():
+        if (not self.class_object
+                or not self.collision_handler.get_num_entries()):
             return
 
         self.collision_handler.sort_entries()
         # Look through entries for the closest selected node that is valid.
         for entry in range(0, self.collision_handler.get_num_entries()):
             node = self.get_node_from_handler(entry)
-            if node:
-                self.node_mover.set_node(node)
+            if node and hasattr(self.class_object, "set_node"):
+                self.class_object.set_node(node)
                 break
 
         # If we keep the collider, the ray will do unnecessary extra work.
@@ -65,7 +66,7 @@ class NodeSelector(DirectObject):
             if node.get_name() == "":
                 """Ignore nodes without names."""
             elif (node.get_parent() == render or
-                node.get_name()[0] == G.SPECIAL_NODE_IFIER_FLAG):
+                node.get_name()[0] in G.SPECIAL_NODE_IFIER_FLAG):
                 break
             node = node.get_parent()
 

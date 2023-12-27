@@ -40,15 +40,15 @@ class ActorTest(ShowBase):
 
         self.pink = Toon(parent=render, gender='m',
                            toon_name="~self.pink",
-                           head='dss', torso='s', legs='m', bottom='shorts',
+                           head='pss', torso='s', legs='m', bottom='shorts',
                            shirt_t=8, sleeve_t=8, bottom_t=7,
-                           head_color=TC.BRIGHT_RED,
-                           shirt_color=TC.BRIGHT_RED,
-                           sleeve_color=TC.BRIGHT_RED,
-                           arm_color=TC.BRIGHT_RED,
-                           glove_color=TC.WHITE,
-                           leg_color=TC.BRIGHT_RED,
-                           bottom_color=TC.BRIGHT_RED)
+                           head_color=1,
+                           shirt_color=1,
+                           sleeve_color=1,
+                           arm_color=1,
+                           glove_color=41,
+                           leg_color=1,
+                           bottom_color=1)
 
         self.suit = Suit('pp', render, suit_name="!self.suit")
 

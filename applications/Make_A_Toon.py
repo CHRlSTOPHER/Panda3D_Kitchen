@@ -21,11 +21,11 @@ from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectFrame, DirectButton
 
 from classes.actors.Toon import Toon
+from classes.editors.NodeSelector import NodeSelector
 from classes.globals import Globals as G
 from classes.globals import ToonGlobals as TG
 from classes.globals.ToonColors import ToonColors as TC
 from classes.props.PlaneModel import PlaneModel
-from classes.editors.MasterEditor import MasterEditor
 
 FRAME_TEXTURE = G.MAPS_3 + "tt_t_gui_ups_panelBg"
 LASHES_TEXTURE = G.APP_MAPS + "lashes-buttons" + G.PNG
@@ -50,7 +50,7 @@ class Make_A_Toon_GUI(DirectFrame):
         self.limbs = ['dss', 'm', 'm']
         self.colors = [41, 41, 41, 41, 41, 41, 41] # White = 41
         self.clothes = [0, 0, 0]
-        self.name = ""
+        self.name = "~Actors.snoopy"
 
         self.load_main_frame()
 
@@ -170,7 +170,7 @@ class Make_A_Toon(ShowBase, Make_A_Toon_GUI):
         Make_A_Toon_GUI.__init__(self)
         base.disable_mouse()
         camera.set_pos_hpr(-3.5, 12.0, 3.0, -150.0, -4.0, 0.0)
-        self.master_editor = MasterEditor(nt_printer=False)
+        self.node_selector = NodeSelector()
 
 
 Make_A_Toon().run()

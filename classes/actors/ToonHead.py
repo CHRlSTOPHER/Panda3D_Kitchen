@@ -112,10 +112,10 @@ class ToonHead():
         self.muzzle_model = loader.load_model(f'{G.CHAR_3}{muzzle_path}{G.BAM}')
         self.muzzle_model.reparent_to(self.toon.get_part(TG.HEAD))
 
-        self.toon.control_joint(None, TG.HEAD, "def_left_pupil")
-        self.toon.control_joint(None, TG.HEAD, "def_right_pupil")
-        self.left_eye = self.toon.find("**/def_left_pupil")
-        self.right_eye = self.toon.find("**/def_right_pupil")
+        l_eye = self.toon.control_joint(None, TG.HEAD, "def_left_pupil")
+        r_eye = self.toon.control_joint(None, TG.HEAD, "def_right_pupil")
+        self.left_eye = l_eye
+        self.right_eye = r_eye
         self.load_lashes()
         self.toon.find(self.lash_type).setPos(0, -.02, .02)
 
