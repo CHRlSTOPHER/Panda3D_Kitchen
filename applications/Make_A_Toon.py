@@ -17,12 +17,14 @@ from direct.gui.DirectGui import DirectFrame, DirectButton
 
 from classes.actors.Toon import Toon
 from classes.editors.NodeSelector import NodeSelector
+from classes.editors.MasterEditor import MasterEditor
 from classes.globals import Globals as G
 from classes.globals import ToonGlobals as TG
 from classes.globals.ToonColors import ToonColors as TC
 from classes.props.PlaneModel import PlaneModel
+from classes.props.AnimatedSprite import AnimatedSprite
 
-FRAME_TEXTURE = G.MAPS_3 + "tt_t_gui_ups_panelBg"
+FRAME_TEXTURE = G.APP_MAPS + "mat-panel1"
 LASHES_TEXTURE = G.APP_MAPS + "lashes-buttons" + G.PNG
 BOTTOMS_TEXTURE = G.APP_MAPS + "bottoms-buttons" + G.PNG
 SPECIES_TEXTURE = G.APP_MAPS + "toon-species-buttons" + G.JPG
@@ -30,6 +32,23 @@ GXZ = .165
 GENDER_POS = [(-GXZ, 0, GXZ), (GXZ, 0, GXZ), (-GXZ, 0, -GXZ), (GXZ, 0, -GXZ)]
 BOTTOM_DICT = {'m': "shorts", "f": "skirt"}
 
+BASE_LIMB_SCALE = .125
+LIMB_POS = {
+    'leg-l': [(.75, 0, 0), (.45, 0, 0), (.15, 0, 0)],
+    'leg-m': [(-.75, 0, -.05), (-.45, 0, -.05), (-.15, 0, -.05)],
+    'leg-s': [(-.75, 0, .5), (-.45, 0, .5), (-.15, 0, .5)],
+    # 'torso-l': [(.75, 0, .2), (-.15, 0, .145), (-.15, 0, .65)],
+    # 'torso-m': [(.45, 0, 0), (-.45, 0, 0), (-.45, 0, 0)],
+    # 'torso-s': [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
+}
+LIMB_SCALE = {
+    'leg-l': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .15),
+    'leg-m': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .125),
+    'leg-s': (.15, BASE_LIMB_SCALE, .09),
+    'torso-l': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .1),
+    'torso-m': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .1),
+    'torso-s': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .1),
+}
 
 class Make_A_Toon_GUI(DirectFrame):
 
@@ -125,7 +144,17 @@ class Make_A_Toon_GUI(DirectFrame):
         return species_frame
 
     def limbs_page(self):
-        return []
+        limb_frame = DirectFrame(self.core, pos=(0, 0, -.7), scale=.9)
+        for limb, pos in LIMB_POS.items():
+            for i in range(0, 3):  # make three copies
+                geom = AnimatedSprite(G.APP_MAPS + f'sketch-{limb}{G.PNG}',
+                                      rows=1, columns=4, wait_time=.2,
+                                      scale=LIMB_SCALE[limb], pos=pos[i],
+                                      parent=limb_frame)
+                geom.loop()
+
+        # DirectButton(limbs_frame)
+        return limb_frame
 
     def colors_page(self):
         return []
@@ -165,6 +194,7 @@ class Make_A_Toon(ShowBase, Make_A_Toon_GUI):
         Make_A_Toon_GUI.__init__(self)
         base.disable_mouse()
         camera.set_pos_hpr(-3.5, 12.0, 3.0, -150.0, -4.0, 0.0)
+        # MasterEditor()
         self.node_selector = NodeSelector()
 
 

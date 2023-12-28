@@ -11,8 +11,8 @@ import math
 
 class PlaneModel(NodePath):
 
-    def __init__(self, texturePath, rows=1, columns=1, scale=(1, 1, 1),
-                 parent=None, frame=None, name="plane_model"):
+    def __init__(self, texturePath, rows=1, columns=1, pos=(0, 0, 0),
+                 scale=(1, 1, 1), parent=None, frame=None, name="plane_model"):
         self.texturePath = texturePath
         self.rows = rows
         self.columns = columns
@@ -20,6 +20,7 @@ class PlaneModel(NodePath):
 
         NodePath.__init__(self, self.generate_plane_model())
         self.apply_texture()
+        self.set_pos(pos)
         self.set_scale(scale)
         if frame != None: # can't say 'not frame' because we want 0.
             self.set_frame(frame)

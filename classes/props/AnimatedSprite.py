@@ -15,9 +15,10 @@ loadPrcFileData("", "textures-power-2 0")
 class AnimatedSprite(PlaneModel):
 
 	def __init__(self, texturePath, rows=1, columns=1, missing_frames=0,
-				 wait_time=.1, scale=(1, 1, 1), parent=None, name="a_sprite"):
+				 wait_time=.1, pos=(0, 0, 0), scale=(1, 1, 1),
+				 parent=None, frame=None, name="a_sprite"):
 		PlaneModel.__init__(self, texturePath, rows, columns,
-							scale, parent, name)
+							pos, scale, parent, frame, name)
 		self.missing_frames = missing_frames
 		self.wait_time = wait_time
 		self.uv_sequence = Sequence()
@@ -43,7 +44,7 @@ class AnimatedSprite(PlaneModel):
 		x_limit = 0
 
 		# set UV coordinate starting position
-		self.set_tex_offset(TextureStage.get_default(), u, v)
+		# self.set_tex_offset(TextureStage.get_default(), u, v)
 
 		for frame in range(0, max_frames - 1):
 			# if the U coordinate goes too far to the right, reset and go down.
@@ -60,6 +61,15 @@ class AnimatedSprite(PlaneModel):
 			self.uv_sequence.append(Wait(self.wait_time))
 			self.uv_sequence.append(Func(self.set_tex_offset,
 										 TextureStage.get_default(), u, v))
+
+	def start(self):
+		self.uv_sequence.start()
+
+	def loop(self):
+		self.uv_sequence.loop()
+
+	def finish(self):
+		self.uv_sequence.finish()
 
 	def cleanup(self):
 		self.uv_sequence.finish()
