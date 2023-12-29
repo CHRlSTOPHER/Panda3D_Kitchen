@@ -14,10 +14,11 @@ Or you can load an existing Toon and edit it!
 '''
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectFrame, DirectButton
+from panda3d.core import TransparencyAttrib, NodePath
 
 from classes.actors.Toon import Toon
+from classes.actors.ToonHead import ToonHead
 from classes.editors.NodeSelector import NodeSelector
-from classes.editors.MasterEditor import MasterEditor
 from classes.globals import Globals as G
 from classes.globals import ToonGlobals as TG
 import Make_A_Toon_Globals as MT
@@ -38,8 +39,8 @@ class Make_A_Toon_Sad_GUI(DirectFrame): # Currently unused.
             for i in range(0, 3):  # make three copies
                 geom = AnimatedSprite(G.APP_MAPS + f'sketch-{limb}{G.PNG}',
                                       rows=1, columns=4, wait_time=.2,
-                                      scale=MT.LIMB_SCALE[limb], pos=pos[i],
-                                      parent=limb_frame)
+                                      scale=MT.LIMB_HEAD_POS[limb],
+                                      pos=pos[i], parent=limb_frame)
                 geom.loop()
         for pos in MT.HEAD_POS:
             geom = AnimatedSprite(G.APP_MAPS + f'sketch-head{G.PNG}',
@@ -70,6 +71,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
 
         # Body type displays
         self.body_displays = []
+        self.head_displays = []
 
         self.load_main_frame()
 
@@ -84,7 +86,8 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             self.name_page()
         ]
         self.load_toon()
-        # self.show_page(0)
+        self.update_heads_display('d') # default to dog head
+        # self.update_heads_display()
 
     def load_main_frame(self):
         textures = [MT.FRAME_TEXTURE + ".jpg", MT.FRAME_TEXTURE + "_a.rgb"]
@@ -128,6 +131,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
     def species_gui(self):
         def change_species(species):
             self.limbs[0] = f"{species}{self.limbs[0][1]}{self.limbs[0][2]}"
+            self.update_heads_display(species)
             self.load_toon()
 
         species_frame = DirectFrame(self.core, pos=(-.5, 0, .5), scale=.9)
@@ -149,16 +153,39 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
 
         return species_frame
 
+    def update_heads_display(self, species, heads=4):
+        # cleanup prior head displays.
+        for head in self.head_displays:
+            head.toon.remove_node()
+
+        if species == 'm': # Stinky mouse toon >:(
+            heads = 2 # Go eat some cheese, Charles and Michael.
+
+        for i in range(0, heads):
+            head = f"{species}{MT.HEAD_DISPLAYS[i]}"
+            head_display = ToonHead(NodePath, head=head,
+                                    head_c=(1, 1, 1, 1), lod=1000)
+            limb_gui = self.pages[3]
+            head_display.toon.set_pos_hpr_scale(*MT.HEAD_POS[i],
+                                                *MT.HEAD_HPR_SCALE)
+            head_display.toon.set_transparency(TransparencyAttrib.MDual)
+            head_display.toon.set_depth_write(True)
+            head_display.toon.set_depth_test(True)
+
+            head_display.toon.reparent_to(limb_gui)
+            self.head_displays.append(head_display)
+
     def limbs_page(self):
         limb_frame = DirectFrame(self.core, pos=(0, 0, -.75), scale=.9)
         i = 0
+        # These are the nine body types being generated and positioned.
         for body in MT.BODY_SIZES:
             # I really don't know why but for some reason we need to
             # attach the actor to a node???
             # Otherwise when you try to move the position of the actor
             # directly in aspect2d it ignores stuff like pose and stop funcs...
             body_node = limb_frame.attach_new_node("body_node")
-            hpr, scale = [(180, 0, 0), (.1, .1, .1)]
+            hpr, scale = [(180, 0, 0), (.11, .11, .11)]
             body_node.set_pos_hpr_scale(*MT.BODY_POS[i], *hpr, *scale)
 
             # create a body display. 9 different limb types.
@@ -173,6 +200,9 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             i += 1
             self.body_displays.append(body)
 
+            # If you're looking for the Toon Head code, it's in species_gui.
+            # The current species determines the head type shown.
+            # It updates in the change_species function.
         return limb_frame
 
     def colors_page(self):

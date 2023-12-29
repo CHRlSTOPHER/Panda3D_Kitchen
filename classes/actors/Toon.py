@@ -57,7 +57,8 @@ class Toon(Actor, ToonHead, AutoWalker):
         self.load_toon_anims(self.torso, TG.TORSO, self.bottom)
         self.apply_clothing_colors()
 
-        ToonHead.__init__(self, self)
+        ToonHead.__init__(self, self, self.head, self.head_c, self.lod,
+                          gender=self.gender)
         self.attach(TG.HEAD, TG.TORSO, TG.JOINT_HEAD)
         self.name_body_parts()
 

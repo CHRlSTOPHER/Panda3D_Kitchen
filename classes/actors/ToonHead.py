@@ -1,6 +1,8 @@
 """
 Filters through all the possible exceptions and makes a Toon Head.
 """
+from direct.actor.Actor import Actor
+
 from classes.globals import Globals as G, ToonGlobals as TG
 
 EXPRESSIONS = ["neutral", "sad", "angry", "laugh", "surprise", "smile"]
@@ -19,14 +21,15 @@ ANIMATED_HEADS = ['d']
 
 class ToonHead():
 
-    def __init__(self, toon):
+    def __init__(self, toon, head, head_c, lod, gender=None):
         self.toon = toon
-        self.head = toon.head
-        self.head_c = toon.head_c
-        self.forehead = toon.forehead
-        self.muzzle_size = TG.SIZE[toon.muzzle]
-        self.lod = toon.lod
-        self.species = toon.head[0]
+        self.head = head
+        self.head_c = head_c
+        self.forehead = head[1]
+        self.muzzle_size = TG.SIZE[head[2]]
+        self.lod = lod
+        self.gender = gender
+        self.species = head[0]
         self.l_eye = None
         self.r_eye = None
         self.lashes = None
@@ -45,9 +48,16 @@ class ToonHead():
 
         species = TG.SPECIES[self.species]
         head_path = f"{G.CHAR_3}{species}-heads-{self.lod}{G.BAM}"
-        self.toon.load_model(head_path, TG.HEAD)
+        if isinstance(self.toon, Actor):
+            self.toon.load_model(head_path, TG.HEAD)
+        else:
+            self.toon = loader.load_model(head_path)
 
-        head_collection = self.toon.get_part(TG.HEAD)
+        if isinstance(self.toon, Actor):
+            head_collection = self.toon.get_part(TG.HEAD)
+        else:
+            head_collection = self.toon
+
         head_children = head_collection.get_children()
         if len(head_children) == 1:
             head_collection = [child for child in head_children][0]
@@ -72,7 +82,7 @@ class ToonHead():
             self.toon.find(f"**/{node}{forehead}").show()
 
         for node in self.head_color_nodes:
-            self.toon.find(f"**/{node}{forehead}").set_color(self.toon.head_c)
+            self.toon.find(f"**/{node}{forehead}").set_color(self.head_c)
 
         self.toon.find(f'**/muzzle-{self.muzzle_size}-neutral').show()
 
@@ -80,7 +90,10 @@ class ToonHead():
         lash = f"{G.CHAR_3}{TG.SPECIES[self.species]}-lashes{G.BAM}"
         self.lash_type = f"**/open-{TG.SIZE[self.forehead]}"
         self.lashes = loader.load_model(lash).find(self.lash_type)
-        self.lashes.reparent_to(self.get_part(TG.HEAD))
+        if isinstance(self.toon, Actor):
+            self.lashes.reparent_to(self.toon.get_part(TG.HEAD))
+        else:
+            self.lashes.reparent_to(self.toon)
         self.toggle_eyelashes()
 
     def change_muzzle(self, expression):
@@ -106,16 +119,22 @@ class ToonHead():
         head_path = DOG_PARTS[self.head][0].format(self.lod)
         muzzle_path = DOG_PARTS[self.head][1].format(self.lod)
 
-        self.toon.load_model(f'{G.CHAR_3}{head_path}{G.BAM}', TG.HEAD)
-        self.toon.load_anims(self.load_dog_anims(), TG.HEAD)
+        if isinstance(self.toon, Actor):
+            self.toon.load_model(f'{G.CHAR_3}{head_path}{G.BAM}', TG.HEAD)
+            self.toon.load_anims(self.load_dog_anims(), TG.HEAD)
+        else:
+            self.toon = loader.load_model(f'{G.CHAR_3}{head_path}{G.BAM}')
 
         self.muzzle_model = loader.load_model(f'{G.CHAR_3}{muzzle_path}{G.BAM}')
-        self.muzzle_model.reparent_to(self.toon.get_part(TG.HEAD))
+        if isinstance(self.toon, Actor):
+            self.muzzle_model.reparent_to(self.toon.get_part(TG.HEAD))
+            l_eye = self.toon.control_joint(None, TG.HEAD, "def_left_pupil")
+            r_eye = self.toon.control_joint(None, TG.HEAD, "def_right_pupil")
+            self.left_eye = l_eye
+            self.right_eye = r_eye
+        else:
+            self.muzzle_model.reparent_to(self.toon)
 
-        l_eye = self.toon.control_joint(None, TG.HEAD, "def_left_pupil")
-        r_eye = self.toon.control_joint(None, TG.HEAD, "def_right_pupil")
-        self.left_eye = l_eye
-        self.right_eye = r_eye
         self.load_lashes()
         self.toon.find(self.lash_type).setPos(0, -.02, .02)
 
@@ -170,11 +189,11 @@ class ToonHead():
         self.head_nodes = ["antler-"]
 
         for node in self.head_color_nodes:
-            self.toon.find(f"**/{node}short").set_color(self.toon.head_c)
+            self.toon.find(f"**/{node}short").set_color(self.head_c)
         self.head_color_nodes = []
 
     def toggle_eyelashes(self):
-        if self.toon.gender == 'f':
+        if self.gender == 'f':
             self.lashes.show()
         else:
             self.lashes.hide()
