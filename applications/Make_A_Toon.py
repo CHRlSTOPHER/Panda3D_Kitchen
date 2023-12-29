@@ -20,58 +20,56 @@ from classes.editors.NodeSelector import NodeSelector
 from classes.editors.MasterEditor import MasterEditor
 from classes.globals import Globals as G
 from classes.globals import ToonGlobals as TG
+import Make_A_Toon_Globals as MT
 from classes.globals.ToonColors import ToonColors as TC
 from classes.props.PlaneModel import PlaneModel
 from classes.props.AnimatedSprite import AnimatedSprite
 
-FRAME_TEXTURE = G.APP_MAPS + "mat-panel1"
-LASHES_TEXTURE = G.APP_MAPS + "lashes-buttons" + G.PNG
-BOTTOMS_TEXTURE = G.APP_MAPS + "bottoms-buttons" + G.PNG
-SPECIES_TEXTURE = G.APP_MAPS + "toon-species-buttons" + G.JPG
-GXZ = .165
-GENDER_POS = [(-GXZ, 0, GXZ), (GXZ, 0, GXZ), (-GXZ, 0, -GXZ), (GXZ, 0, -GXZ)]
-BOTTOM_DICT = {'m': "shorts", "f": "skirt"}
 
-BASE_LIMB_SCALE = .125
-LIMB_POS = { # Left to right.
-    'leg-s': [(-.75, 0, .5), (-.45, 0, .5), (-.15, 0, .5)],
-    'leg-m': [(-.75, 0, -.05), (-.45, 0, -.05), (-.15, 0, -.05)],
-    'leg-l': [(.15, 0, 0), (.45, 0, 0), (.75, 0, 0)],
-
-    'torso-s': [(-.75, 0, .605), (-.75, 0, .09), (.15, 0, .195)],
-    'torso-m': [(-.445, 0, .63), (-.45, 0, .13), (.45, 0, .24)],
-    'torso-l': [(-.15, 0, .675), (-.15, 0, .17), (.75, 0, .27)]
-}
-LIMB_SCALE = {
-    'leg-s': (.15, BASE_LIMB_SCALE, .055),
-    'leg-m': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .115),
-    'leg-l': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .15),
-
-    'torso-s': (.15, BASE_LIMB_SCALE, .125),
-    'torso-m': (.075, BASE_LIMB_SCALE, .2),
-    'torso-l': (.088, BASE_LIMB_SCALE, .175)
-}
-HEAD_POS = [
-    (-.75, 0, .715), (-.445, 0, .77), (-.145, 0, .845),
-    (-.75, 0, .205), (-.445, 0, .275), (-.145, 0, .3425),
-    (.15, 0, .31), (.45, 0, .39), (.75, 0, .448),
-]
-
-class Make_A_Toon_GUI(DirectFrame):
+class Make_A_Toon_Sad_GUI(DirectFrame): # Currently unused.
 
     def __init__(self):
         DirectFrame.__init__(self)
-        self.initialiseoptions(Make_A_Toon_GUI)
+        self.initialiseoptions(Make_A_Toon_Sad_GUI)
+
+    def limbs_page(self):
+        limb_frame = DirectFrame(self.core, pos=(0, 0, -.7), scale=.9)
+        for limb, pos in MT.LIMB_POS.items():
+            for i in range(0, 3):  # make three copies
+                geom = AnimatedSprite(G.APP_MAPS + f'sketch-{limb}{G.PNG}',
+                                      rows=1, columns=4, wait_time=.2,
+                                      scale=MT.LIMB_SCALE[limb], pos=pos[i],
+                                      parent=limb_frame)
+                geom.loop()
+        for pos in MT.HEAD_POS:
+            geom = AnimatedSprite(G.APP_MAPS + f'sketch-head{G.PNG}',
+                                  rows=1, columns=4, wait_time=.2,
+                                  scale=.1, pos=pos, parent=limb_frame)
+            geom.loop()
+
+        # DirectButton(limbs_frame)
+        return limb_frame
+
+
+class Make_A_Toon_Happy_GUI(DirectFrame):
+
+    def __init__(self):
+        DirectFrame.__init__(self)
+        self.initialiseoptions(Make_A_Toon_Happy_GUI)
 
         self.edit_toon = False
         self.create_toon = False
         self.toon = None
 
+        # Data to construct the display toon and the data that gets saved.
         self.gender = ['m', 'shorts']
         self.limbs = ['dss', 'm', 'm']
         self.colors = [41, 41, 41, 41, 41, 41, 41] # White = 41
         self.clothes = [0, 0, 0]
         self.name = "~Actors.snoopy"
+
+        # Body type displays
+        self.body_displays = []
 
         self.load_main_frame()
 
@@ -89,7 +87,7 @@ class Make_A_Toon_GUI(DirectFrame):
         # self.show_page(0)
 
     def load_main_frame(self):
-        textures = [FRAME_TEXTURE + ".jpg", FRAME_TEXTURE + "_a.rgb"]
+        textures = [MT.FRAME_TEXTURE + ".jpg", MT.FRAME_TEXTURE + "_a.rgb"]
         self.core = DirectFrame(parent=base.a2dLeftCenter,
                                  geom=PlaneModel(textures),
                                  frameVisibleScale=(0, 0), pos=(1.0, 0, 0))
@@ -106,20 +104,21 @@ class Make_A_Toon_GUI(DirectFrame):
                 self.toon.lashes.hide()
 
         def new_bottom(bottom):
-            self.gender = [self.gender[0], BOTTOM_DICT[bottom]]
+            self.gender = [self.gender[0], MT.BOTTOM_DICT[bottom]]
             self.load_toon()
 
         gender_frame = DirectFrame(self.core, pos=(.45, 0, .5))
         i = 0
-        trans = [[LASHES_TEXTURE, new_gender], [BOTTOMS_TEXTURE, new_bottom]]
-        for texture, command in trans:
+        gender_textures = [[MT.LASHES_TEXTURE, new_gender],
+                           [MT.BOTTOMS_TEXTURE, new_bottom]]
+        for texture, command in gender_textures:
             geom = [PlaneModel(texture, 2, 2, frame=x) for x in range(0, 4)]
             DirectButton(gender_frame, geom=(geom[0], geom[1], geom[0]),
-                         pos=GENDER_POS[i], scale=.165,
+                         pos=MT.GENDER_POS[i], scale=.165,
                          frameVisibleScale=(0, 0), frameSize=(.8, -.8, .8, -.8),
                          command=command, extraArgs=['f'])
             DirectButton(gender_frame, geom=(geom[2], geom[3], geom[2]),
-                         pos=GENDER_POS[i + 1], scale=.165,
+                         pos=MT.GENDER_POS[i + 1], scale=.165,
                          frameVisibleScale=(0, 0), frameSize=(.8, -.8, .8, -.8),
                          command=command, extraArgs=['m'])
             i += 2
@@ -137,7 +136,7 @@ class Make_A_Toon_GUI(DirectFrame):
         x_add, z_add = [x_value, z_value]
         uv_frame = 0
         for species, name in TG.SPECIES.items():
-            meter = PlaneModel(SPECIES_TEXTURE, rows=4, columns=4)
+            meter = PlaneModel(MT.SPECIES_TEXTURE, rows=4, columns=4)
             meter.set_frame(uv_frame)
             DirectButton(species_frame, geom=meter, pos=(x, 0, z), scale=.115,
                          command=change_species, extraArgs=[species])
@@ -151,21 +150,29 @@ class Make_A_Toon_GUI(DirectFrame):
         return species_frame
 
     def limbs_page(self):
-        limb_frame = DirectFrame(self.core, pos=(0, 0, -.7), scale=.9)
-        for limb, pos in LIMB_POS.items():
-            for i in range(0, 3):  # make three copies
-                geom = AnimatedSprite(G.APP_MAPS + f'sketch-{limb}{G.PNG}',
-                                      rows=1, columns=4, wait_time=.2,
-                                      scale=LIMB_SCALE[limb], pos=pos[i],
-                                      parent=limb_frame)
-                geom.loop()
-        for pos in HEAD_POS:
-            geom = AnimatedSprite(G.APP_MAPS + f'sketch-head{G.PNG}',
-                                  rows=1, columns=4, wait_time=.2,
-                                  scale=.1, pos=pos, parent=limb_frame)
-            geom.loop()
+        limb_frame = DirectFrame(self.core, pos=(0, 0, -.75), scale=.9)
+        i = 0
+        for body in MT.BODY_SIZES:
+            # I really don't know why but for some reason we need to
+            # attach the actor to a node???
+            # Otherwise when you try to move the position of the actor
+            # directly in aspect2d it ignores stuff like pose and stop funcs...
+            body_node = limb_frame.attach_new_node("body_node")
+            hpr, scale = [(180, 0, 0), (.1, .1, .1)]
+            body_node.set_pos_hpr_scale(*MT.BODY_POS[i], *hpr, *scale)
 
-        # DirectButton(limbs_frame)
+            # create a body display. 9 different limb types.
+            body = Toon(parent=body_node, torso=body[0], legs=body[1])
+            body.get_part(TG.HEAD).remove_node()
+            body.find(f"**/{TG.NECK}").remove_node()
+            # body.pose("neutral", 24)
+            light_blue = (1, 1, 1, 1)
+            body.set_color_scale(*light_blue)
+            body.set_depth_write(True)
+            body.set_depth_test(True)
+            i += 1
+            self.body_displays.append(body)
+
         return limb_frame
 
     def colors_page(self):
@@ -199,11 +206,11 @@ class Make_A_Toon_GUI(DirectFrame):
             gui_node.show() # show desired page gui
 
 
-class Make_A_Toon(ShowBase, Make_A_Toon_GUI):
+class Make_A_Toon(ShowBase, Make_A_Toon_Happy_GUI):
 
     def __init__(self):
         ShowBase.__init__(self)
-        Make_A_Toon_GUI.__init__(self)
+        Make_A_Toon_Happy_GUI.__init__(self)
         base.disable_mouse()
         camera.set_pos_hpr(-3.5, 12.0, 3.0, -150.0, -4.0, 0.0)
         # MasterEditor()
