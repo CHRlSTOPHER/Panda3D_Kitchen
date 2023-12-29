@@ -87,7 +87,6 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
         ]
         self.load_toon()
         self.update_heads_display('d') # default to dog head
-        # self.update_heads_display()
 
     def load_main_frame(self):
         textures = [MT.FRAME_TEXTURE + ".jpg", MT.FRAME_TEXTURE + "_a.rgb"]
@@ -111,10 +110,10 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             self.load_toon()
 
         gender_frame = DirectFrame(self.core, pos=(.45, 0, .5))
+
         i = 0
-        gender_textures = [[MT.LASHES_TEXTURE, new_gender],
-                           [MT.BOTTOMS_TEXTURE, new_bottom]]
-        for texture, command in gender_textures:
+        for texture, command in [[MT.LASHES_TEXTURE, new_gender],
+                                 [MT.BOTTOMS_TEXTURE, new_bottom]]:
             geom = [PlaneModel(texture, 2, 2, frame=x) for x in range(0, 4)]
             DirectButton(gender_frame, geom=(geom[0], geom[1], geom[0]),
                          pos=MT.GENDER_POS[i], scale=.165,
@@ -131,7 +130,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
     def species_gui(self):
         def change_species(species):
             self.limbs[0] = f"{species}{self.limbs[0][1]}{self.limbs[0][2]}"
-            self.update_heads_display(species)
+            self.update_heads_display(species) # change the head display
             self.load_toon()
 
         species_frame = DirectFrame(self.core, pos=(-.5, 0, .5), scale=.9)
@@ -153,33 +152,48 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
 
         return species_frame
 
-    def update_heads_display(self, species, heads=4):
+    def update_heads_display(self, species):
         # cleanup prior head displays.
         for head in self.head_displays:
             head.toon.remove_node()
 
+        head_pos = MT.HEAD_POS
+        x, z = [0, 0]
+        heads = 4
         if species == 'm': # Stinky mouse toon >:(
+            head_pos = MT.MOUSE_HEAD_POS
+            x, z = [.1, .05]
             heads = 2 # Go eat some cheese, Charles and Michael.
+        elif species == 'r': # fat rabbits.
+            x, z = [0, -.05]
 
         for i in range(0, heads):
-            head = f"{species}{MT.HEAD_DISPLAYS[i]}"
-            head_display = ToonHead(NodePath, head=head,
+            # Create GUI visuals
+            head = f"{species}{MT.HEAD_DISPLAYS[i]}" # the 2 or 4 head sizes
+            head_display = ToonHead(NodePath("display_head"), head=head,
                                     head_c=(1, 1, 1, 1), lod=1000)
             limb_gui = self.pages[3]
-            head_display.toon.set_pos_hpr_scale(*MT.HEAD_POS[i],
-                                                *MT.HEAD_HPR_SCALE)
-            head_display.toon.set_transparency(TransparencyAttrib.MDual)
+            # zip combines the index of each tuple together.
+            # Add Xs, Ys, and Zs together.
+            pos = [sum(x) for x in zip(head_pos[i], (x, 0, z))]
+            head_display.toon.set_pos_hpr_scale(*pos, *MT.HEAD_HPR_SCALE)
             head_display.toon.set_depth_write(True)
             head_display.toon.set_depth_test(True)
 
             head_display.toon.reparent_to(limb_gui)
             self.head_displays.append(head_display)
 
+            # GUI buttons
+
     def limbs_page(self):
+        def change_limb_type(limb_type):
+            self.limbs = [self.limbs[0], limb_type[0], limb_type[1]]
+            self.load_toon()
+
         limb_frame = DirectFrame(self.core, pos=(0, 0, -.75), scale=.9)
         i = 0
         # These are the nine body types being generated and positioned.
-        for body in MT.BODY_SIZES:
+        for limbs in MT.BODY_SIZES:
             # I really don't know why but for some reason we need to
             # attach the actor to a node???
             # Otherwise when you try to move the position of the actor
@@ -189,7 +203,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             body_node.set_pos_hpr_scale(*MT.BODY_POS[i], *hpr, *scale)
 
             # create a body display. 9 different limb types.
-            body = Toon(parent=body_node, torso=body[0], legs=body[1])
+            body = Toon(parent=body_node, torso=limbs[0], legs=limbs[1])
             body.get_part(TG.HEAD).remove_node()
             body.find(f"**/{TG.NECK}").remove_node()
             # body.pose("neutral", 24)
@@ -197,6 +211,11 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             body.set_color_scale(*light_blue)
             body.set_depth_write(True)
             body.set_depth_test(True)
+
+            pos = tuple(sum(x) for x in zip(MT.BODY_POS[i], (0, 0, .2)))
+            DirectButton(limb_frame, pos=pos, scale=(1.35, 1, 2.0),
+                         frameVisibleScale=(0, 0),
+                         command=change_limb_type, extraArgs=[limbs])
             i += 1
             self.body_displays.append(body)
 

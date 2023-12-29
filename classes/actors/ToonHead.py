@@ -50,17 +50,16 @@ class ToonHead():
         head_path = f"{G.CHAR_3}{species}-heads-{self.lod}{G.BAM}"
         if isinstance(self.toon, Actor):
             self.toon.load_model(head_path, TG.HEAD)
-        else:
-            self.toon = loader.load_model(head_path)
-
-        if isinstance(self.toon, Actor):
             head_collection = self.toon.get_part(TG.HEAD)
         else:
+            self.toon = loader.load_model(head_path)
             head_collection = self.toon
 
         head_children = head_collection.get_children()
-        if len(head_children) == 1:
+        # Keep going down the node tree until the head collection is found.
+        while len(head_children) == 1:
             head_collection = [child for child in head_children][0]
+            head_children = head_collection.get_children()
 
         # hide all head nodes.
         for node in head_collection.get_children():
