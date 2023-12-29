@@ -14,18 +14,17 @@ Or you can load an existing Toon and edit it!
 '''
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectFrame, DirectButton
-from panda3d.core import TransparencyAttrib, NodePath
+from panda3d.core import NodePath, TransparencyAttrib
 
 from classes.actors.Toon import Toon
 from classes.actors.ToonHead import ToonHead
 from classes.editors.NodeSelector import NodeSelector
 from classes.globals import Globals as G
 from classes.globals import ToonGlobals as TG
-import Make_A_Toon_Globals as MT
 from classes.globals.ToonColors import ToonColors as TC
 from classes.props.PlaneModel import PlaneModel
 from classes.props.AnimatedSprite import AnimatedSprite
-
+import Make_A_Toon_Globals as MT
 
 class Make_A_Toon_Sad_GUI(DirectFrame): # Currently unused.
 
@@ -76,14 +75,14 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
         self.load_main_frame()
 
         # each function returns a list of gui.
-        self.pages = [
-            self.options_page(),
+        self.gui_sections = [
+            self.options_gui(),
             self.gender_gui(),
             self.species_gui(),
-            self.limbs_page(),
-            self.colors_page(),
-            self.clothes_page(),
-            self.name_page()
+            self.limbs_gui(),
+            self.colors_gui(),
+            self.clothes_gui(),
+            self.name_gui()
         ]
         self.load_toon()
         self.update_heads_display('d') # default to dog head
@@ -94,7 +93,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
                                  geom=PlaneModel(textures),
                                  frameVisibleScale=(0, 0), pos=(1.0, 0, 0))
 
-    def options_page(self):
+    def options_gui(self):
         return []
 
     def gender_gui(self):
@@ -172,7 +171,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             head = f"{species}{MT.HEAD_DISPLAYS[i]}" # the 2 or 4 head sizes
             head_display = ToonHead(NodePath("display_head"), head=head,
                                     head_c=(1, 1, 1, 1), lod=1000)
-            limb_gui = self.pages[3]
+            limb_gui = self.gui_sections[3]
             # zip combines the index of each tuple together.
             # Add Xs, Ys, and Zs together.
             pos = [sum(x) for x in zip(head_pos[i], (x, 0, z))]
@@ -180,12 +179,20 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             head_display.toon.set_depth_write(True)
             head_display.toon.set_depth_test(True)
 
+            # Fix eyes with transparency issues.
+            species = head_display.species
+            if species in MT.UNSORTED_EYES:
+                for eye in MT.UNSORTED_EYES[species]:
+                    eye_node = head_display.toon.find(f'**/{eye}')
+                    eye_node.set_transparency(TransparencyAttrib.MOff)
+                    eye_node.hide()
+
             head_display.toon.reparent_to(limb_gui)
             self.head_displays.append(head_display)
 
             # GUI buttons
 
-    def limbs_page(self):
+    def limbs_gui(self):
         def change_limb_type(limb_type):
             self.limbs = [self.limbs[0], limb_type[0], limb_type[1]]
             self.load_toon()
@@ -224,13 +231,13 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             # It updates in the change_species function.
         return limb_frame
 
-    def colors_page(self):
+    def colors_gui(self):
         return []
 
-    def clothes_page(self):
+    def clothes_gui(self):
         return []
 
-    def name_page(self):
+    def name_gui(self):
         return []
 
     def load_toon(self):
@@ -245,14 +252,6 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             head_color=color[0], shirt_color=color[1], sleeve_color=color[2],
             glove_color=color[3], leg_color=color[4], bottom_color=color[5]
         )
-
-    def show_page(self, index):
-        for page in self.pages:
-            for gui_node in page:
-                gui_node.hide() # hide all gui
-
-        for gui_node in self.pages[index]:
-            gui_node.show() # show desired page gui
 
 
 class Make_A_Toon(ShowBase, Make_A_Toon_Happy_GUI):

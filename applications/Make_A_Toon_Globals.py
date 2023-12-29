@@ -22,6 +22,13 @@ HEAD_POS = [
 ]
 MOUSE_HEAD_POS = [(.15, 0, .5), (.6, 0, .5)]
 HEAD_HPR_SCALE = (160, -20, 0, .15, .15, .15)
+UNSORTED_EYES = {
+    'd': ["eyes", "def_left_pupil", "def_right_pupil"],
+    'r': ["eyes", "joint_pupilL_long", "joint_pupilR_long",
+          "joint_pupilL_short", "joint_pupilR_short"],
+    'p': ["eyes-short", "eyes-long", "joint_pupilL_long", "joint_pupilR_long",
+          "joint_pupilL_short", "joint_pupilR_short"]
+}
 
 # Grim Make a Toon limbs
 BASE_LIMB_SCALE = .125
