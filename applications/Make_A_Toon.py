@@ -33,22 +33,29 @@ GENDER_POS = [(-GXZ, 0, GXZ), (GXZ, 0, GXZ), (-GXZ, 0, -GXZ), (GXZ, 0, -GXZ)]
 BOTTOM_DICT = {'m': "shorts", "f": "skirt"}
 
 BASE_LIMB_SCALE = .125
-LIMB_POS = {
-    'leg-l': [(.75, 0, 0), (.45, 0, 0), (.15, 0, 0)],
-    'leg-m': [(-.75, 0, -.05), (-.45, 0, -.05), (-.15, 0, -.05)],
+LIMB_POS = { # Left to right.
     'leg-s': [(-.75, 0, .5), (-.45, 0, .5), (-.15, 0, .5)],
-    # 'torso-l': [(.75, 0, .2), (-.15, 0, .145), (-.15, 0, .65)],
-    # 'torso-m': [(.45, 0, 0), (-.45, 0, 0), (-.45, 0, 0)],
-    # 'torso-s': [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
+    'leg-m': [(-.75, 0, -.05), (-.45, 0, -.05), (-.15, 0, -.05)],
+    'leg-l': [(.15, 0, 0), (.45, 0, 0), (.75, 0, 0)],
+
+    'torso-s': [(-.75, 0, .605), (-.75, 0, .09), (.15, 0, .195)],
+    'torso-m': [(-.445, 0, .63), (-.45, 0, .13), (.45, 0, .24)],
+    'torso-l': [(-.15, 0, .675), (-.15, 0, .17), (.75, 0, .27)]
 }
 LIMB_SCALE = {
+    'leg-s': (.15, BASE_LIMB_SCALE, .055),
+    'leg-m': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .115),
     'leg-l': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .15),
-    'leg-m': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .125),
-    'leg-s': (.15, BASE_LIMB_SCALE, .09),
-    'torso-l': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .1),
-    'torso-m': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .1),
-    'torso-s': (BASE_LIMB_SCALE, BASE_LIMB_SCALE, .1),
+
+    'torso-s': (.15, BASE_LIMB_SCALE, .125),
+    'torso-m': (.075, BASE_LIMB_SCALE, .2),
+    'torso-l': (.088, BASE_LIMB_SCALE, .175)
 }
+HEAD_POS = [
+    (-.75, 0, .715), (-.445, 0, .77), (-.145, 0, .845),
+    (-.75, 0, .205), (-.445, 0, .275), (-.145, 0, .3425),
+    (.15, 0, .31), (.45, 0, .39), (.75, 0, .448),
+]
 
 class Make_A_Toon_GUI(DirectFrame):
 
@@ -152,6 +159,11 @@ class Make_A_Toon_GUI(DirectFrame):
                                       scale=LIMB_SCALE[limb], pos=pos[i],
                                       parent=limb_frame)
                 geom.loop()
+        for pos in HEAD_POS:
+            geom = AnimatedSprite(G.APP_MAPS + f'sketch-head{G.PNG}',
+                                  rows=1, columns=4, wait_time=.2,
+                                  scale=.1, pos=pos, parent=limb_frame)
+            geom.loop()
 
         # DirectButton(limbs_frame)
         return limb_frame
