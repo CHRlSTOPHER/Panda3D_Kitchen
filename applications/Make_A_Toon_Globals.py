@@ -4,6 +4,7 @@ FRAME_TEXTURE = G.APP_MAPS + "mat_panel"
 LASHES_TEXTURE = G.APP_MAPS + "lashes-buttons" + G.PNG
 BOTTOMS_TEXTURE = G.APP_MAPS + "bottoms-buttons" + G.PNG
 SPECIES_TEXTURE = G.APP_MAPS + "toon-species-buttons" + G.JPG
+LIMB_TEXTURE = G.APP_MAPS + "limb-sizes" + G.PNG
 GXZ = .165
 GENDER_POS = [(-GXZ, 0, GXZ), (GXZ, 0, GXZ), (-GXZ, 0, -GXZ), (GXZ, 0, -GXZ)]
 BOTTOM_DICT = {'m': "shorts", "f": "skirt"}
@@ -22,11 +23,12 @@ HEAD_POS = [
 ]
 MOUSE_HEAD_POS = [(.15, 0, .5), (.6, 0, .5)]
 HEAD_HPR_SCALE = (160, -20, 0, .15, .15, .15)
-UNSORTED_EYES = {
-    'd': ["eyes", "def_left_pupil", "def_right_pupil"],
-    'r': ["eyes", "joint_pupilL_long", "joint_pupilR_long",
+UNSORTED_EYES = {'d': ["eyes"], 'r': ["eyes"], 'p': ["eyes-short", "eyes-long"]}
+UNSORTED_PUPILS = {
+    'd': ["def_left_pupil", "def_right_pupil"],
+    'r': ["joint_pupilL_long", "joint_pupilR_long",
           "joint_pupilL_short", "joint_pupilR_short"],
-    'p': ["eyes-short", "eyes-long", "joint_pupilL_long", "joint_pupilR_long",
+    'p': ["joint_pupilL_long", "joint_pupilR_long",
           "joint_pupilL_short", "joint_pupilR_short"]
 }
 

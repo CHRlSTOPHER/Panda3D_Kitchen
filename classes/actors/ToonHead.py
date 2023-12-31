@@ -15,7 +15,7 @@ DOG_PARTS = {
 HEAD_NODE_PARTS = ['head-', 'head-front-', 'ears-', 'eyes-',
                      'joint_pupilL_', 'joint_pupilR_']
 HEAD_COLOR_PARTS = ['head-', 'head-front-', 'ears-']
-EYE_NODE_PARTS = ['**/joint_pupilL_', '**/joint_pupilR_', '**/eyes-']
+EYE_NODE_PARTS = ['joint_pupilL_', 'joint_pupilR_', 'eyes-']
 ANIMATED_HEADS = ['d']
 
 
@@ -37,6 +37,9 @@ class ToonHead():
         self.head_nodes = HEAD_NODE_PARTS
         self.head_color_nodes = HEAD_COLOR_PARTS
         self.eye_nodes = EYE_NODE_PARTS
+
+        self.left_eye = None
+        self.right_eye = None
 
         self.load_head_model()
 
@@ -73,8 +76,7 @@ class ToonHead():
         if define_head_features: define_head_features()
 
         forehead = TG.SIZE[self.head[1]]
-        self.left_eye = self.toon.find(f"**/{self.eye_nodes[0]}{forehead}")
-        self.right_eye = self.toon.find(f"**/{self.eye_nodes[1]}{forehead}")
+        self.define_eyes(forehead, species)
         self.load_lashes()
 
         for node in self.head_nodes:
@@ -84,6 +86,13 @@ class ToonHead():
             self.toon.find(f"**/{node}{forehead}").set_color(self.head_c)
 
         self.toon.find(f'**/muzzle-{self.muzzle_size}-neutral').show()
+
+    def define_eyes(self, forehead, species):
+        self.left_eye = self.toon.find(f"**/{self.eye_nodes[0]}{forehead}")
+        self.right_eye = self.toon.find(f"**/{self.eye_nodes[1]}{forehead}")
+        if species == 'deer':
+            self.left_eye = self.toon.find(f"**/{self.eye_nodes[0]}short")
+            self.right_eye = self.toon.find(f"**/{self.eye_nodes[1]}short")
 
     def load_lashes(self):
         lash = f"{G.CHAR_3}{TG.SPECIES[self.species]}-lashes{G.BAM}"
