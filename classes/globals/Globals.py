@@ -14,7 +14,7 @@ AUTO_WALKER = "auto_walker"
 MOUSE_LOCK = "mouse_lock"
 
 FONTS = "phase_3/fonts/"
-
+APP_MODELS = "applications/models/"
 APP_MAPS = "applications/maps/"
 APP_SFX = "applications/sfx/"
 
@@ -24,6 +24,8 @@ CHAR_4 = "phase_4/models/char/"
 CHAR_5 = "phase_5/models/char/"
 
 DOM_5 = "phase_5/models/cogdominium/"
+
+ESTATE_5_5 = "phase_5.5/models/estate/"
 
 GUI_3 = "phase_3/gui/"
 

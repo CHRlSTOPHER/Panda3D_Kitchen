@@ -15,10 +15,9 @@ Or you can load an existing Toon and edit it!
 '''
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectFrame, DirectButton
-from panda3d.core import NodePath, TransparencyAttrib
+from direct.interval.IntervalGlobal import Sequence, Func, Wait
 
 from classes.actors.Toon import Toon
-from classes.actors.ToonHead import ToonHead
 from classes.editors.MasterEditor import MasterEditor
 from classes.editors.NodeMover import NodeMover
 from classes.editors.NodeSelector import NodeSelector
@@ -27,32 +26,8 @@ from classes.globals import Globals as G
 from classes.globals import ToonGlobals as TG
 from classes.globals.ToonColors import ToonColors as TC
 from classes.props.PlaneModel import PlaneModel
-from classes.props.AnimatedSprite import AnimatedSprite
+from classes.props.Prop import Prop
 import Make_A_Toon_Globals as MT
-
-class Make_A_Toon_Sad_GUI(DirectFrame): # Currently unused.
-
-    def __init__(self):
-        DirectFrame.__init__(self)
-        self.initialiseoptions(Make_A_Toon_Sad_GUI)
-
-    def limbs_page(self):
-        limb_frame = DirectFrame(self.core, pos=(0, 0, -.7), scale=.9)
-        for limb, pos in MT.LIMB_POS.items():
-            for i in range(0, 3):  # make three copies
-                geom = AnimatedSprite(G.APP_MAPS + f'sketch-{limb}{G.PNG}',
-                                      rows=1, columns=4, wait_time=.2,
-                                      scale=MT.LIMB_HEAD_POS[limb],
-                                      pos=pos[i], parent=limb_frame)
-                geom.loop()
-        for pos in MT.HEAD_POS:
-            geom = AnimatedSprite(G.APP_MAPS + f'sketch-head{G.PNG}',
-                                  rows=1, columns=4, wait_time=.2,
-                                  scale=.1, pos=pos, parent=limb_frame)
-            geom.loop()
-
-        # DirectButton(limbs_frame)
-        return limb_frame
 
 
 class Make_A_Toon_Happy_GUI(DirectFrame):
@@ -61,22 +36,24 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
         DirectFrame.__init__(self)
         self.initialiseoptions(Make_A_Toon_Happy_GUI)
 
-        self.edit_toon = False
-        self.create_toon = False
         self.toon = None
+        self.head_display = None
 
         # Data to construct the display toon and the data that gets saved.
         self.gender = ['m', 'shorts']
-        self.limbs = ['dll', 'm', 'm']
+        self.limbs = ['dss', 'm', 'm']
         self.colors = [41, 41, 41, 41, 41, 41, 41] # White = 41
         self.clothes = [0, 0, 0]
-        self.name = "~Actors.snoopy"
+        self.name = MT.BODY
 
-        self.head_display = None
-
-        self.load_main_frame()
-
-        # each function returns a list of gui.
+        self.load_pages()
+        self.pages = [
+            # self.file_page,
+            self.body_page,
+            # self.color_page,
+            # self.clothes_pages,
+        ]
+        # each function returns a direct frame.
         self.gui_sections = [
             self.options_gui(),
             self.gender_gui(),
@@ -88,12 +65,13 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
         ]
         self.load_toon()
         self.update_heads_display('d') # default to dog head
+        # self.body_page.hide()
 
-    def load_main_frame(self):
+    def load_pages(self):
         textures = [MT.FRAME_TEXTURE + ".jpg", MT.FRAME_TEXTURE + "_a.rgb"]
-        self.core = DirectFrame(parent=base.a2dLeftCenter,
-                                 geom=PlaneModel(textures),
-                                 frameVisibleScale=(0, 0), pos=(1.0, 0, 0))
+        self.body_page = DirectFrame(parent=base.a2dLeftCenter,
+                                     geom=PlaneModel(textures),
+                                     frameVisibleScale=(0, 0), pos=(1, 0, 0))
 
     def options_gui(self):
         return []
@@ -113,7 +91,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             self.gender = [self.gender[0], MT.BOTTOM_DICT[bottom]]
             self.load_toon()
 
-        gender_frame = DirectFrame(self.core, pos=(.45, 0, .5))
+        gender_frame = DirectFrame(self.body_page, pos=(.45, 0, .5))
 
         i = 0
         for texture, command in [[MT.LASHES_TEXTURE, new_gender],
@@ -139,7 +117,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             self.load_toon()
 
         species_frame = ButtonGrid(
-            parent=self.core, pos=(-.5, 0, .5), scale=.9,
+            parent=self.body_page, pos=(-.5, 0, .5), scale=.9,
             texture=MT.SPECIES_TEXTURE, rows=4, columns=4,
             db_scale=.115, collection=TG.SPECIES,
             command=change_species, extra_arg="key",
@@ -165,7 +143,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             rows, columns = [1, 2]
 
         self.head_display = ButtonGrid(
-            parent=self.core, pos=(.05, 0.0, -.33), scale=1,
+            parent=self.body_page, pos=(.05, 0.0, -.33), scale=1,
             texture=f"{G.APP_MAPS}{species_name}-heads.png",
             rows=rows, columns=columns, db_scale=.12,
             collection=collection, command=update_head, extra_arg=None,
@@ -177,7 +155,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             self.limbs = [self.limbs[0], limb_type[0], limb_type[1]]
             self.load_toon()
 
-        limb_frame = DirectFrame(self.core, pos=(0, 0, -.75), scale=.9)
+        limb_frame = DirectFrame(self.body_page, pos=(0, 0, -.75), scale=.9)
         i = 0
         for limbs in MT.BODY_SIZES:
             geom = PlaneModel(MT.LIMB_TEXTURE, rows=1, columns=9)
@@ -211,8 +189,14 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             head=limbs[0], torso=limbs[1], legs=limbs[2], bottom=bottom,
             shirt_t=cloth[0], sleeve_t=cloth[1], bottom_t=cloth[2],
             head_color=color[0], shirt_color=color[1], sleeve_color=color[2],
-            glove_color=color[3], leg_color=color[4], bottom_color=color[5]
+            glove_color=color[3], leg_color=color[4], bottom_color=color[5],
+            names=False
         )
+
+    def show_page(self, index):
+        for page in self.pages:
+            page.hide()
+        self.pages[index].show()
 
 
 class Make_A_Toon(ShowBase, Make_A_Toon_Happy_GUI):
@@ -220,11 +204,40 @@ class Make_A_Toon(ShowBase, Make_A_Toon_Happy_GUI):
     def __init__(self):
         ShowBase.__init__(self)
         Make_A_Toon_Happy_GUI.__init__(self)
+        self.selection_allowed = True
+        self.set_sequence = Sequence()
+
         base.disable_mouse()
-        camera.set_pos_hpr(-3.5, 12.0, 3.0, -150.24, -1.19, 0.0)
-        # self.node_mover = NodeMover(camera)
-        # self.node_selector = NodeSelector()
-        rot_cam = False
-        self.editor = MasterEditor(rot_cam=rot_cam)
+        camera.set_pos_hpr(*MT.CAM_INTERVALS[MT.BODY])
+
+        self.node_selector = NodeSelector(self)
+        self.bucket = Prop(MT.BUCKET_MODEL, parent=render, name=MT.BUCKET,
+                           pos=(0.72, -6.06, 0.0), hpr=(96.91, 0.0, 0.0))
+        self.closet = Prop(MT.WARDROBE_MODEL, parent=render, name=MT.WARDROBE,
+                           pos=(8.62, -3.77, -2.55), hpr=(-128.96, 0.0, 0.0))
+        # self.node_mover = NodeMover(self.bucket)
+        self.editor = MasterEditor(rot_cam=False, mouse_lock=False)
+        self.body_page.hide()
+
+    def set_node(self, node):
+        if not self.selection_allowed or not node.name in MT.CAM_INTERVALS:
+            return
+
+        angle = MT.CAM_INTERVALS[node.name]
+        if angle == (camera.get_pos(), camera.get_hpr()):
+            return # the interval end point is our current position. Abort.
+
+        self.set_sequence = Sequence(Func(self.toggle_selection_allowed))
+        if node.name == MT.WARDROBE:
+            turn = MT.WARDROBE_CAM_TURN
+            self.set_sequence.append(
+                camera.posHprInterval(1, *turn, blendType='easeInOut'))
+        self.set_sequence.append(
+            camera.posHprInterval(2, *angle, blendType='easeInOut'))
+        self.set_sequence.append(Func(self.toggle_selection_allowed))
+        self.set_sequence.start()
+
+    def toggle_selection_allowed(self):
+        self.selection_allowed = not self.selection_allowed
 
 Make_A_Toon().run()

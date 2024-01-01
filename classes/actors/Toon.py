@@ -16,7 +16,8 @@ class Toon(Actor, ToonHead, AutoWalker):
                  head='dss', torso='s', legs='s', bottom='shorts',
                  shirt_t=0, sleeve_t=0, bottom_t=0,
                  head_color=41, shirt_color=41, sleeve_color=41,
-                 arm_color=41, glove_color=41, leg_color=41, bottom_color=41):
+                 arm_color=41, glove_color=41, leg_color=41, bottom_color=41,
+                 names=True):
         self.gender = gender
         self.toon_name = toon_name
         self.lod = lod
@@ -39,6 +40,7 @@ class Toon(Actor, ToonHead, AutoWalker):
         self.leg_c = colors[leg_color] + ALPHA
         self.bottom_c = colors[bottom_color] + ALPHA
 
+        self.names = names
         self.species = head[0]
         self.forehead = head[1]
         self.muzzle = head[2]
@@ -60,7 +62,8 @@ class Toon(Actor, ToonHead, AutoWalker):
         ToonHead.__init__(self, self, self.head, self.head_c, self.lod,
                           gender=self.gender)
         self.attach(TG.HEAD, TG.TORSO, TG.JOINT_HEAD)
-        self.name_body_parts()
+        if self.names:
+            self.name_body_parts()
 
         AutoWalker.__init__(self, self, speed=15, run_anim="run", run_div=2.0)
         self.set_blend(frameBlend=True)
