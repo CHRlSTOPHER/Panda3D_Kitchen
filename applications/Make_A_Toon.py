@@ -15,7 +15,8 @@ Or you can load an existing Toon and edit it!
 '''
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectFrame, DirectButton
-from direct.interval.IntervalGlobal import Sequence, Func, Wait
+from direct.interval.IntervalGlobal import (Sequence, Func,
+                                            LerpPosInterval)
 
 from classes.actors.Toon import Toon
 from classes.editors.MasterEditor import MasterEditor
@@ -65,37 +66,36 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
         ]
         self.load_toon()
         self.update_heads_display('d') # default to dog head
-        # self.body_page.hide()
 
     def load_pages(self):
         textures = [MT.FRAME_TEXTURE + ".jpg", MT.FRAME_TEXTURE + "_a.rgb"]
         self.body_page = DirectFrame(parent=base.a2dLeftCenter,
                                      geom=PlaneModel(textures),
-                                     frameVisibleScale=(0, 0), pos=(1, 0, 0))
+                                     frameVisibleScale=(0, 0),
+                                     pos=MT.GUI_INTERVALS[MT.BODY])
 
     def options_gui(self):
         return []
 
     def gender_gui(self):
-        def toggle_lashes(gender):
-            if gender == 'f':
-                self.toon.lashes.show()
-            else:
+        def update_lashes(gender):
+            self.toon.lashes.show()
+            if gender == 'm':
                 self.toon.lashes.hide()
 
-        def new_gender(gender):
+        def update_gender(gender):
             self.gender = [gender, self.gender[1]]
-            toggle_lashes(gender)
+            update_lashes(gender)
 
-        def new_bottom(bottom):
+        def update_bottom(bottom):
             self.gender = [self.gender[0], MT.BOTTOM_DICT[bottom]]
             self.load_toon()
 
         gender_frame = DirectFrame(self.body_page, pos=(.45, 0, .5))
 
         i = 0
-        for texture, command in [[MT.LASHES_TEXTURE, new_gender],
-                                 [MT.BOTTOMS_TEXTURE, new_bottom]]:
+        for texture, command in [[MT.LASHES_TEXTURE, update_gender],
+                                 [MT.BOTTOMS_TEXTURE, update_bottom]]:
             geom = [PlaneModel(texture, 2, 2, frame=f) for f in range(0, 4)]
             scale, fvs, frame_size = [.165, (0, 0), (.8, -.8, .8, -.8)]
             DirectButton(gender_frame, geom=(geom[0], geom[1], geom[0]),
@@ -111,7 +111,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
         return gender_frame
 
     def species_gui(self):
-        def change_species(species):
+        def update_species(species):
             self.limbs[0] = f"{species}{self.limbs[0][1]}{self.limbs[0][2]}"
             self.update_heads_display(species) # change the head display
             self.load_toon()
@@ -120,7 +120,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             parent=self.body_page, pos=(-.5, 0, .5), scale=.9,
             texture=MT.SPECIES_TEXTURE, rows=4, columns=4,
             db_scale=.115, collection=TG.SPECIES,
-            command=change_species, extra_arg="key",
+            command=update_species, extra_arg="key",
             base_x=-.25, base_z=.25, x_increment=.25, z_increment=.25)
 
         return species_frame
@@ -151,7 +151,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             x_regression=-.125, fvs=(0, 0))
 
     def limbs_gui(self):
-        def change_limb_type(limb_type):
+        def updates_limbs(limb_type):
             self.limbs = [self.limbs[0], limb_type[0], limb_type[1]]
             self.load_toon()
 
@@ -165,7 +165,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
                          geom=geom, geom_scale=(.1125, 12, .12),
                          frameSize=(.11, -.11, .11, -.11),
                          frameVisibleScale=(0, 0),
-                         command=change_limb_type, extraArgs=[limbs])
+                         command=updates_limbs, extraArgs=[limbs])
             i += 1
             # Toon Head code is in update_heads_display.
         return limb_frame
@@ -193,11 +193,6 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             names=False
         )
 
-    def show_page(self, index):
-        for page in self.pages:
-            page.hide()
-        self.pages[index].show()
-
 
 class Make_A_Toon(ShowBase, Make_A_Toon_Happy_GUI):
 
@@ -205,7 +200,6 @@ class Make_A_Toon(ShowBase, Make_A_Toon_Happy_GUI):
         ShowBase.__init__(self)
         Make_A_Toon_Happy_GUI.__init__(self)
         self.selection_allowed = True
-        self.set_sequence = Sequence()
 
         base.disable_mouse()
         camera.set_pos_hpr(*MT.CAM_INTERVALS[MT.BODY])
@@ -223,19 +217,26 @@ class Make_A_Toon(ShowBase, Make_A_Toon_Happy_GUI):
         if not self.selection_allowed or not node.name in MT.CAM_INTERVALS:
             return
 
-        angle = MT.CAM_INTERVALS[node.name]
-        if angle == (camera.get_pos(), camera.get_hpr()):
+        new_pos_hpr = MT.CAM_INTERVALS[node.name]
+        if new_pos_hpr == (camera.get_pos(), camera.get_hpr()):
             return # the interval end point is our current position. Abort.
 
-        self.set_sequence = Sequence(Func(self.toggle_selection_allowed))
+        self.load_gui_transition_sequence(node, new_pos_hpr)
+        self.gui_sequence.start()
+
+    def load_gui_transition_sequence(self, node, new_pos_hpr):
+        self.gui_sequence = Sequence()
+        self.gui_sequence.append(Func(self.toggle_selection_allowed))
+
         if node.name == MT.WARDROBE:
             turn = MT.WARDROBE_CAM_TURN
-            self.set_sequence.append(
-                camera.posHprInterval(1, *turn, blendType='easeInOut'))
-        self.set_sequence.append(
-            camera.posHprInterval(2, *angle, blendType='easeInOut'))
-        self.set_sequence.append(Func(self.toggle_selection_allowed))
-        self.set_sequence.start()
+            interval = camera.posHprInterval(1, *turn, blendType='easeInOut')
+            self.gui_sequence.append(interval)
+
+        self.gui_sequence.append(camera.posHprInterval(1.7, *new_pos_hpr,
+                                                 blendType='easeInOut'))
+        self.gui_sequence.append(Func(self.toggle_selection_allowed))
+        self.gui_sequence.start()
 
     def toggle_selection_allowed(self):
         self.selection_allowed = not self.selection_allowed

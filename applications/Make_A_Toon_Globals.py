@@ -12,6 +12,11 @@ CAM_INTERVALS = {
     BUCKET: ((-6.85, 7.9, 4.55), (-145.05, -10.99, 0.0)),
     WARDROBE: ((6.7, -2.15, 1.04), (-131.88, -20.21, -0.81))
 }
+GUI_INTERVALS = {
+    BODY: (1, 0, 0),
+    BUCKET: (-1, 0, 0),
+    WARDROBE: (0, 0, 0),
+}
 
 FRAME_TEXTURE = G.APP_MAPS + "mat_panel"
 LASHES_TEXTURE = G.APP_MAPS + "lashes-buttons" + G.PNG
