@@ -14,11 +14,12 @@ loadPrcFileData("", "textures-power-2 0")
 
 class AnimatedSprite(PlaneModel):
 
-	def __init__(self, texturePath, rows=1, columns=1, missing_frames=0,
-				 wait_time=.1, pos=(0, 0, 0), scale=(1, 1, 1),
-				 parent=None, frame=None, name="a_sprite"):
+	def __init__(self, texturePath, rows=1, columns=1,
+				 pos=(0, 0, 0), scale=(1, 1, 1), color=(1, 1, 1, 1),
+				 parent=None, frame=None, name="a_sprite",
+				 wait_time=.1, missing_frames=0):
 		PlaneModel.__init__(self, texturePath, rows, columns,
-							pos, scale, parent, frame, name)
+							pos, scale, color, parent, frame, name)
 		self.missing_frames = missing_frames
 		self.wait_time = wait_time
 		self.uv_sequence = Sequence()

@@ -15,12 +15,9 @@ Or you can load an existing Toon and edit it!
 '''
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectFrame, DirectButton
-from direct.interval.IntervalGlobal import (Sequence, Func,
-                                            LerpPosInterval)
+from direct.interval.IntervalGlobal import (Sequence, Func, Wait, Parallel)
 
 from classes.actors.Toon import Toon
-from classes.editors.MasterEditor import MasterEditor
-from classes.editors.NodeMover import NodeMover
 from classes.editors.NodeSelector import NodeSelector
 from classes.gui.ButtonGrid import ButtonGrid
 from classes.globals import Globals as G
@@ -31,11 +28,11 @@ from classes.props.Prop import Prop
 import Make_A_Toon_Globals as MT
 
 
-class Make_A_Toon_Happy_GUI(DirectFrame):
+class Make_A_Toon_GUI(DirectFrame):
 
     def __init__(self):
         DirectFrame.__init__(self)
-        self.initialiseoptions(Make_A_Toon_Happy_GUI)
+        self.initialiseoptions(Make_A_Toon_GUI)
 
         self.toon = None
         self.head_display = None
@@ -47,13 +44,9 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
         self.clothes = [0, 0, 0]
         self.name = MT.BODY
 
+        self.pages = {}
         self.load_pages()
-        self.pages = [
-            # self.file_page,
-            self.body_page,
-            # self.color_page,
-            # self.clothes_pages,
-        ]
+
         # each function returns a direct frame.
         self.gui_sections = [
             self.options_gui(),
@@ -69,10 +62,13 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
 
     def load_pages(self):
         textures = [MT.FRAME_TEXTURE + ".jpg", MT.FRAME_TEXTURE + "_a.rgb"]
-        self.body_page = DirectFrame(parent=base.a2dLeftCenter,
-                                     geom=PlaneModel(textures),
-                                     frameVisibleScale=(0, 0),
-                                     pos=MT.GUI_INTERVALS[MT.BODY])
+
+        pages = [MT.FILE, MT.BODY, MT.BUCKET, MT.WARDROBE, MT.NAME]
+        for page_name in pages:
+            page = DirectFrame(parent=base.a2dLeftCenter,
+                               geom=PlaneModel(textures), pos=(-1, 0, 0),
+                               frameVisibleScale=(0, 0))
+            self.pages[page_name] = page
 
     def options_gui(self):
         return []
@@ -91,7 +87,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             self.gender = [self.gender[0], MT.BOTTOM_DICT[bottom]]
             self.load_toon()
 
-        gender_frame = DirectFrame(self.body_page, pos=(.45, 0, .5))
+        gender_frame = DirectFrame(self.pages[MT.BODY], pos=(.45, 0, .5))
 
         i = 0
         for texture, command in [[MT.LASHES_TEXTURE, update_gender],
@@ -117,7 +113,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             self.load_toon()
 
         species_frame = ButtonGrid(
-            parent=self.body_page, pos=(-.5, 0, .5), scale=.9,
+            parent=self.pages[MT.BODY], pos=(-.5, 0, .5), scale=.9,
             texture=MT.SPECIES_TEXTURE, rows=4, columns=4,
             db_scale=.115, collection=TG.SPECIES,
             command=update_species, extra_arg="key",
@@ -143,7 +139,7 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             rows, columns = [1, 2]
 
         self.head_display = ButtonGrid(
-            parent=self.body_page, pos=(.05, 0.0, -.33), scale=1,
+            parent=self.pages[MT.BODY], pos=(.05, 0.0, -.33), scale=1,
             texture=f"{G.APP_MAPS}{species_name}-heads.png",
             rows=rows, columns=columns, db_scale=.12,
             collection=collection, command=update_head, extra_arg=None,
@@ -155,7 +151,8 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             self.limbs = [self.limbs[0], limb_type[0], limb_type[1]]
             self.load_toon()
 
-        limb_frame = DirectFrame(self.body_page, pos=(0, 0, -.75), scale=.9)
+        limb_frame = DirectFrame(self.pages[MT.BODY],
+                                 pos=(0, 0, -.75), scale=.9)
         i = 0
         for limbs in MT.BODY_SIZES:
             geom = PlaneModel(MT.LIMB_TEXTURE, rows=1, columns=9)
@@ -171,7 +168,16 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
         return limb_frame
 
     def colors_gui(self):
-        return []
+        colors_frame = DirectFrame(self.pages[MT.BUCKET], pos=(0, 0, .5))
+        x, z = [0, 0]
+        for name in TC: #for name in ToonColors
+            color = name.value
+            frame = PlaneModel()
+            size = .15
+            button = DirectButton(colors_frame, geom=frame, geom_scale=size,
+                                  frameSize=(size, -size, size, -size))
+            button.set_pos(x, 0, z)
+        return colors_frame
 
     def clothes_gui(self):
         return []
@@ -192,51 +198,53 @@ class Make_A_Toon_Happy_GUI(DirectFrame):
             glove_color=color[3], leg_color=color[4], bottom_color=color[5],
             names=False
         )
+        self.toon.set_pos_hpr(*MT.TOON_POS, *MT.TOON_HPR)
 
 
-class Make_A_Toon(ShowBase, Make_A_Toon_Happy_GUI):
+class Make_A_Toon(ShowBase, Make_A_Toon_GUI):
 
     def __init__(self):
         ShowBase.__init__(self)
-        Make_A_Toon_Happy_GUI.__init__(self)
+        Make_A_Toon_GUI.__init__(self)
+
         self.selection_allowed = True
+        self.current_selection = MT.BODY
+        self.pages[MT.BODY].set_pos(1, 0, 0)
 
         base.disable_mouse()
-        camera.set_pos_hpr(*MT.CAM_INTERVALS[MT.BODY])
+        camera.set_pos_hpr(*MT.CAMERA_POS, *MT.CAMERA_HPR)
 
         self.node_selector = NodeSelector(self)
         self.bucket = Prop(MT.BUCKET_MODEL, parent=render, name=MT.BUCKET,
-                           pos=(0.72, -6.06, 0.0), hpr=(96.91, 0.0, 0.0))
+                           pos=MT.BUCKET_POS, hpr=MT.BUCKET_HPR)
         self.closet = Prop(MT.WARDROBE_MODEL, parent=render, name=MT.WARDROBE,
-                           pos=(8.62, -3.77, -2.55), hpr=(-128.96, 0.0, 0.0))
+                           pos=MT.WARDROBE_POS, hpr=MT.WARDROBE_HPR)
         # self.node_mover = NodeMover(self.bucket)
-        self.editor = MasterEditor(rot_cam=False, mouse_lock=False)
-        self.body_page.hide()
+        # self.editor = MasterEditor(rot_cam=False, mouse_lock=False)
 
     def set_node(self, node):
-        if not self.selection_allowed or not node.name in MT.CAM_INTERVALS:
+        if (not self.selection_allowed
+            or not node.name in MT.GUI_INTERVALS
+            or node.name == self.current_selection):
+            # return on selection disabled, node not in dict, or same node
             return
 
-        new_pos_hpr = MT.CAM_INTERVALS[node.name]
-        if new_pos_hpr == (camera.get_pos(), camera.get_hpr()):
-            return # the interval end point is our current position. Abort.
+        current_gui = self.pages[self.current_selection]
+        new_gui = self.pages[node.name]
 
-        self.load_gui_transition_sequence(node, new_pos_hpr)
-        self.gui_sequence.start()
+        self.selection_allowed = False
+        og_color = node.get_color_scale()
+        node.set_color_scale(1, .25, .25, 1)
 
-    def load_gui_transition_sequence(self, node, new_pos_hpr):
         self.gui_sequence = Sequence()
-        self.gui_sequence.append(Func(self.toggle_selection_allowed))
-
-        if node.name == MT.WARDROBE:
-            turn = MT.WARDROBE_CAM_TURN
-            interval = camera.posHprInterval(1, *turn, blendType='easeInOut')
-            self.gui_sequence.append(interval)
-
-        self.gui_sequence.append(camera.posHprInterval(1.7, *new_pos_hpr,
-                                                 blendType='easeInOut'))
+        self.gui_sequence.append(
+            Parallel(Sequence(Wait(.3), Func(node.set_color_scale, *og_color)),
+                     current_gui.posInterval(.5, (1, 0, -2)),
+                     new_gui.posInterval(.5, (1, 0, 0), (1, 0, 2))
+            ))
         self.gui_sequence.append(Func(self.toggle_selection_allowed))
         self.gui_sequence.start()
+        self.current_selection = node.name
 
     def toggle_selection_allowed(self):
         self.selection_allowed = not self.selection_allowed

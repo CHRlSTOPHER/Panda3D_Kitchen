@@ -1,21 +1,23 @@
 from classes.globals import Globals as G
 
+FILE = "FILE"
 BODY = "TOON"
 BUCKET = "PAINTBUCKET"
 WARDROBE = "WARDRODE"
+NAME = "NAME"
+
 BUCKET_MODEL = G.APP_MODELS + "paint-bucket" + G.EGG
 WARDROBE_MODEL = G.ESTATE_5_5 + "closetBoy" + G.BAM
 
-WARDROBE_CAM_TURN = ((-5.53, 8.96, 6.88), (-131.88, -20.21, -0.81))
-CAM_INTERVALS = {
-    BODY: ((-5.53, 8.96, 6.88), (-137.6, -21.5, 0.0)),
-    BUCKET: ((-6.85, 7.9, 4.55), (-145.05, -10.99, 0.0)),
-    WARDROBE: ((6.7, -2.15, 1.04), (-131.88, -20.21, -0.81))
-}
+CAMERA_POS, CAMERA_HPR = [(-5.87, 9.83, 5.64), (-137.99, -12.87, 0.0)]
+TOON_POS, TOON_HPR = [(-0.56, -1.02, 0.0), (0, 0, 0)]
+BUCKET_POS, BUCKET_HPR = [(0.19, -6.66, 0.0), (90.7, -3.0, 5.25)]
+WARDROBE_POS, WARDROBE_HPR = [(3.85, -4.83, -0.15), (-132.32, 0.0, 0.0)]
+
 GUI_INTERVALS = {
-    BODY: (1, 0, 0),
-    BUCKET: (-1, 0, 0),
-    WARDROBE: (0, 0, 0),
+    BODY: [(-1, 0, 0)],
+    BUCKET: [(-1, 0, 0)],
+    WARDROBE: [(-1, 0, 0)],
 }
 
 FRAME_TEXTURE = G.APP_MAPS + "mat_panel"
