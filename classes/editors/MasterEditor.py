@@ -14,7 +14,7 @@ from classes.gui.MouseWindowLock import MouseWindowLock
 
 class MasterEditor(DirectObject):
 
-    def __init__(self, mouse_lock=True, rot_cam=True, nt_printer=True):
+    def __init__(self, mouse_lock=True, rot_cam=True, nt_printer=True, fov=50):
         DirectObject.__init__(self)
         self.hide_gui = False
         self.accept("`", self.hide_editor_gui)
@@ -24,7 +24,7 @@ class MasterEditor(DirectObject):
         self.nt_printer = None
         self.nt_gui = None
 
-        self.fov_wheel = FovScrollWheel()
+        self.fov_wheel = FovScrollWheel(fov)
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)
 
