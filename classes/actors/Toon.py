@@ -6,6 +6,7 @@ from panda3d.core import OmniBoundingVolume
 
 from .AutoWalker import AutoWalker
 from classes.globals import Globals as G, ToonGlobals as TG
+from classes.props.Prop import Prop
 from .ToonHead import ToonHead
 
 ALPHA = (1,)
@@ -54,6 +55,7 @@ class Toon(Actor, ToonHead, AutoWalker):
         Actor.__init__(self, actor)
         self.load_legs()
         self.load_toon_anims(self.legs, TG.LEGS)
+        self.load_shadow()
 
         self.load_torso()
         self.load_toon_anims(self.torso, TG.TORSO, self.bottom)
@@ -78,6 +80,12 @@ class Toon(Actor, ToonHead, AutoWalker):
         self.load_model(model_string, TG.LEGS)
         self.set_leg_color()
         self.hide_shoes()
+
+    def load_shadow(self):
+        self.shadow = Prop(G.PROPS_3 + "drop_shadow.bam")
+        self.shadow.reparentTo(self.find('**/joint_shadow'))
+        self.shadow.set_scale(.45)
+        self.shadow.set_alpha_scale(.7)
 
     def load_torso(self):
         model_string = G.CHAR_3 + TG.TOON_MODEL_FILE.format(
@@ -138,6 +146,9 @@ class Toon(Actor, ToonHead, AutoWalker):
         self.find(f'**/{TG.NECK}').set_color(arm_color)
         self.find(f'**/{TG.ARMS}').set_color(arm_color)
         self.find(f'**/{TG.GLOVES}').set_color(glove_color)
+
+    def disable_autowalker(self):
+        self.cleanup_walker()
 
     def cleanup_actor(self):
         self.cleanup_walker()

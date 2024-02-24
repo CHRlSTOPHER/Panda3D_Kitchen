@@ -104,15 +104,6 @@ class ToonHead():
             self.lashes.reparent_to(self.toon)
         self.toggle_eyelashes()
 
-    def change_muzzle(self, expression):
-        if self.species == 'd':
-            self.change_dog_muzzle(expression) # OH MY DAWG
-            return
-
-        for expression in EXPRESSIONS:
-            self.toon.find(f'**/muzzle-{self.muzzle_size}-{expression}').hide()
-        self.toon.find(f'**/muzzle-{self.muzzle_size}-{expression}').show()
-
     def change_dog_muzzle(self, new_emote):
         self.toon.find('**/muzzle').hide()
         for expression in EXPRESSIONS[1:]:
@@ -226,3 +217,16 @@ class ToonHead():
         return {
             'd': self.load_dog_head,
         }
+
+    def change_muzzle(self, emote):
+        if self.species == 'd':
+            self.change_dog_muzzle(emote) # OH MY DAWG
+            return
+
+        for expression in EXPRESSIONS:
+            self.toon.find(f'**/muzzle-{self.muzzle_size}-{expression}').hide()
+        self.toon.find(f'**/muzzle-{self.muzzle_size}-{emote}').show()
+
+    def change_eyes(self, emote):
+        self.eyes_emote = emote
+        # need to implement blinking

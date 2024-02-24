@@ -29,6 +29,8 @@ ESTATE_5_5 = "phase_5.5/models/estate/"
 
 GUI_3 = "phase_3/gui/"
 
+PROPS_3 = "phase_3/models/props/"
+
 MAPS_3 = "phase_3/maps/"
 MAPS_3_5 = "phase_3.5/maps/"
 MAPS_4 = "phase_4/maps/"
