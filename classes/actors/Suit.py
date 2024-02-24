@@ -11,22 +11,24 @@ from classes.globals import Globals as G, SuitGlobals as SG
 
 class Suit(Actor, AutoWalker):
 
-    def __init__(self, suit, parent, skelecog=False, suit_name="~Suit"):
-        self.suit = suit
-        if isinstance(suit, str): # check if cog is NOT custom.
-            suit = SG.SUITS[suit]
-        self.suit_parent = parent
+    def __init__(self, suit_type, parent, skelecog=False, suit_name="~Suit"):
+        if suit_type in SG.CUSTOM_SUIT:
+            self.suit = SG.CUSTOM_SUIT[suit_type]
+        else:
+            self.suit = SG.SUITS[suit_type]
 
+        self.suit_type = suit_type
+        self.suit_parent = parent
         self.skelecog = skelecog
         self.suit_name = suit_name
         self.suits = []
 
-        self.body = suit[0]
-        self.dept = suit[1]
-        self.head_type = suit[2]
-        self.hand_color = suit[3]
-        self.head_texture = suit[4]
-        self.scale = suit[5]
+        self.body = self.suit[0]
+        self.dept = self.suit[1]
+        self.head_type = self.suit[2]
+        self.hand_color = self.suit[3]
+        self.head_texture = self.suit[4]
+        self.scale = self.suit[5]
 
         # for flunky.
         self.left_eye = None
@@ -67,8 +69,13 @@ class Suit(Actor, AutoWalker):
             self.find(f"**/{body_part}").set_texture(clothing_texture, 1)
 
         # Load head and apply a name flag.
-        head_path = SG.HEAD_MODEL_PATH.format(self.body)
-        self.head = loader.load_model(head_path).find(f'**/{self.head_type}')
+        if self.suit_type in SG.CUSTOM_SUIT:
+            self.head = loader.load_model(G.CHAR_4 + self.head_type + G.BAM)
+        else:
+            head_path = SG.HEAD_MODEL_PATH.format(self.body)
+            self.head = loader.load_model(head_path).find(
+                f'**/{self.head_type}')
+
         self.head.reparent_to(self.find('**/joint_head'))
         self.head.set_name(self.suit_name + f".find('**/{self.head_type}')")
 

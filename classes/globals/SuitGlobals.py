@@ -8,6 +8,21 @@ SELL_HAND = (0.95, 0.75, 0.95, 1.0)
 CC_COLOR = (0.25, 0.35, 1.0, 1.0)
 AUTO_WALKER_SPEED = 14
 
+PRESIDENT = 'ttr_{}_ene_bossbotClubPresident'
+CLERK = 'ttr_{}_ene_lawbotClerk'
+AUDITOR = 'ttr_{}_ene_cashbotAuditor'
+FOREMAN = 'ttr_{}_ene_sellbotForeman'
+CUSTOM_SUIT = {
+    'cp': ('A', PRESIDENT.format("t"), PRESIDENT.format("m"),
+           BOSS_HAND, None, 4.4/a_scale),
+    'lc': ('B', CLERK.format("t"), CLERK.format("m"),
+           (0.66, 0.706, 0.74, 1), None, 6.8/b_scale),
+    'ma': ('C', AUDITOR.format("t"), AUDITOR.format("m"),
+           CASH_HAND, None, 5.7/c_scale),
+    'ff': ('B', FOREMAN.format("t"), FOREMAN.format("m"),
+           (0.74, 0.62, 0.66, 1), None, 6.0/b_scale)
+}
+
 COG_CLOTHING = [
     ["blazer", "torso"],
     ["sleeve", "arms"],
