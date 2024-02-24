@@ -23,6 +23,7 @@ class MasterEditor(DirectObject):
         self.rot_cam = None
         self.nt_printer = None
         self.nt_gui = None
+        self.gui_classes = []
 
         self.fov_wheel = FovScrollWheel(fov)
         self.node_mover = NodeMover(camera)
@@ -30,16 +31,14 @@ class MasterEditor(DirectObject):
 
         if mouse_lock:
             self.mouse_lock = MouseWindowLock()
+            self.gui_classes.append(self.mouse_lock)
         if rot_cam:
             self.rot_cam = RotationalCamera()
         if nt_printer:
             self.nt_printer = NodeTransformPrinter(*get_transform_data(camera))
             self.nt_gui = NodeTransformPrinterGUI(
                 self.node_mover, self.nt_printer, base.a2dLeftCenter)
-
-        self.gui_classes = [
-            self.nt_gui, self.mouse_lock
-        ]
+            self.gui_classes.append(self.nt_gui)
 
     def hide_editor_gui(self):
         self.hide_gui = not self.hide_gui
