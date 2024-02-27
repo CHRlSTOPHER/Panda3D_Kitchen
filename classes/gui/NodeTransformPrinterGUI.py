@@ -6,7 +6,7 @@ from direct.gui.DirectGui import DirectButton
 from direct.gui import DirectGuiGlobals as DGG
 from panda3d.core import TextNode, TransparencyAttrib
 
-from classes.gui.RevealerGUI import RevealerGUI
+from classes.gui.Revealer import RevealerGUI
 from classes.globals import Globals as G
 from classes.globals import GUIGlobals as GG
 

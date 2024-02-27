@@ -34,6 +34,7 @@ class RevealerGUI(DirectFrame):
         self.setup_icon_geom(parent)
         self.setup_detection_frame(parent)
         DirectFrame.__init__(self, parent=parent)
+        self.initialiseoptions(RevealerGUI)
 
         self.set_pos(self.gui_hide_pos)
         self.guis = [self, self.detection_frame, self.icon_geom]
