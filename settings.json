@@ -9,6 +9,6 @@
 	"framebuffer-multisample": 1,
 	"multisamples": 8,
 	"show_fps_meter": false,
-	"auto_walker": true,
+	"auto_walker": false,
 	"mouse_lock": true
 }
