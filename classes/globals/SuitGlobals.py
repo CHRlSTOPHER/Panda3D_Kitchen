@@ -8,6 +8,14 @@ SELL_HAND = (0.95, 0.75, 0.95, 1.0)
 CC_COLOR = (0.25, 0.35, 1.0, 1.0)
 AUTO_WALKER_SPEED = 14
 
+SUIT_PATH = "phase_3.5/models/char/suit{}-mod"
+HEAD_MODEL_PATH = "phase_4/models/char/suit{}-heads.bam"
+ANIM_PATH = 'phase_{}/models/char/suit{}-{}.bam'
+TTR_ANIM_FILE = 'tt_a_ene_cg{}_'
+METER_MODEL = "phase_3/models/gui/cog_icons.bam"
+HEALTH_MODEL = "phase_3.5/models/gui/matching_game_gui.bam"
+GLOW_MODEL = "phase_3.5/models/props/glow.bam"
+
 PRESIDENT = 'ttr_{}_ene_bossbotClubPresident'
 CLERK = 'ttr_{}_ene_lawbotClerk'
 AUDITOR = 'ttr_{}_ene_cashbotAuditor'
@@ -20,15 +28,38 @@ CUSTOM_SUIT = {
     'ma': ('C', AUDITOR.format("t"), AUDITOR.format("m"),
            CASH_HAND, None, 5.7/c_scale),
     'ff': ('B', FOREMAN.format("t"), FOREMAN.format("m"),
-           (0.74, 0.62, 0.66, 1), None, 6.0/b_scale)
+           (0.878, 0.733, 0.78, 1), None, 6.0/b_scale)
 }
 
+GLASSES = '**/glasses'
+LEFT_EYE = "**/left_eye"
+RIGHT_EYE = "**/right_eye"
+
+SUIT_METERS = {
+    's': "SalesIcon",
+    'm': "MoneyIcon",
+    'l': "LegalIcon",
+    'c': "CorpIcon",
+    FOREMAN.format("t"): "SalesIcon",
+    AUDITOR.format("t"): "MoneyIcon",
+    CLERK.format("t"): "LegalIcon",
+    PRESIDENT.format("t"): "CorpIcon",
+}
+METER_COLORS = {
+    's': (0.843, 0.745, 0.745, 1.0),
+    'm': (0.749, 0.769, 0.749, 1.0),
+    'l': (0.749, 0.776, 0.824, 1.0),
+    'c': (0.863, 0.776, 0.769, 1.0),
+    FOREMAN.format("t"): (0.843, 0.745, 0.745, 1.0),
+    AUDITOR.format("t"): (0.749, 0.769, 0.749, 1.0),
+    CLERK.format("t"): (0.749, 0.776, 0.824, 1.0),
+    PRESIDENT.format("t"): (0.863, 0.776, 0.769, 1.0),
+}
 COG_CLOTHING = [
     ["blazer", "torso"],
     ["sleeve", "arms"],
     ["leg", "legs"]
 ]
-
 HEADS = {
     'nd': 'name-dropper',
     'm': 'mingler',
@@ -40,14 +71,6 @@ HEADS = {
     'cr': 'corporate-raider'
 }
 ALL_SEEING_HEADS = ['bigcheese', 'pennypincher']
-
-SUIT_PATH = "phase_3.5/models/char/suit{}-mod"
-HEAD_MODEL_PATH = "phase_4/models/char/suit{}-heads.bam"
-ANIM_PATH = 'phase_{}/models/char/suit{}-{}.bam'
-
-GLASSES = '**/glasses'
-LEFT_EYE = "**/left_eye"
-RIGHT_EYE = "**/right_eye"
 
 # suit type, department, head type, hand color, head texture, scale.
 SUITS = {
@@ -101,4 +124,13 @@ SUIT_ANIMS = {
     'C': {
         "neutral": 3.5, "walk": 3.5,
     }
+}
+
+TTR_ANIMS = {
+    'a': ["golf-club-super-swing", "jump", "powered-up", "seizecontrol",
+               "tantrum"],
+    'b': ["chop-chop", "livid", "powered-up", "shhh", "song-and-dance",
+               "soundhit"],
+    'c': ["double-hand-whistle", "officework", "powered-up",
+               "promoting", "song-and-dance"],
 }

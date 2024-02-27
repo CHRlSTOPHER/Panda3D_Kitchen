@@ -83,9 +83,9 @@ TRANSFORM_FUNCTION_STRINGS = [
         "duration=DURATION, blendType='noBlend'),",
     "",
     None, # INTERVAL:
-    "{name}.pos_hpr_interval(DURATION, ({x}, {y}, {z}), ({h}, {p}, {r}),"
+    "{name}.posHprInterval(DURATION, ({x}, {y}, {z}), ({h}, {p}, {r}),"
         "blendType='easeInOut'),",
-    "{name}.scale_interval(DURATION, ({sx}, {sy}, {sz}),"
+    "{name}.scaleInterval(DURATION, ({sx}, {sy}, {sz}),"
         "blendType='easeInOut'),",
 ]
 TRANSFORM_FUNCTION_NAMES = [
