@@ -26,7 +26,6 @@ class MasterEditor(DirectObject):
         self.rot_cam = None
         self.nt_printer = None
         self.nt_gui = None
-        self.master_frame = DirectFrame()
 
         self.fov_wheel = FovScrollWheel(fov)
         self.node_mover = NodeMover(camera)
@@ -34,7 +33,6 @@ class MasterEditor(DirectObject):
 
         if mouse_lock:
             self.mouse_lock = MouseWindowLock()
-            self.mouse_lock.reparent_to(self.master_frame)
 
         if rot_cam:
             self.rot_cam = RotationalCamera()
@@ -43,11 +41,9 @@ class MasterEditor(DirectObject):
             self.nt_printer = NodeTransformPrinter(*get_transform_data(camera))
             self.nt_gui = NodeTransformPrinterGUI(
                 self.node_mover, self.nt_printer, base.a2dLeftCenter)
-            # self.nt_gui.reparent_to(self.master_frame)
 
         if sequence:
            self.sequence_manager = SequenceManager(sequence)
-           self.sequence_manager.reparent_to(self.master_frame)
 
     def hide_editor_gui(self):
         self.hide_gui = not self.hide_gui
