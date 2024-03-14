@@ -1,5 +1,4 @@
 from direct.actor.Actor import Actor
-from panda3d.core import BoundingBox
 
 from classes.globals import Globals as G
 

@@ -73,7 +73,8 @@ class ToonHead():
         # ducks don't have ears.
         # deers have antler and nose variations...
         define_head_features = self.get_head_features()[self.species]
-        if define_head_features: define_head_features()
+        if define_head_features:
+            define_head_features()
 
         forehead = TG.SIZE[self.head[1]]
         self.define_eyes(forehead, species)

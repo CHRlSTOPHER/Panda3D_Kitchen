@@ -23,16 +23,15 @@ CONTROL_RATE = .1
 
 class AutoWalker():
 
-    def __init__(self, actor, speed=13, neutral_anim="neutral",
-                 walk_anim="walk",
-                 run_anim=None, run_threshold=1.25, run_div=2.0):
+    def __init__(self, actor, speed=13, run_threshold=1.25, run_div=2.0,
+                 neutral_anim="neutral", walk_anim="walk", run_anim=None):
         self.actor = actor
         self.speed = speed
+        self.run_threshold = run_threshold
+        self.run_div = run_div
         self.neutral_anim = neutral_anim
         self.walk_anim = walk_anim
         self.run_anim = run_anim
-        self.run_threshold = run_threshold
-        self.run_div = run_div
 
         self.old_anim_state = 0
         self.new_anim_state = 0

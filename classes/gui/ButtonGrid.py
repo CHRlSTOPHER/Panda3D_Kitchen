@@ -17,7 +17,6 @@ VALUE = "value"
 BOTH = "both"
 
 
-
 class ButtonGrid(DirectFrame):
 
     def __init__(self, parent, pos, scale, texture,

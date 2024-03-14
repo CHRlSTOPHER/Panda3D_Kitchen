@@ -1,4 +1,3 @@
-from direct.interval.IntervalGlobal import Sequence
 from direct.gui.DirectGui import DirectSlider, DirectFrame, DirectButton, DGG
 from panda3d.core import TextNode
 
@@ -6,7 +5,6 @@ UPDATE_TASK = "update_slider_task"
 SET_TIME_TASK = "set_time_task"
 START_TIME = "00:00:00"
 START_DURATION = "00000"
-FRAMES = "000000000"
 
 
 class SequenceManager(DirectSlider):
@@ -15,7 +13,10 @@ class SequenceManager(DirectSlider):
         if not sequence.getDuration():
             return
 
-        self.load_gui(sequence)
+        DirectSlider.__init__(self, pos=(0, 0, -.9),
+                              range=(0, sequence.getDuration()),
+                              value=0, pageSize=.1)
+        self.initialiseoptions(SequenceManager)
 
         self.sequence = sequence
         self.duration = sequence.getDuration()
@@ -23,14 +24,11 @@ class SequenceManager(DirectSlider):
         self.pause = False
         self.manual_pause = False
 
+        self.load_gui(sequence)
         taskMgr.doMethodLater(.01, self.update_slider, UPDATE_TASK)
 
     def load_gui(self, sequence):
-        DirectSlider.__init__(self,
-                              range=(0, sequence.getDuration()),
-                              pos=(0, 0, -.9),
-                              value=0, pageSize=.1)
-        self.initialiseoptions(SequenceManager)
+        # Thumb is defined in the DirectSlider class.
         self.thumb.bind(DGG.B1PRESS, self.toggle_time)
         self.thumb.bind(DGG.B1RELEASE, self.toggle_time)
 
@@ -57,12 +55,12 @@ class SequenceManager(DirectSlider):
     def toggle_time(self, value):
         self.pause = not self.pause
         if self.pause:
-            # Pause Sequence, Start task that updates time by input
+            # Pause Sequence. Start task that updates time by input.
             self.sequence.pause()
             taskMgr.doMethodLater(.01, self.set_slider_time, SET_TIME_TASK)
             taskMgr.remove(UPDATE_TASK)
         else:
-            # Resume Sequence, Start task that updates time by time passed
+            # Resume Sequence. Start task that updates time by time passed.
             if not self.manual_pause:
                 self.sequence.resume()
                 taskMgr.doMethodLater(.01, self.update_slider, UPDATE_TASK)
@@ -90,6 +88,8 @@ class SequenceManager(DirectSlider):
         return task.again
 
     def move_back(self):
+        # The number below needs to be changed later.
+        # It doesn't scale properly for longer animations.
         frame = self['value'] - (self.duration / 1500.0)
         self.set_time(frame)
 

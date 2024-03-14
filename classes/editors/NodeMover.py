@@ -34,7 +34,7 @@ class NodeMover(NodePath, DirectObject):
             NodePath.__init__(self, node)
             self.set_move_options()
 
-            # Make a little sequence to show it was selected.
+            # Make a short sequence to show it was selected.
             og_color_scale = node.get_color_scale()
             node.set_color_scale(G.RED)
             Sequence(

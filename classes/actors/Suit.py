@@ -46,6 +46,7 @@ class Suit(Actor, AutoWalker):
     def assemble_suit(self, actor=None):
         Actor.__init__(self, actor)
         self.load_suit()
+
         AutoWalker.__init__(self, self, speed=SG.AUTO_WALKER_SPEED)
         self.load_animations()
         self.load_health_meter()
@@ -56,10 +57,11 @@ class Suit(Actor, AutoWalker):
         self.set_blend(frameBlend=True)
         self.node().set_bounds(OmniBoundingVolume())
         self.node().set_final(1)
-        if self.model == TTO:
-            self.loop("neutral")
         self.reparent_to(self.suit_parent)
         self.set_name(self.suit_name)
+
+        if self.model == TTO:
+            self.loop("neutral")
 
         self.suits.append(self)
 
@@ -145,7 +147,7 @@ class Suit(Actor, AutoWalker):
             self.glasses.reparentTo(self.head)
             self.glasses.set_name(f"{self.suit_name}.glasses")
 
-        # Has separate eye nodes.
+        # Separate eye nodes.
         if (self.head_type == 'flunky' and not self.head_texture
         or self.head_type in SG.ALL_SEEING_HEADS):
             self.left_eye = self.head.find(SG.LEFT_EYE)

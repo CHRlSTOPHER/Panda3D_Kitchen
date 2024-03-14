@@ -64,10 +64,11 @@ class Toon(Actor, ToonHead, AutoWalker):
         ToonHead.__init__(self, self, self.head, self.head_c, self.lod,
                           gender=self.gender)
         self.attach(TG.HEAD, TG.TORSO, TG.JOINT_HEAD)
-        if self.names:
-            self.name_body_parts()
 
         AutoWalker.__init__(self, self, speed=15, run_anim="run", run_div=2.0)
+
+        if self.names:
+            self.name_body_parts()
         self.set_blend(frameBlend=True)
         self.node().set_bounds(OmniBoundingVolume())
         self.node().set_final(1)
