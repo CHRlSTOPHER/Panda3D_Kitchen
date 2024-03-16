@@ -1,4 +1,7 @@
 WINDOW_TITLE = "PANDA3D KITCHEN"
+ICON_FILENAME = "panda3d-chef.ico"
+SETTINGS_JSON = 'json/settings.json'
+KEYBINDINGS_JSON = "json/keybindings.json"
 
 #json variable names
 PROJECT_PATH = "project-path"
@@ -39,10 +42,6 @@ JPG = ".jpg"
 PNG = ".png"
 EGG = ".egg"
 BAM = ".bam"
-
-ICON_FILENAME = "panda3d-chef.ico"
-SETTINGS_JSON = 'settings.json'
-KEYBINDINGS_JSON = "keybindings.json"
 
 ROTATIONAL_CAM_MOUSE_SENSITIVITY = 70
 FOV_MODIFIER = 90
