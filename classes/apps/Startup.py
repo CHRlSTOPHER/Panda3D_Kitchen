@@ -69,15 +69,25 @@ class Startup(ShowBase):
     def create_project(self):
         self.define_folder_location()
         for filename in FILENAMES:
-            file = open(f"{self.folder_location}/{filename}.py", "w")
-            file.write(FILE_DATA[filename])
-            file.close()
+            file = f"{self.folder_location}/{filename}.py"
+            if not os.path.exists(file):
+                file = open(file, "x")
+                file.write(FILE_DATA[filename])
+                file.close()
+            else:
+                print("A project already exists there!\n"
+                      "Please delete the existing project first.")
+                return
 
     def load_project(self):
         pass
 
     def delete_project(self):
-        pass
+        self.define_folder_location()
+        for filename in FILENAMES:
+            file = f"{self.folder_location}/{filename}.py"
+            if os.path.exists(file):
+                os.remove(file)
 
     def move_project(self):
         pass
