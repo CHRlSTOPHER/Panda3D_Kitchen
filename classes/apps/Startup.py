@@ -20,6 +20,9 @@ Start a side application like Make-a-Toon
 """
 from classes.settings import Settings
 
+import tkinter as tk
+from tkinter import filedialog
+
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
 
@@ -30,6 +33,8 @@ BUTTONS = [
     ("MOVE", (.193, 0, -.802), (.115, .115, .12)),
     ("APPLICATIONS", (-.018, 0, -.925), (.116, .116, .116)),
 ]
+FILENAMES = ["Scenes", "Dialogue", "Actors",  "Props", "Textures",
+             "TextBoxes", "ParticleEffects", "Music", "Sounds"]
 
 
 class Startup(ShowBase):
@@ -38,16 +43,50 @@ class Startup(ShowBase):
         ShowBase.__init__(self)
 
         self.project_frame = None
+        self.folder_location = None
+        self.commands = [
+            self.create_project,
+            self.load_project,
+            self.delete_project,
+            self.move_project,
+            self.load_apps
+        ]
 
         self.load_gui()
 
     def load_gui(self):
         self.project_frame = DirectFrame(pos=(0, 0, .1), scale=1.1)
+        i = 0
         for name, pos, scale in BUTTONS:
             m = .9
             new_scale = (scale[0] * m, scale[1] * m, scale[2] * m)
             DirectButton(parent=self.project_frame, text=name,
-                         pos=pos, scale=new_scale)
+                         pos=pos, scale=new_scale, command=self.commands[i])
+            i += 1
+
+    def create_project(self):
+        self.define_folder_location()
+        for filename in FILENAMES:
+            file = open(f"{self.folder_location}/{filename}.py", "w")
+            file.close()
+
+    def load_project(self):
+        pass
+
+    def delete_project(self):
+        pass
+
+    def move_project(self):
+        pass
+
+    def load_apps(self):
+        pass
+
+    def define_folder_location(self):
+        root = tk.Tk()
+        root.withdraw()
+        self.folder_location = filedialog.askdirectory()
+        root.destroy()
 
 
 project = Startup()
