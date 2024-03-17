@@ -26,6 +26,8 @@ from tkinter import filedialog
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
 
+from classes.globals.AppGlobals import FILE_DATA
+
 BUTTONS = [
     ("CREATE", (-.19, 0, -.67), [.115, .115, .115]),
     ("LOAD", (.19, 0, -.67), (.123, .12, .116)),
@@ -33,8 +35,8 @@ BUTTONS = [
     ("MOVE", (.193, 0, -.802), (.115, .115, .12)),
     ("APPLICATIONS", (-.018, 0, -.925), (.116, .116, .116)),
 ]
-FILENAMES = ["Scenes", "Dialogue", "Actors",  "Props", "Textures",
-             "TextBoxes", "ParticleEffects", "Music", "Sounds"]
+FILENAMES = ["Actors", "Dialogue", "Music", "ParticleEffects", "Props",
+             "Scenes", "Sounds", "TextBoxes", "Textures"]
 
 
 class Startup(ShowBase):
@@ -68,6 +70,7 @@ class Startup(ShowBase):
         self.define_folder_location()
         for filename in FILENAMES:
             file = open(f"{self.folder_location}/{filename}.py", "w")
+            file.write(FILE_DATA[filename])
             file.close()
 
     def load_project(self):
