@@ -35,8 +35,8 @@ BUTTONS = [
     ("MOVE", (.193, 0, -.802), (.115, .115, .12)),
     ("APPLICATIONS", (-.018, 0, -.925), (.116, .116, .116)),
 ]
-FILENAMES = ["Actors", "Dialogue", "Music", "ParticleEffects", "Props",
-             "Scenes", "Sounds", "TextBoxes", "Textures"]
+FILENAMES = ["Actors", "Dialogue", "Main", "Music", "ParticleEffects",
+             "Props", "Scenes", "Sounds", "TextBoxes", "Textures"]
 
 
 class Startup(ShowBase):
@@ -46,6 +46,7 @@ class Startup(ShowBase):
 
         self.project_frame = None
         self.folder_location = None
+        self.main = None
         self.commands = [
             self.create_project,
             self.load_project,
@@ -70,17 +71,20 @@ class Startup(ShowBase):
         self.define_folder_location()
         for filename in FILENAMES:
             file = f"{self.folder_location}/{filename}.py"
-            if not os.path.exists(file):
-                file = open(file, "x")
-                file.write(FILE_DATA[filename])
-                file.close()
-            else:
-                print("A project already exists there!\n"
-                      "Please delete the existing project first.")
+            if os.path.exists(file):
+                print("A project already exists there!")
                 return
 
+            file = open(file, "x")
+            file.write(FILE_DATA[filename])
+            file.close()
+
     def load_project(self):
-        pass
+        self.define_folder_location()
+        # Add directory to path in case directory is in a different location.
+        sys.path.append(self.folder_location)
+        from Main import Main
+        self.main = Main()
 
     def delete_project(self):
         self.define_folder_location()
