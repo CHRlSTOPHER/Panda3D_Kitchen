@@ -2,25 +2,25 @@ ACTOR_DATA = """
 class Actors():
 
     def __init__(self):
-        pass
+        print('loading actors')
 """
 
 DIALOGUE_DATA = """
 class Dialogue():
 
     def __init__(self):
-        pass
+        print('loading dialogue')
 """
 
-MAIN_DATA = """from .Actors import Actors
-from .Dialogue import Dialogue
-from .Music import Music
-from .ParticleEffects import ParticleEffects
-from .Props import Props
-from .Scenes import Scenes
-from .Sounds import Sounds
-from .TextBoxes import TextBoxes
-from .Textures import Textures
+MAIN_DATA = """from Actors import Actors
+from Dialogue import Dialogue
+from Music import Music
+from ParticleEffects import ParticleEffects
+from Props import Props
+from Scenes import Scenes
+from Sounds import Sounds
+from TextBoxes import TextBoxes
+from Textures import Textures
 
 
 class Main():
@@ -44,49 +44,49 @@ MUSIC_DATA = """
 class Music():
 
     def __init__(self):
-        pass
+        print('loading music')
 """
 
 PARTICLE_DATA = """
 class ParticleEffects():
 
     def __init__(self):
-        pass
+        print('loading particle effects')
 """
 
 PROP_DATA = """
 class Props():
 
     def __init__(self):
-        pass
+        print('loading props')
 """
 
 SCENE_DATA = """
 class Scenes():
 
     def __init__(self):
-        pass
+        print('loading scenes')
 """
 
 SOUND_DATA = """
 class Sounds():
 
     def __init__(self):
-        pass
+        print('loading sounds')
 """
 
 TEXTBOX_DATA = """
 class TextBoxes():
 
     def __init__(self):
-        pass
+        print('loading text boxes')
 """
 
 TEXTURE_DATA = """
 class Textures():
 
     def __init__(self):
-        pass
+        print('loading textures')
 """
 
 FILE_DATA = {

@@ -2,4 +2,4 @@
 class Music():
 
     def __init__(self):
-        pass
+        print('loading music')

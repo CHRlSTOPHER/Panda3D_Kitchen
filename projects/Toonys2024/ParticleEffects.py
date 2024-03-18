@@ -2,4 +2,4 @@
 class ParticleEffects():
 
     def __init__(self):
-        pass
+        print('loading particle effects')

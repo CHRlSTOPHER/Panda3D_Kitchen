@@ -2,4 +2,4 @@
 class Actors():
 
     def __init__(self):
-        pass
+        print('loading actors')

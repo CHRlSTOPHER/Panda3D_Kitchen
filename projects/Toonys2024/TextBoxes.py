@@ -2,4 +2,4 @@
 class TextBoxes():
 
     def __init__(self):
-        pass
+        print('loading text boxes')

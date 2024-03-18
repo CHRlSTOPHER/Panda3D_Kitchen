@@ -2,4 +2,4 @@
 class Dialogue():
 
     def __init__(self):
-        pass
+        print('loading dialogue')

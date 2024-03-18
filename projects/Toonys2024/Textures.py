@@ -2,4 +2,4 @@
 class Textures():
 
     def __init__(self):
-        pass
+        print('loading textures')

@@ -75,16 +75,22 @@ class Startup(ShowBase):
                 print("A project already exists there!")
                 return
 
-            file = open(file, "x")
-            file.write(FILE_DATA[filename])
-            file.close()
+            try:
+                file = open(file, "x")
+                file.write(FILE_DATA[filename])
+                file.close()
+            except:
+                """User closed the tkinter box without directory input"""
 
     def load_project(self):
         self.define_folder_location()
         # Add directory to path in case directory is in a different location.
         sys.path.append(self.folder_location)
-        from Main import Main
-        self.main = Main()
+        try:
+            from Main import Main
+            self.main = Main()
+        except:
+            print("Project not found.")
 
     def delete_project(self):
         self.define_folder_location()

@@ -2,4 +2,4 @@
 class Sounds():
 
     def __init__(self):
-        pass
+        print('loading sounds')
