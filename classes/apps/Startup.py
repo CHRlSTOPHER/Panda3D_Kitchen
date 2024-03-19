@@ -22,6 +22,7 @@ from classes.settings import Settings
 
 import tkinter as tk
 from tkinter import filedialog
+import shutil
 
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
@@ -29,11 +30,11 @@ from direct.gui.DirectGui import DirectButton, DirectFrame
 from classes.globals.AppGlobals import FILE_DATA
 
 BUTTONS = [
-    ("CREATE", (-.19, 0, -.67), [.115, .115, .115]),
-    ("LOAD", (.19, 0, -.67), (.123, .12, .116)),
-    ("DELETE", (-.19, 0, -.802), (.121, .121, .121)),
-    ("MOVE", (.193, 0, -.802), (.115, .115, .12)),
-    ("APPLICATIONS", (-.018, 0, -.925), (.116, .116, .116)),
+    ("CREATE", (-.19, 0, -.67), (.103, .103, .103)),
+    ("LOAD", (.19, 0, -.67), (.111, .108, .104)),
+    ("DELETE", (-.19, 0, -.802), (.109, .109, .109)),
+    ("MOVE", (.193, 0, -.802), (.103, .103, .108)),
+    ("APPLICATIONS", (-.018, 0, -.925), (.104, .104, .104)),
 ]
 FILENAMES = ["Actors", "Dialogue", "Main", "Music", "ParticleEffects",
              "Props", "Scenes", "Sounds", "TextBoxes", "Textures"]
@@ -61,14 +62,12 @@ class Startup(ShowBase):
         self.project_frame = DirectFrame(pos=(0, 0, .1), scale=1.1)
         i = 0
         for name, pos, scale in BUTTONS:
-            m = .9
-            new_scale = (scale[0] * m, scale[1] * m, scale[2] * m)
             DirectButton(parent=self.project_frame, text=name,
-                         pos=pos, scale=new_scale, command=self.commands[i])
+                         pos=pos, scale=scale, command=self.commands[i])
             i += 1
 
     def create_project(self):
-        self.define_folder_location()
+        self.folder_location = self.get_folder_location()
         for filename in FILENAMES:
             file = f"{self.folder_location}/{filename}.py"
             if os.path.exists(file):
@@ -83,33 +82,40 @@ class Startup(ShowBase):
                 """User closed the tkinter box without directory input"""
 
     def load_project(self):
-        self.define_folder_location()
+        self.folder_location = self.get_folder_location()
         # Add directory to path in case directory is in a different location.
         sys.path.append(self.folder_location)
         try:
             from Main import Main
             self.main = Main()
+            self.project_frame.stash()
         except:
-            print("Project not found.")
+            print("Project not found / User cancelled load.")
 
     def delete_project(self):
-        self.define_folder_location()
+        self.folder_location = self.get_folder_location()
         for filename in FILENAMES:
             file = f"{self.folder_location}/{filename}.py"
             if os.path.exists(file):
                 os.remove(file)
 
     def move_project(self):
-        pass
+        old_folder_location = self.get_folder_location()
+        new_folder_location = self.get_folder_location()
+        try:
+            shutil.move(old_folder_location, new_folder_location)
+        except:
+            """They moved the folder to the same location lol."""
 
     def load_apps(self):
         pass
 
-    def define_folder_location(self):
+    def get_folder_location(self):
         root = tk.Tk()
-        root.withdraw()
-        self.folder_location = filedialog.askdirectory()
+        root.withdraw() # Hide the tk box that pops up.
+        folder_location = filedialog.askdirectory()
         root.destroy()
+        return folder_location
 
 
 project = Startup()
