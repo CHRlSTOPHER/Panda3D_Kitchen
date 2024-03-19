@@ -30,11 +30,10 @@ from direct.gui.DirectGui import DirectButton, DirectFrame
 from classes.globals.AppGlobals import FILE_DATA
 
 BUTTONS = [
-    ("CREATE", (-.19, 0, -.67), (.103, .103, .103)),
-    ("LOAD", (.19, 0, -.67), (.111, .108, .104)),
-    ("DELETE", (-.19, 0, -.802), (.109, .109, .109)),
-    ("MOVE", (.193, 0, -.802), (.103, .103, .108)),
-    ("APPLICATIONS", (-.018, 0, -.925), (.104, .104, .104)),
+    ("CREATE", (-.19, 0, -.77), (.103, .103, .103)),
+    ("LOAD", (.19, 0, -.77), (.111, .108, .104)),
+    ("DELETE", (-.19, 0, -.902), (.109, .109, .109)),
+    ("MOVE", (.193, 0, -.902), (.103, .103, .108)),
 ]
 FILENAMES = ["Actors", "Dialogue", "Main", "Music", "ParticleEffects",
              "Props", "Scenes", "Sounds", "TextBoxes", "Textures"]
@@ -44,6 +43,7 @@ class Startup(ShowBase):
 
     def __init__(self):
         ShowBase.__init__(self)
+        base.disable_mouse()
 
         self.project_frame = None
         self.folder_location = None
@@ -53,7 +53,6 @@ class Startup(ShowBase):
             self.load_project,
             self.delete_project,
             self.move_project,
-            self.load_apps
         ]
 
         self.load_gui()
@@ -85,12 +84,9 @@ class Startup(ShowBase):
         self.folder_location = self.get_folder_location()
         # Add directory to path in case directory is in a different location.
         sys.path.append(self.folder_location)
-        try:
-            from Main import Main
-            self.main = Main()
-            self.project_frame.stash()
-        except:
-            print("Project not found / User cancelled load.")
+        from Main import Main
+        self.main = Main()
+        self.project_frame.stash()
 
     def delete_project(self):
         self.folder_location = self.get_folder_location()
@@ -106,9 +102,6 @@ class Startup(ShowBase):
             shutil.move(old_folder_location, new_folder_location)
         except:
             """They moved the folder to the same location lol."""
-
-    def load_apps(self):
-        pass
 
     def get_folder_location(self):
         root = tk.Tk()

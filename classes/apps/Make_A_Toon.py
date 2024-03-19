@@ -1,19 +1,3 @@
-# The code below lets you load the py file directly in cmd/IDE.
-# (You will still need to use a version of python that comes with Panda3D)
-import os, sys
-
-project_path = ""
-for folder in os.getcwd().split("\\"):
-    project_path += folder + "/"
-    if folder == "Panda3D_Kitchen": break
-sys.path.append(project_path)
-os.chdir(project_path)
-from classes.settings import Settings
-'''
-An application that lets you create new Toons and save them.
-Or you can load an existing Toon and edit it!
-'''
-from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectFrame, DirectButton
 from direct.interval.IntervalGlobal import (Sequence, Func, Wait, Parallel)
 
@@ -201,10 +185,9 @@ class Make_A_Toon_GUI(DirectFrame):
         self.toon.set_pos_hpr(*MT.TOON_POS, *MT.TOON_HPR)
 
 
-class Make_A_Toon(ShowBase, Make_A_Toon_GUI):
+class Make_A_Toon(Make_A_Toon_GUI):
 
     def __init__(self):
-        ShowBase.__init__(self)
         Make_A_Toon_GUI.__init__(self)
 
         self.selection_allowed = True
