@@ -11,6 +11,7 @@ from .ToonHead import ToonHead
 
 ALPHA = (1,)
 
+
 class Toon(Actor, ToonHead, AutoWalker):
 
     def __init__(self, parent, gender='m', toon_name="~Toon", lod=1000,

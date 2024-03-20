@@ -13,8 +13,13 @@ DELAY = .001
 
 class RotationalCamera(DirectObject):
 
-    def __init__(self):
+    def __init__(self, camera, rotate=True):
+        if not rotate:
+            return
+
         DirectObject.__init__(self)
+
+        self.camera = camera
         self.window_properties = WindowProperties()
         self.toggle_value = True
         self.cam_task = True
@@ -38,6 +43,7 @@ class RotationalCamera(DirectObject):
     def recenter_mouse_cursor(self):
         mouse_x_center = base.win.get_x_size() // 2
         mouse_y_center = base.win.get_y_size() // 2
+
         base.win.move_pointer(0, mouse_x_center, mouse_y_center)
 
     def rot_cam_task(self, task):
@@ -56,11 +62,13 @@ class RotationalCamera(DirectObject):
             # move camera based on mouse movement during frame.
             # factor fov into the equation. small fov, reduce move speed.
             fov_mod = base.camLens.get_fov()[0] / G.FOV_MODIFIER
-            new_cam_h_value = camera.get_h() - (x_pos * SENSITIVITY * fov_mod)
-            new_cam_p_value = camera.get_p() + (y_pos * SENSITIVITY * fov_mod)
+            new_cam_h_value = (self.camera.get_h()
+                               - (x_pos * SENSITIVITY * fov_mod))
+            new_cam_p_value = (self.camera.get_p()
+                               + (y_pos * SENSITIVITY * fov_mod))
 
-            camera.set_h(new_cam_h_value)
-            camera.set_p(new_cam_p_value)
+            self.camera.set_h(new_cam_h_value)
+            self.camera.set_p(new_cam_p_value)
 
     def cleanup(self):
         if not self.toggle_value:

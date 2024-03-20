@@ -16,7 +16,7 @@ BASE_TURN_RATE = .5
 
 class NodeMover(NodePath, DirectObject):
 
-    def __init__(self, node=None):
+    def __init__(self, node=None, _camera=None):
         DirectObject.__init__(self)
         self.move_options = None
         self.move_speed = BASE_MOVE_RATE
@@ -25,7 +25,12 @@ class NodeMover(NodePath, DirectObject):
         self.allow_tasks = True
 
         # The assigned key below will set the camera as the node being moved.
-        self.accept(G.MIDDLE_MOUSE_BUTTON, self.set_node, extraArgs=[camera])
+        if _camera:
+            cam = _camera
+        else:
+            cam = camera
+
+        self.accept(G.MIDDLE_MOUSE_BUTTON, self.set_node, extraArgs=[cam])
         self.set_node(node)
         self.listen_for_key_inputs()
 

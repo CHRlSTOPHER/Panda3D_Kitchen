@@ -12,8 +12,10 @@ MAXIMUM_FOV = G.MAXIMUM_SCROLL_FOV - G.FOV_SCROLL_AMOUNT\
 
 class FovScrollWheel(DirectObject):
 
-    def __init__(self, fov):
+    def __init__(self, camera, fov):
         DirectObject.__init__(self)
+
+        self.camera = camera
         self.current_fov = fov
         self.new_fov = fov
         self.fov_increment = 1
@@ -24,12 +26,12 @@ class FovScrollWheel(DirectObject):
     def zoom_in(self):
         if self.new_fov - SCROLL_AMOUNT >= MINIMUM_FOV:
             self.new_fov = self.new_fov - SCROLL_AMOUNT
-            base.camLens.set_fov(self.new_fov)
+            self.camera.node().get_lens().set_fov(self.new_fov)
 
     def zoom_out(self):
         if self.new_fov + SCROLL_AMOUNT <= MAXIMUM_FOV:
             self.new_fov = self.new_fov + SCROLL_AMOUNT
-            base.camLens.set_fov(self.new_fov)
+            self.camera.node().get_lens().set_fov(self.new_fov)
 
     def cleanup(self):
         self.ignore_all()

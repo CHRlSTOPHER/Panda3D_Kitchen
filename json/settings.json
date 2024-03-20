@@ -2,13 +2,12 @@
 	"project-path": "C:/Users/Chris/Desktop/Panda3D_Kitchen/",
 
 	"full_screen": false,
-	"window_size": "1280 720",
+	"window_size": "1920 1080",
 	"monitor_resolution": "1920 1080",
-	"borderless": true,
+	"borderless": false,
 	"bits": 24,
 	"framebuffer-multisample": 1,
 	"multisamples": 8,
 	"show_fps_meter": false,
-	"auto_walker": false,
-	"mouse_lock": true
+	"auto_walker": false
 }
