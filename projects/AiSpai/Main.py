@@ -22,7 +22,7 @@ class Main(DirectObject):
 
     def __init__(self):
         self.classes = []
-        self.master_editor = MasterEditor(mouse_lock=False)
+        self.master_editor = MasterEditor()
         self.load_project()
         self.accept('r', self.reload_modules)
 

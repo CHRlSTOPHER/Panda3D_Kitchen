@@ -56,6 +56,7 @@ class Startup(ShowBase):
         ]
 
         self.load_gui()
+        self.accept('escape', exit)
 
     def load_gui(self):
         self.project_frame = DirectFrame(pos=(0, 0, .1), scale=1.1)
