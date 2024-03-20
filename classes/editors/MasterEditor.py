@@ -10,19 +10,16 @@ from .NodeMover import NodeMover
 from .NodeSelector import NodeSelector
 from .NodeTransformPrinter import (NodeTransformPrinter, get_transform_data)
 from classes.gui.NodeTransformPrinterGUI import NodeTransformPrinterGUI
-from classes.gui.MouseWindowLock import MouseWindowLock
 from .SequenceManager import SequenceManager
 
 
 class MasterEditor(DirectObject):
 
-    def __init__(self, mouse_lock=True, rot_cam=True, nt_printer=True, fov=50,
-                 sequence=None):
+    def __init__(self, rot_cam=True, nt_printer=True, fov=50, sequence=None):
         DirectObject.__init__(self)
         self.hide_gui = False
         self.accept("`", self.hide_editor_gui)
 
-        self.mouse_lock = None
         self.rot_cam = None
         self.nt_printer = None
         self.nt_gui = None
@@ -30,9 +27,6 @@ class MasterEditor(DirectObject):
         self.fov_wheel = FovScrollWheel(fov)
         self.node_mover = NodeMover(camera)
         self.node_selector = NodeSelector(self.node_mover)
-
-        if mouse_lock:
-            self.mouse_lock = MouseWindowLock()
 
         if rot_cam:
             self.rot_cam = RotationalCamera()
@@ -57,8 +51,6 @@ class MasterEditor(DirectObject):
 
     def cleanup(self):
         classes = [self.node_mover, self.node_selector, self.fov_wheel]
-        if self.mouse_lock:
-            classes.append(self.mouse_lock)
         if self.orb_cam:
             classes.append(self.orb_cam)
         if self.nt_printer:
