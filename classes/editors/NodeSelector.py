@@ -13,10 +13,13 @@ RAY_MOUSE_TASK = "ray_mouse_task"
 
 class NodeSelector(DirectObject):
 
-    def __init__(self, camera, _render, mouse_watcher, class_object=None):
+    def __init__(self, _camera, _render, mouse_watcher, class_object=None):
         DirectObject.__init__(self)
 
-        self.camera = camera
+        if _camera == camera:
+            self.camera = base.cam
+        else:
+            self.camera = _camera
         self.render = _render
 
         if mouse_watcher:
