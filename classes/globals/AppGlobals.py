@@ -26,6 +26,7 @@ from direct.showbase.DirectObject import DirectObject
 from panda3d.core import Camera, NodePath, MouseWatcher
 
 from classes.editors.MasterEditor import MasterEditor
+from classes.menus.MasterMenu import MasterMenu
 
 import Actors
 import Dialogue
@@ -50,6 +51,7 @@ class Main(DirectObject):
 
         self.editor = MasterEditor([camera, self.camera], self.mouse_watcher,
                                    self.region, self.render)
+        self.master_menu = MasterMenu()
 
         self.load_project()
         self.accept('r', self.reload_modules)
@@ -67,6 +69,10 @@ class Main(DirectObject):
         self.mouse_watcher = MouseWatcher()
         base.mouseWatcher.get_parent().attach_new_node(self.mouse_watcher)
         self.mouse_watcher.set_display_region(self.region)
+
+        # Fix display region aspect ratio. Otherwise, it warps terribly.
+        aspect_ratio = base.get_aspect_ratio()
+        self.camera.node().get_lens().set_aspect_ratio(aspect_ratio)
 
     def load_project(self):
         self.actors = Actors.Actors(self.render, self.editor)

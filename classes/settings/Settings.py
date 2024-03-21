@@ -11,7 +11,7 @@ RESOURCES = JSON_SETTINGS['project-path'] + "resources/"
 
 loadPrcFileData("", f"model-path {RESOURCES}")
 loadPrcFileData("", f"window-title {G.WINDOW_TITLE}")
-loadPrcFileData("", f"icon-filename {RESOURCES}windows/{G.ICON_FILENAME}")
+loadPrcFileData("", f"icon-filename {RESOURCES}editor/{G.ICON_FILENAME}")
 
 loadPrcFileData("", f"depth-bits {G.BITS}")
 loadPrcFileData("", "framebuffer-multisample"
