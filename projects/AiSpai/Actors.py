@@ -1,9 +1,9 @@
 from classes.actors.Toon import Toon
 class Actors():
 
-    def __init__(self, editor):
-        self.ai_spai = Toon(render, head='qls', toon_name="~self.ai_spai",
-                            torso='m',
+    def __init__(self, _render, editor):
+        self.ai_spai = Toon(_render, head='qls', toon_name="~self.ai_spai",
+                            #torso='m',
                             head_color=7, gender='f', arm_color=6,
                             bottom='skirt', names=True)
         spai_shirt = loader.load_texture('phase_4/maps/ttr_t_chr_avt_shirt_taskForceSleuth2.jpg')
@@ -15,7 +15,7 @@ class Actors():
         self.ai_spai.find('**/torso-bot').set_texture(spai_skirt, 1)
         self.ai_spai.find('**/sleeves').set_texture(spai_sleeve, 1)
         self.ai_spai.disable_autowalker()
-        # self.ai_spai.pose('think', 49)
+        self.ai_spai.pose('think', 49)
         glasses_texture = loader.load_texture(
             'phase_4/maps/tt_t_chr_avt_acc_msk_sellbotGlasses.jpg',
             'phase_4/maps/tt_t_chr_avt_acc_msk_sellbotGlasses_a.rgb',
@@ -29,15 +29,15 @@ class Actors():
         self.ai_spai_glasses.set_pos_hpr(-0.0, 0.11, 0.2, 180.0, -61.82, 0.0)
         self.ai_spai_glasses.set_name("~self.ai_spai_glasses")
 
-        # right_elbow = self.ai_spai.control_joint(None, 'torso', 'def_right_elbow')
-        # left_elbow = self.ai_spai.control_joint(None, 'torso', 'def_left_elbow')
-        # right_elbow.set_pos_hpr(0.53, 0.0, 0.0, -71.66, -16.5, -43.5)
-        # left_elbow.set_pos_hpr(-0.83, -0.01, 0.18, -124.24, -34.83, -51.17)
+        right_elbow = self.ai_spai.control_joint(None, 'torso', 'def_right_elbow')
+        left_elbow = self.ai_spai.control_joint(None, 'torso', 'def_left_elbow')
+        right_elbow.set_pos_hpr(0.53, 0.0, 0.0, -71.66, -16.5, -43.5)
+        left_elbow.set_pos_hpr(-0.83, -0.01, 0.18, -124.24, -34.83, -51.17)
         # editor.node_mover.set_node(left_elbow)
 
         t = 8
         c = 1
-        self.pink = Toon(render, 'm', "~self.pink", 1000,
+        self.pink = Toon(_render, 'm', "~self.pink", 1000,
                          'pss', 's', 'm', 'shorts',
                          41, 41, 41,
                          c, c, 41, c, 41, c, 41, True)
@@ -62,20 +62,20 @@ class Actors():
         self.pink.set_pos_hpr(-3.6, -3.12, 1.11, -90.89, -4.52, -0.75)
         self.pink.hide()
 
-        self.ai_spai.pose('toss', 20)
+        # self.ai_spai.pose('toss', 20)
         self.ai_spai.get_part("head").set_pos_hpr(0.0, 0.0, 0.0, 10.5, -18.0,
                                                   9.0)
         self.ai_spai.left_eye.set_pos_hpr(-0.04, 0.0, -0.02, 0.0, 0.0, 0.0)
         self.ai_spai.right_eye.set_pos_hpr(-0.05, 0.04, -0.01, 0.0, 0.0, 0.0)
         self.ai_spai_glasses.set_pos_hpr(-0.0, 0.17, 0.2, 180.0, -58.86, -1.26)
         camera.set_pos_hpr(-1.83, 4.4, 1.51, -152.08, 10.48, -12.82)
-        self.ai_spai.set_pos_hpr(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-        self.ai_spai.hide()
+        # self.ai_spai.set_pos_hpr(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        # self.ai_spai.hide()
 
-        # self.ai_spai.set_pos_hpr(-0.06, -0.98, 0.38, 1.73, 3.0, 4.07)
-        # self.ai_spai.right_eye.set_pos_hpr(-0.02, 0.03, -0.08, -2.25, 0.0, 0.0)
-        # self.ai_spai.left_eye.set_pos_hpr(0.02, 0.03, -0.09, 0.0, 0.0, 0.0)
-        # self.ai_spai.get_part("head").set_pos_hpr(0.0, 0.0, 0.0, -2.25, 3.75, -16.5)
+        self.ai_spai.set_pos_hpr(-0.06, -0.98, 0.38, 1.73, 3.0, 4.07)
+        self.ai_spai.right_eye.set_pos_hpr(-0.02, 0.03, -0.08, -2.25, 0.0, 0.0)
+        self.ai_spai.left_eye.set_pos_hpr(0.02, 0.03, -0.09, 0.0, 0.0, 0.0)
+        self.ai_spai.get_part("head").set_pos_hpr(0.0, 0.0, 0.0, -2.25, 3.75, -16.5)
 
     def cleanup(self):
         self.pink.delete()

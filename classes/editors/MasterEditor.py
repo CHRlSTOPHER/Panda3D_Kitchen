@@ -45,7 +45,7 @@ class MasterEditor(DirectObject):
 
     def set_camera(self, camera):
         self.rot_cam = RotationalCamera(camera, self.rot_cam)
-        self.fov_wheel = FovScrollWheel(camera, self.fov)
+        self.fov_wheel = FovScrollWheel(self.fov, camera, self.mouse_watcher)
         self.node_mover = NodeMover(camera, camera)
         self.node_selector = NodeSelector(camera, self.render,
                                           self.mouse_watcher, self.node_mover)
