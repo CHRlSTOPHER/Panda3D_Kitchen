@@ -23,6 +23,7 @@ from classes.settings import Settings
 import tkinter as tk
 from tkinter import filedialog
 import shutil
+import importlib
 
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
@@ -85,9 +86,10 @@ class Startup(ShowBase):
         self.folder_location = self.get_folder_location()
         # Add directory to path in case directory is in a different location.
         sys.path.append(self.folder_location)
-        from Main import Main
-        self.main = Main()
-        self.project_frame.stash()
+        if importlib.util.find_spec("Main"): # check if module exists
+            from Main import Main
+            self.main = Main()
+            self.project_frame.stash()
 
     def delete_project(self):
         self.folder_location = self.get_folder_location()
