@@ -8,8 +8,6 @@ from classes.camera.RotationalCamera import RotationalCamera
 from classes.camera.FovScrollWheel import FovScrollWheel
 from .NodeMover import NodeMover
 from .NodeSelector import NodeSelector
-from .NodeTransformPrinter import (NodeTransformPrinter, get_transform_data)
-from classes.gui.NodeTransformPrinterGUI import NodeTransformPrinterGUI
 from .SequenceManager import SequenceManager
 
 
@@ -17,37 +15,29 @@ class MasterEditor(DirectObject):
 
     def __init__(self, cameras=[], mouse_watcher=None,
                  display_region=None, _render=False,
-                 rot_cam=True, nt_printer=True, fov=None, sequence=None):
+                 rot_cam=True, fov=None, sequence=None):
         DirectObject.__init__(self)
 
         self.cameras = []
         self.mouse_watcher = mouse_watcher
         self.display_region = display_region
-        self.fov = None
 
-        self.hide_gui = False
-
-        if _render:
+        self.render = render
+        if _render: # Add the new render made for a new display region.
             self.render = _render
-        else:
-            self.render = render
 
         self.rot_cam = rot_cam
-        self.nt_printer = None
-        self.nt_gui = None
-
-        if cameras:
-            self.set_camera(cameras[-1])
-        else:
-            self.set_camera(camera)
-
-        if nt_printer:
-            self.nt_printer = NodeTransformPrinter(*get_transform_data(camera))
-            self.nt_gui = NodeTransformPrinterGUI(
-                self.node_mover, self.nt_printer, base.a2dLeftCenter)
+        self.fov = fov
 
         if sequence:
            self.sequence_manager = SequenceManager(sequence)
+
+        self.hide_gui = False
+
+        if cameras: # Get the last camera from the list
+            self.set_camera(cameras[-1])
+        else: # Default to og camera.
+            self.set_camera(camera)
 
         self.accept("`", self.hide_editor_gui)
 
@@ -72,8 +62,6 @@ class MasterEditor(DirectObject):
         classes = [self.node_mover, self.node_selector, self.fov_wheel]
         if self.orb_cam:
             classes.append(self.orb_cam)
-        if self.nt_printer:
-            classes.append(self.nt_printer)
 
         for selector in self.node_selectors:
             selector.cleanup()
