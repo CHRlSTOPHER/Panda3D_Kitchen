@@ -20,6 +20,8 @@ class MasterEditor(DirectObject):
 
         self.cameras = []
         self.mouse_watcher = mouse_watcher
+        if not self.mouse_watcher:
+            self.mouse_watcher = base.mouseWatcherNode
         self.display_region = display_region
 
         self.render = render
