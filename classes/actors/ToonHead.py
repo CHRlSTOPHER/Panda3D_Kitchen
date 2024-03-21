@@ -3,7 +3,8 @@ Filters through all the possible exceptions and makes a Toon Head.
 """
 from direct.actor.Actor import Actor
 
-from classes.globals import Globals as G, ToonGlobals as TG
+from ..settings import Globals as G
+from . import ToonGlobals as TG
 
 EXPRESSIONS = ["neutral", "sad", "angry", "laugh", "surprise", "smile"]
 DOG_PARTS = {

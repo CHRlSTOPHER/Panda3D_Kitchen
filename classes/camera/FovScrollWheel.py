@@ -5,7 +5,7 @@ Limited range between 0-180.
 import json
 from direct.showbase.DirectObject import DirectObject
 
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 
 SCROLL_AMOUNT = int(G.FOV_SCROLL_AMOUNT)
 MINIMUM_FOV = G.MINIMUM_SCROLL_FOV + G.FOV_SCROLL_AMOUNT

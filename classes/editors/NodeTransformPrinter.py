@@ -4,7 +4,8 @@ Prints various bits of information about the currently selected node.
 from dataclasses import dataclass
 import re
 
-from classes.globals import Globals as G
+from classes.settings import Globals as G
+
 
 # Use this function to provide the args required for the dataclass.
 def get_transform_data(node):

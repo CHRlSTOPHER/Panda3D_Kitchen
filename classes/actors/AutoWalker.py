@@ -8,7 +8,7 @@ import math
 
 from panda3d.core import Vec3
 
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 
 json_settings = json.loads(open(G.SETTINGS_JSON).read())
 

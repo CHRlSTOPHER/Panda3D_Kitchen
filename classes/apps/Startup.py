@@ -28,7 +28,7 @@ import importlib
 from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
 
-from classes.globals.AppGlobals import FILE_DATA
+from classes.apps.AppGlobals import FILE_DATA
 
 BUTTONS = [
     ("CREATE", (-.19, 0, -.77), (.103, .103, .103)),

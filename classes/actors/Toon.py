@@ -5,9 +5,10 @@ from direct.actor.Actor import Actor
 from panda3d.core import OmniBoundingVolume
 
 from .AutoWalker import AutoWalker
-from classes.globals import Globals as G, ToonGlobals as TG
+from ..settings import Globals as G
 from classes.props.Prop import Prop
 from .ToonHead import ToonHead
+from . import ToonGlobals as TG
 
 ALPHA = (1,)
 

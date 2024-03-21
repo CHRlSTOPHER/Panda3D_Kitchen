@@ -7,7 +7,7 @@ from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from panda3d.core import NodePath
 import json
 
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 
 KBS = json.loads(open(G.KEYBINDINGS_JSON).read())
 BASE_MOVE_RATE = .1

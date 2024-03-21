@@ -1,6 +1,6 @@
 from direct.actor.Actor import Actor
 
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 
 ROOM_PATH = G.DOM_5 + "ttr_m_ara_crg_boiler"
 ACTOR_PATH = G.CHAR_5 + "ttr_r_chr_cbg_boss" + G.BAM

@@ -6,8 +6,9 @@ from direct.actor.Actor import Actor
 from panda3d.core import OmniBoundingVolume
 
 from .AutoWalker import AutoWalker
-from classes.globals import Globals as G, SuitGlobals as SG
+from ..settings import Globals as G
 from classes.props.Prop import Prop
+from . import SuitGlobals as SG
 
 TTO = 1
 TTR = 2

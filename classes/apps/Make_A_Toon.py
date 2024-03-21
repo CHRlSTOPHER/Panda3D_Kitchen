@@ -4,9 +4,9 @@ from direct.interval.IntervalGlobal import (Sequence, Func, Wait, Parallel)
 from classes.actors.Toon import Toon
 from classes.editors.NodeSelector import NodeSelector
 from classes.gui.ButtonGrid import ButtonGrid
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 from classes.globals import ToonGlobals as TG
-from classes.globals.ToonColors import ToonColors as TC
+from projects.ToonColors import ToonColors as TC
 from classes.props.PlaneModel import PlaneModel
 from classes.props.Prop import Prop
 import Make_A_Toon_Globals as MT

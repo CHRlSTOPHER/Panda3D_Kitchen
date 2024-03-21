@@ -12,7 +12,7 @@ from direct.gui import DirectGuiGlobals as DGG
 from panda3d.core import TextNode, TransparencyAttrib
 
 from classes.gui.Revealer import RevealerGUI
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 from classes.globals import GUIGlobals as GG
 
 ICON_TEXTURE = "windows/printer-icon.png"

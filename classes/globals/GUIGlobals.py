@@ -1,1 +1,0 @@
-CAFE_FONT = "cafe-francoise.ttf"

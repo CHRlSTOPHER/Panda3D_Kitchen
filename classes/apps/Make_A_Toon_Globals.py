@@ -1,4 +1,4 @@
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 
 FILE = "FILE"
 BODY = "TOON"

@@ -5,7 +5,7 @@ Enable and Disable the Mode with the RMB.
 from direct.showbase.DirectObject import DirectObject
 from panda3d.core import WindowProperties
 
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 
 SENSITIVITY = G.ROTATIONAL_CAM_MOUSE_SENSITIVITY
 ROT_CAM_TASK = "rot_cam_task"

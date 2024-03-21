@@ -6,7 +6,7 @@ from panda3d.core import (CollisionTraverser, CollisionRay, CollisionNode,
                           GeomNode, CollisionHandlerQueue)
 from direct.showbase.DirectObject import DirectObject
 
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 
 RAY_MOUSE_TASK = "ray_mouse_task"
 

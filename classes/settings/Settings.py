@@ -3,7 +3,7 @@ import json
 
 from panda3d.core import loadPrcFileData, CullBinManager
 
-from classes.globals import Globals as G
+from classes.settings import Globals as G
 
 # Change the directory to the project path in the settings
 JSON_SETTINGS = json.loads(open(G.SETTINGS_JSON).read())
