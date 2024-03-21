@@ -2,6 +2,7 @@
 Adjust the Camera Fov by scrolling the Mouse Wheel.
 Limited range between 0-180.
 """
+import json
 from direct.showbase.DirectObject import DirectObject
 
 from classes.globals import Globals as G
@@ -16,9 +17,15 @@ class FovScrollWheel(DirectObject):
         DirectObject.__init__(self)
 
         self.camera = camera
+        if not fov: # Default to the fov in settings.
+            json_settings = json.loads(open(G.SETTINGS_JSON).read())
+            fov = json_settings['fov']
+
         self.current_fov = fov
         self.new_fov = fov
         self.fov_increment = 1
+
+        self.camera.node().get_lens().set_fov(self.new_fov)
 
         self.accept(G.MOUSE_WHEEL_UP, self.zoom_in)
         self.accept(G.MOUSE_WHEEL_DOWN, self.zoom_out)

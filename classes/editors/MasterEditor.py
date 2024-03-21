@@ -17,13 +17,13 @@ class MasterEditor(DirectObject):
 
     def __init__(self, cameras=[], mouse_watcher=None,
                  display_region=None, _render=False,
-                 rot_cam=True, nt_printer=True, fov=50, sequence=None):
+                 rot_cam=True, nt_printer=True, fov=None, sequence=None):
         DirectObject.__init__(self)
 
         self.cameras = []
         self.mouse_watcher = mouse_watcher
         self.display_region = display_region
-        self.fov = fov
+        self.fov = None
 
         self.hide_gui = False
 
