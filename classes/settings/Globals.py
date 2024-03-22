@@ -1,5 +1,5 @@
 WINDOW_TITLE = "PANDA3D KITCHEN"
-ICON_FILENAME = "panda3d-chef.ico"
+ICON_FILENAME = "/maps/panda3d-chef.ico"
 SETTINGS_JSON = 'json/settings.json'
 KEYBINDINGS_JSON = "json/keybindings.json"
 

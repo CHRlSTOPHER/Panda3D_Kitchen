@@ -29,7 +29,6 @@ class Main(DirectObject):
 
         self.editor = MasterEditor([camera, self.camera], self.mouse_watcher,
                                    self.region, self.render)
-        self.master_menu = MasterMenu()
 
         self.load_project()
         self.accept('r', self.reload_modules)

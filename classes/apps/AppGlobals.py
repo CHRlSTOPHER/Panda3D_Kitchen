@@ -26,7 +26,6 @@ from direct.showbase.DirectObject import DirectObject
 from panda3d.core import Camera, NodePath, MouseWatcher
 
 from classes.editors.MasterEditor import MasterEditor
-from classes.menus.MasterMenu import MasterMenu
 
 import Actors
 import Dialogue
@@ -51,7 +50,6 @@ class Main(DirectObject):
 
         self.editor = MasterEditor([camera, self.camera], self.mouse_watcher,
                                    self.region, self.render)
-        self.master_menu = MasterMenu()
 
         self.load_project()
         self.accept('r', self.reload_modules)
