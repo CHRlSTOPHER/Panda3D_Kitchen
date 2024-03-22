@@ -125,8 +125,8 @@ class Startup(ShowBase):
         lines = ""
         # update the last-project line to store the new project location.
         for line in line_data:
-            if "last_project" in line:
-                line = f'    "last-project": "f{folder_location}",'
+            if "last-project" in line:
+                line = f'    "last-project": "{folder_location}",\n'
             lines += line
 
         # write the new line data to the file.
