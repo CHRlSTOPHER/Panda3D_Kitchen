@@ -4,11 +4,11 @@ A collection of different classes. Mashes them together into an editor.
 from direct.showbase.DirectObject import DirectObject
 from direct.gui.DirectGui import DirectFrame
 
+from classes.menus.MasterMenu import MasterMenu
 from classes.camera.RotationalCamera import RotationalCamera
 from classes.camera.FovScrollWheel import FovScrollWheel
 from .NodeMover import NodeMover
 from .NodeSelector import NodeSelector
-from .SequenceManager import SequenceManager
 
 
 class MasterEditor(DirectObject):
@@ -31,8 +31,7 @@ class MasterEditor(DirectObject):
         self.rot_cam = rot_cam
         self.fov = fov
 
-        if sequence:
-           self.sequence_manager = SequenceManager(sequence)
+        self.master_menu = MasterMenu(sequence)
 
         self.hide_gui = False
 
