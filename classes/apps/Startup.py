@@ -29,6 +29,8 @@ from direct.showbase.ShowBase import ShowBase
 from direct.gui.DirectGui import DirectButton, DirectFrame
 
 from classes.apps.AppGlobals import FILE_DATA
+from classes.settings.FileManagement import (FILES_JSON,
+                                             update_json_last_selected)
 
 BUTTONS = [
     ("CREATE", (-.19, 0, -.77), (.103, .103, .103)),
@@ -38,7 +40,6 @@ BUTTONS = [
 ]
 FILENAMES = ["Actors", "Dialogue", "Main", "Music", "ParticleEffects",
              "Props", "Scenes", "Sounds", "TextBoxes", "Textures"]
-FILES_JSON = "json/files.json"
 
 
 class Startup(ShowBase):
@@ -114,25 +115,9 @@ class Startup(ShowBase):
         last_project = json_files["last-project"]
         folder_location = filedialog.askdirectory(initialdir=last_project)
         root.destroy()
-        self.update_last_selected_project(folder_location)
+        update_json_last_selected(folder_location, "last-project")
 
         return folder_location
-
-    # Update the last project the user loaded in files.json.
-    def update_last_selected_project(self, folder_location):
-        file = open(FILES_JSON, "r")
-        line_data = file.readlines()
-        lines = ""
-        # update the last-project line to store the new project location.
-        for line in line_data:
-            if "last-project" in line:
-                line = f'    "last-project": "{folder_location}",\n'
-            lines += line
-
-        # write the new line data to the file.
-        file = open(FILES_JSON, "w")
-        file.writelines(lines)
-        file.close()
 
 
 project = Startup()
