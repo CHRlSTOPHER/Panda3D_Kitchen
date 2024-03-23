@@ -2,7 +2,7 @@
 class Scenes():
 
     def __init__(self):
-        print('loading scenes')
+        pass
     
     def cleanup(self):
         pass

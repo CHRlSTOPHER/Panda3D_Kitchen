@@ -2,7 +2,7 @@
 class Dialogue():
 
     def __init__(self):
-        print('loading dialogue')
+        pass
     
     def cleanup(self):
         pass

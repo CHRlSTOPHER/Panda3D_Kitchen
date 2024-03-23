@@ -1,17 +1,17 @@
-
 class Props():
 
-    def __init__(self, _render, editor):
-        print('loading props')
-        self.render = _render
-        self.editor = editor
+    def __init__(self):
+        pass
 
         # temporary test prop
         env = loader.load_model('environment.egg')
-        env.reparent_to(self.render)
+        env.reparent_to(base.main_render)
+
+        env = loader.load_model('environment.egg')
+        # env.reparent_to(base.preview_render)
 
         panda = loader.load_model('panda.egg')
-        panda.reparent_to(self.render)
+        panda.reparent_to(base.main_render)
     
     def cleanup(self):
         pass

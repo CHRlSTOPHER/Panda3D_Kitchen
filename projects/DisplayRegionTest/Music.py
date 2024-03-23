@@ -2,7 +2,7 @@
 class Music():
 
     def __init__(self):
-        print('loading music')
+        pass
     
     def cleanup(self):
         pass

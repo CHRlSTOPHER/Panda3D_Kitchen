@@ -38,6 +38,8 @@ MAPS_3 = "phase_3/maps/"
 MAPS_3_5 = "phase_3.5/maps/"
 MAPS_4 = "phase_4/maps/"
 
+R_EDITOR = "resources/editor"
+
 JPG = ".jpg"
 PNG = ".png"
 EGG = ".egg"

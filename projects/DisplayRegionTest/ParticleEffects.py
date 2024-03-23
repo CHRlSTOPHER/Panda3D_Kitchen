@@ -2,7 +2,7 @@
 class ParticleEffects():
 
     def __init__(self):
-        print('loading particle effects')
+        pass
 
     def cleanup(self):
         pass
