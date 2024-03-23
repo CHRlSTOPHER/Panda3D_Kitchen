@@ -27,24 +27,44 @@ def update_json_last_selected(folder_location, keyword):
     file.close()
 
 # Returns the directory relative to resources and the file name.
-def get_resource_dir_and_file_name(initialdir=""):
+def get_resource_dir_and_file_name(title="", initialdir="", multiple=False):
     root = tk.Tk()
     root.withdraw()  # Hide the tk box that pops up.
-    file_location = filedialog.askopenfilename(initialdir=initialdir)
+    if multiple:
+        file_location = (filedialog.askopenfilenames(
+                            title=title, initialdir=initialdir))
+    else:
+        file_location = filedialog.askopenfilename(
+                            title=title, initialdir=initialdir)
     root.destroy()
 
-    # get the proper resource path from the file location
-    add_folder = False
-    resource_location = ""
-    for folder in file_location.split("/"):
-        if add_folder:
-            resource_location += folder + "/"
-        if folder == 'resources':
-            add_folder = True
+    def get_resource_directory(file_location):
+        # get the proper resource path from the file location
+        add_folder = False
+        resource_location = ""
+        for folder in file_location.split("/"):
+            if add_folder:
+                resource_location += folder + "/"
+            if folder == 'resources':
+                add_folder = True
 
-    item_name = folder.split('.')[0]
+        return resource_location, folder
 
-    return (resource_location[:-1], item_name)
+    if not multiple:
+        resource_dir, file = get_resource_directory(file_location)
+        item_name = file.split('.')[0]
+        return item_name, resource_dir[:-1],
+
+    items_names = []
+    resource_directories = []
+    for location in file_location:
+        resource_dir, file = get_resource_directory(location)
+        item_name = file.split('.')[0]
+        resource_dir = resource_dir[:-1]
+        items_names.append(item_name)
+        resource_directories.append(resource_dir)
+
+    return items_names, resource_directories
 
 # Adds or replaces new items into the database libraries.
 def update_database_library(mode, resource_dir, filename):

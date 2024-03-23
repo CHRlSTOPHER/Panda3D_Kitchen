@@ -7,10 +7,8 @@ from direct.interval.IntervalGlobal import Sequence, LerpFunc, Func
 from panda3d.core import Fog, TransparencyAttrib
 
 from classes.props.PlaneModel import PlaneModel
-from classes.settings.FileManagement import (FILES_JSON,
-                                             get_resource_dir_and_file_name,
+from classes.settings.FileManagement import (get_resource_dir_and_file_name,
                                              update_database_library)
-from classes.windows.NewWindow import NewWindow
 from classes.settings import Globals as G
 
 FRAME_POS = (-1.5, 0, -.5)
@@ -21,7 +19,7 @@ ADD_SCALE = (.24, .24, .19)
 
 ADD_BUTTON = "_add_button"
 
-CATEGORIES = { # Keyword, pos, padding
+MODES = { # Keyword, pos, padding
     "ACTORS": ['Actor', 'last-actor', (.478, 0, .8), (.49, 0)],
     "PROPS": ['Prop', 'last-prop', (-.31, 0, .8), (.99, 0)],
     "MUSIC": ['Music', 'last-music', (.481, 0, .69), (.92, 0)],
@@ -39,14 +37,26 @@ class AddItemsMenu(DirectFrame):
                              pos=FRAME_POS, scale=FRAME_SCALE)
         self.initialiseoptions(AddItemsMenu)
 
+        self.allow_screenshot = False
         self.file_location = None
-        self.mode = None
+        self.mode = 'Actor'
         self.keyword = None
         self.buttons = []
-        self.allow_screenshot = False
+
+        self.preview_model = None
         self.item_name = None
         self.item_location = None
         self.fog = None
+
+        # define all the mode classes
+        self.modes = {
+            'Actor': ActorMode(),
+            'Prop': PropMode(),
+            'Music': MusicMode(),
+            'Sound': SoundMode(),
+            'Texture': TextureMode(),
+            'Particle': ParticleMode(),
+        }
 
         # Start the search in the root of the resources file.
         json_settings = json.loads(open(G.SETTINGS_JSON).read())
@@ -55,6 +65,7 @@ class AddItemsMenu(DirectFrame):
         self.screenshot_sfx = loader.load_sfx(G.SFX_4 + "Photo_shutter.ogg")
         self.screenshot_sfx.set_balance(-.25)
 
+        # Load the top and bottom buttons. The other buttons are dynamic.
         self.load_buttons()
         self.set_mode("Actor", "last-actor", self.buttons[0])
         self.setup_fog()
@@ -62,11 +73,11 @@ class AddItemsMenu(DirectFrame):
     def load_buttons(self):
         category_frame = DirectFrame(parent=self, pos=(-.015, 0, -.07),
                                      scale=(1.11, 1.11, 1.11))
-        for category in CATEGORIES:
-            mode = CATEGORIES[category][0]
-            keyword = CATEGORIES[category][1]
-            pos = CATEGORIES[category][2]
-            padding = CATEGORIES[category][3]
+        for category in MODES:
+            mode = MODES[category][0]
+            keyword = MODES[category][1]
+            pos = MODES[category][2]
+            padding = MODES[category][3]
             button = DirectButton(text=category, parent=category_frame,
                                   pad=padding, pos=pos, scale=(-.15, .15, .1),
                                   command=self.set_mode)
@@ -86,6 +97,9 @@ class AddItemsMenu(DirectFrame):
         self.toggle_screenshot_button()
 
     def set_mode(self, mode, keyword, selected_button):
+        # cleanup existing item if one exists before changing modes.
+        self.modes[self.mode].cleanup_item()
+
         self.mode = mode
         self.keyword = keyword
 
@@ -107,33 +121,37 @@ class AddItemsMenu(DirectFrame):
         # temporary hard coded value for testing.
         self.resources = "C:/Users/Chris/Desktop/Panda3D_Kitchen/resources/phase_4/models/char"
 
-        resource_location, item_name = get_resource_dir_and_file_name(
+        item_name, item_directory = get_resource_dir_and_file_name(
+                                            title=f"Select {self.mode}",
                                             initialdir=self.resources)
+
+        # we need to ask a second time for actor animations
+        if self.mode == 'Actor':
+            anim_names, anim_directories = get_resource_dir_and_file_name(
+                title='Select Animations', initialdir=self.resources,
+                multiple=True)
+            self.modes[self.mode].set_anims(anim_names, anim_directories)
+
         # for future searches, fallback on last directory used.
         self.resources = ""
 
-        if resource_location == "":
+        if item_directory == "":
             return # ignore user cancel input
 
         self.item_name = item_name
 
-        self.load_model_in_preview_region(resource_location)
-        self.item_location = resource_location
-
-    def load_model_in_preview_region(self, resource_location):
-        self.preview_model = loader.load_model(resource_location)
-        self.preview_model.set_y(5)
-        self.preview_model.reparent_to(base.preview_render)
-
-        base.node_mover.set_node(self.preview_model)
-        self.toggle_screenshot_button()
+        # The load method will vary based on the mode.
+        self.modes[self.mode].load_item(item_directory)
+        self.item_location = item_directory # store this variable for later
 
     def take_screenshot(self):
         self.toggle_screenshot_button()
 
         # play short animation and remove preview model
         self.flash_screen()
-        self.save_item_to_file()
+
+        # The save method will vary based on the mode.
+        self.modes[self.mode].save_item(self.item_name, self.item_location)
 
     def flash_screen(self):
         self.preview_model.set_transparency(TransparencyAttrib.MDual)
@@ -157,7 +175,10 @@ class AddItemsMenu(DirectFrame):
                         source=base.preview_region)
         update_database_library(self.mode, self.item_location, self.item_name)
 
-    def toggle_screenshot_button(self):
+    def toggle_screenshot_button(self, force=None):
+        if force:
+            self.allow_screenshot = True
+
         if self.allow_screenshot:
             self.camera_button['state'] = DGG.NORMAL
             self.camera_button.set_color_scale(1, 1, 1, 1)
@@ -166,3 +187,104 @@ class AddItemsMenu(DirectFrame):
             self.camera_button.set_color_scale(.25, .25, .25, 1)
 
         self.allow_screenshot = not self.allow_screenshot
+
+
+# if you are confused why I have a cleanup and delete function-
+# cleanup_item() cleans up items in the preview region when switching modes
+# delete_item() removes the item from the library database.
+class ActorMode():
+
+    def __init__(self):
+        self.anim_list = None
+
+    def set_anims(self, anim_names, anim_dirs):
+        self.anim_list = {}
+        for i in range(0, len(anim_names)):
+            self.anim_list[anim_names[i]] = anim_dirs[i]
+        print(self.anim_list)
+
+    def load_item(self, resource_location):
+        pass
+
+    def save_item(self):
+        pass
+
+    def cleanup_item(self):
+        pass
+
+    def delete_item(self):
+        pass
+
+class PropMode():
+
+    def load_item(self, resource_location):
+        pass
+
+    def save_item(self):
+        pass
+
+    def cleanup_item(self):
+        pass
+
+    def delete_item(self):
+        pass
+
+
+class MusicMode():
+
+    def load_item(self, resource_location):
+        pass
+
+    def save_item(self):
+        pass
+
+    def cleanup_item(self):
+        pass
+
+    def delete_item(self):
+        pass
+
+
+class SoundMode():
+
+    def load_item(self, resource_location):
+        pass
+
+    def save_item(self):
+        pass
+
+    def cleanup_item(self):
+        pass
+
+    def delete_item(self):
+        pass
+
+
+class TextureMode():
+
+    def load_item(self, resource_location):
+        pass
+
+    def save_item(self):
+        pass
+
+    def cleanup_item(self):
+        pass
+
+    def delete_item(self):
+        pass
+
+
+class ParticleMode():
+
+    def load_item(self, resource_location):
+        pass
+
+    def save_item(self):
+        pass
+
+    def cleanup_item(self):
+        pass
+
+    def delete_item(self):
+        pass
