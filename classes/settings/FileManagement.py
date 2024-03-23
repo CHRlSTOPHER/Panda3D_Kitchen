@@ -1,29 +1,33 @@
 import tkinter as tk
 from tkinter import filedialog
 
+from classes.settings import Globals as G
+
 FILES_JSON = "json/files.json"
 
-# Update the last project the user loaded in files.json.
+# Store the last selected directory for a project into the json file
 def update_json_last_selected(folder_location, keyword):
+
     if folder_location == "":
         return # Don't replace the last project with an empty string.
 
-    file = open(FILES_JSON, "r")
+    file_name = FILES_JSON
+    file = open(file_name, "r")
     line_data = file.readlines()
-    lines = ""
+    new_lines = ""
     # update the last-project line to store the new project location.
     for line in line_data:
         if keyword in line:
             line = f'    "{keyword}": "{folder_location}"\n'
-        lines += line
+        new_lines += line
 
     # write the new line data to the file.
     file = open(FILES_JSON, "w")
-    file.writelines(lines)
+    file.writelines(new_lines)
     file.close()
 
-# Returns the full directory location and the location relative to resources.
-def get_directory_and_resource_dir(initialdir=""):
+# Returns the directory relative to resources and the file name.
+def get_resource_dir_and_file_name(initialdir=""):
     root = tk.Tk()
     root.withdraw()  # Hide the tk box that pops up.
     file_location = filedialog.askopenfilename(initialdir=initialdir)
@@ -41,3 +45,32 @@ def get_directory_and_resource_dir(initialdir=""):
     item_name = folder.split('.')[0]
 
     return (resource_location[:-1], item_name)
+
+# Adds or replaces new items into the database libraries.
+def update_database_library(mode, resource_dir, filename):
+    library = f"/{mode}Library.py"
+    filepath = G.DATABASE_DIRECTORY + library
+    file = open(filepath, "r")
+    line_data = file.readlines()
+
+    item_addition = f'    "{filename}": "{resource_dir}",\n'
+
+    duplicate = False
+    new_lines = ""
+    for line in line_data:
+        # Check if item is already in library. If so, replace.
+        if f'"{filename}"' in line:
+            duplicate = True
+            line = item_addition
+        new_lines += line
+
+    # if no duplicate was found, add the item to the end of the list.
+    if not duplicate:
+        # remove the bracket
+        new_lines = new_lines[:-1]
+        new_lines += item_addition + "}"
+
+    # write the new line data to the file.
+    file = open(filepath, "w")
+    file.writelines(new_lines)
+    file.close()

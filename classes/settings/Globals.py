@@ -2,6 +2,7 @@ WINDOW_TITLE = "PANDA3D KITCHEN"
 ICON_FILENAME = "/maps/panda3d-chef.ico"
 SETTINGS_JSON = 'json/settings.json'
 KEYBINDINGS_JSON = "json/keybindings.json"
+RESOURCES = 'resources/'
 
 #json variable names
 PROJECT_PATH = "project-path"
@@ -38,7 +39,10 @@ MAPS_3 = "phase_3/maps/"
 MAPS_3_5 = "phase_3.5/maps/"
 MAPS_4 = "phase_4/maps/"
 
+SFX_4 = "phase_4/audio/sfx/"
+
 R_EDITOR = "resources/editor"
+DATABASE_DIRECTORY = "databases/"
 
 JPG = ".jpg"
 PNG = ".png"

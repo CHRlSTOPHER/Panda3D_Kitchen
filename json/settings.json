@@ -10,5 +10,6 @@
 	"multisamples": 8,
 	"show_fps_meter": false,
 	"auto_walker": false,
-	"fov": 50
+	"fov": 50,
+	"sfx_volume": 100
 }
