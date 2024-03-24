@@ -1,7 +1,7 @@
 from panda3d.core import Camera, NodePath, MouseWatcher
 
 CENTER_REGION = [.1616, .8283, .1616, .8283]
-PREVIEW_REGION = [.175, .2415, .0185, .137]
+PREVIEW_REGION = [.3125, .6875, .1616, .8283]
 
 
 class KitchenDisplayRegions():
@@ -47,7 +47,7 @@ class KitchenDisplayRegions():
     def load_bottom_left_region(self):
         # This will be used for when we want to take screenshots
         # of actors, props, and particle effects.
-        self.preview_region = base.win.make_display_region(*PREVIEW_REGION)
+        self.preview_region = base.win.make_display_region(0, 0, 0, 0) # hide
 
         preview_cam_node = Camera('preview_cam')
         self.preview_cam = NodePath(preview_cam_node)
@@ -55,16 +55,13 @@ class KitchenDisplayRegions():
 
         self.preview_render = NodePath('preview_render')
         self.preview_cam.reparent_to(self.preview_render)
+        self.preview_cam.node().get_lens().set_aspect_ratio(1)
         self.preview_region.setCamera(self.preview_cam)
 
         self.preview_mouse_watcher = MouseWatcher()
         base.mouseWatcher.get_parent().attach_new_node(
                             self.preview_mouse_watcher)
         self.preview_mouse_watcher.set_display_region(self.preview_region)
-
-        aspect_ratio = base.get_aspect_ratio()
-        self.preview_cam.node().get_lens().set_aspect_ratio(
-            aspect_ratio)
 
     def get_center_region(self):
         return self.center_region

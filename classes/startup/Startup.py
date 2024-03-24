@@ -80,7 +80,7 @@ class Startup(ShowBase):
         # Set up the display regions and define the region components.
         self.display_regions = KitchenDisplayRegions()
 
-        base.center_region = self.display_regions.get_center_region()
+        base.main_region = self.display_regions.get_center_region()
         base.main_cam = self.display_regions.get_main_cam()
         base.main_mouse_watcher = self.display_regions.get_main_mw()
         base.main_render = self.display_regions.get_main_render()
@@ -117,7 +117,7 @@ class Startup(ShowBase):
             # Load up all the editor tools
             base.editor = MasterEditor([camera, base.main_cam],
                                        base.main_mouse_watcher,
-                                       base.center_region,
+                                       base.main_region,
                                        base.main_render)
             base.node_mover = base.editor.get_node_mover()
 
