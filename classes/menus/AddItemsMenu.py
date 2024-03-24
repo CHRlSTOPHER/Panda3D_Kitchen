@@ -2,9 +2,10 @@ import json
 import tkinter as tk
 from tkinter import filedialog
 
+from direct.actor.Actor import Actor
 from direct.gui.DirectGui import DirectFrame, DirectButton, DGG
 from direct.interval.IntervalGlobal import Sequence, LerpFunc, Func
-from panda3d.core import Fog, TransparencyAttrib
+from panda3d.core import Fog, TransparencyAttrib, OmniBoundingVolume
 
 from classes.props.PlaneModel import PlaneModel
 from classes.settings.FileManagement import (get_resource_dir_and_file_name,
@@ -94,9 +95,9 @@ class AddItemsMenu(DirectFrame):
                                           pos=(-.75, 0, -.85),
                                           scale=(.3, .15, .15),
                                           command=self.take_screenshot)
-        self.toggle_screenshot_button()
 
     def set_mode(self, mode, keyword, selected_button):
+        self.toggle_screenshot_button(False)
         # cleanup existing item if one exists before changing modes.
         self.modes[self.mode].cleanup_item()
 
@@ -115,25 +116,24 @@ class AddItemsMenu(DirectFrame):
     def setup_fog(self):
         self.fog = Fog("Photo Fog") # Play on Photo Fun
         self.fog.set_color(1, 1, 1)
+        self.fog.set_exp_density(0)
         base.preview_render.set_fog(self.fog)
 
     def choose_file(self):
         # temporary hard coded value for testing.
-        self.resources = "C:/Users/Chris/Desktop/Panda3D_Kitchen/resources/phase_4/models/char"
-
         item_name, item_directory = get_resource_dir_and_file_name(
                                             title=f"Select {self.mode}",
                                             initialdir=self.resources)
+        # for future searches, fallback on last directory used.
+        self.resources = ""
 
         # we need to ask a second time for actor animations
         if self.mode == 'Actor':
+            if not item_directory: return # no point in continuing input
             anim_names, anim_directories = get_resource_dir_and_file_name(
                 title='Select Animations', initialdir=self.resources,
                 multiple=True)
             self.modes[self.mode].set_anims(anim_names, anim_directories)
-
-        # for future searches, fallback on last directory used.
-        self.resources = ""
 
         if item_directory == "":
             return # ignore user cancel input
@@ -141,52 +141,45 @@ class AddItemsMenu(DirectFrame):
         self.item_name = item_name
 
         # The load method will vary based on the mode.
+        self.modes[self.mode].cleanup_item()
         self.modes[self.mode].load_item(item_directory)
         self.item_location = item_directory # store this variable for later
+        self.toggle_screenshot_button(True)
 
     def take_screenshot(self):
-        self.toggle_screenshot_button()
+        self.toggle_screenshot_button(False)
 
         # play short animation and remove preview model
         self.flash_screen()
-
-        # The save method will vary based on the mode.
-        self.modes[self.mode].save_item(self.item_name, self.item_location)
+        self.save_item_to_file()
 
     def flash_screen(self):
-        self.preview_model.set_transparency(TransparencyAttrib.MDual)
         def flash(density):
             self.fog.set_exp_density(density)
-
-        def fade(alpha):
-            self.preview_model.set_alpha_scale(alpha)
 
         Sequence(
             Func(self.screenshot_sfx.play),
             LerpFunc(flash, duration=.5, fromData=0, toData=1),
             LerpFunc(flash, duration=.5, fromData=1, toData=0),
-            LerpFunc(fade, duration=.4, fromData=1, toData=0, blendType='easeOut'),
-            Func(self.preview_model.remove_node)
+            LerpFunc(self.modes[self.mode].fade,
+                     duration=.4, fromData=1, toData=0, blendType='easeOut'),
+            Func(self.modes[self.mode].cleanup_item)
         ).start()
 
     def save_item_to_file(self):
         icon_path = f'{G.R_EDITOR}/{self.mode}/{self.item_name}.jpg'
         base.screenshot(namePrefix=icon_path, defaultFilename=0,
                         source=base.preview_region)
-        update_database_library(self.mode, self.item_location, self.item_name)
+        # The save method will vary based on the mode.
+        self.modes[self.mode].save_item(self.item_name, self.item_location)
 
-    def toggle_screenshot_button(self, force=None):
-        if force:
-            self.allow_screenshot = True
-
-        if self.allow_screenshot:
+    def toggle_screenshot_button(self, toggle):
+        if toggle:
             self.camera_button['state'] = DGG.NORMAL
             self.camera_button.set_color_scale(1, 1, 1, 1)
         else:
             self.camera_button['state'] = DGG.DISABLED
             self.camera_button.set_color_scale(.25, .25, .25, 1)
-
-        self.allow_screenshot = not self.allow_screenshot
 
 
 # if you are confused why I have a cleanup and delete function-
@@ -196,21 +189,43 @@ class ActorMode():
 
     def __init__(self):
         self.anim_list = None
+        self.actor = None
 
     def set_anims(self, anim_names, anim_dirs):
         self.anim_list = {}
         for i in range(0, len(anim_names)):
             self.anim_list[anim_names[i]] = anim_dirs[i]
-        print(self.anim_list)
 
     def load_item(self, resource_location):
-        pass
+        self.actor = Actor()
+        self.actor.load_model(resource_location)
+        self.actor.set_transparency(TransparencyAttrib.MDual)
+        self.actor.reparent_to(base.preview_render)
+        self.actor.node().set_bounds(OmniBoundingVolume())
+        self.actor.node().set_final(1)
+        self.actor.set_y(5)
+        if self.anim_list:
+            # load anims and set the actor to the first frame of the first anim
+            self.actor.load_anims(self.anim_list)
+            first_anim = next(iter(self.anim_list))
+            self.actor.pose(first_anim, 3)
 
-    def save_item(self):
-        pass
+        base.node_mover.set_node(self.actor)
+        base.node_mover.set_clickability(False)
+
+    def save_item(self, item_name, item_location):
+        save_data = f'"{item_name}": ["{item_location}", {self.anim_list}],\n'
+        update_database_library("Actor", save_data, item_name)
+
+    def fade(self, alpha):
+        self.actor.set_alpha_scale(alpha)
 
     def cleanup_item(self):
-        pass
+        if base.node_mover:
+            base.node_mover.set_clickability(True)
+
+        if self.actor:
+            self.actor.cleanup()
 
     def delete_item(self):
         pass
@@ -223,8 +238,11 @@ class PropMode():
     def save_item(self):
         pass
 
+    def fade(self, alpha):
+        pass# self.prop.set_alpha_scale(alpha)
+
     def cleanup_item(self):
-        pass
+        base.node_mover.set_clickability(True)
 
     def delete_item(self):
         pass
@@ -283,8 +301,11 @@ class ParticleMode():
     def save_item(self):
         pass
 
+    def fade(self, alpha):
+        pass# self.particle.set_alpha_scale(alpha)
+
     def cleanup_item(self):
-        pass
+        base.node_mover.set_clickability(True)
 
     def delete_item(self):
         pass

@@ -119,6 +119,9 @@ class NodeMover(NodePath, DirectObject):
     def get_turn_speed(self):
         return self.turn_speed
 
+    def set_clickability(self, click):
+        self.allow_click = click
+
     def cleanup(self):
         self.allow_tasks = False
         self.ignore_all()

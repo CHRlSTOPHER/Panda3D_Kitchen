@@ -51,6 +51,7 @@ class KitchenDisplayRegions():
 
         preview_cam_node = Camera('preview_cam')
         self.preview_cam = NodePath(preview_cam_node)
+        self.preview_cam.node().get_lens().set_fov(35)
 
         self.preview_render = NodePath('preview_render')
         self.preview_cam.reparent_to(self.preview_render)

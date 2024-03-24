@@ -67,13 +67,11 @@ def get_resource_dir_and_file_name(title="", initialdir="", multiple=False):
     return items_names, resource_directories
 
 # Adds or replaces new items into the database libraries.
-def update_database_library(mode, resource_dir, filename):
+def update_database_library(mode, save_data, filename):
     library = f"/{mode}Library.py"
     filepath = G.DATABASE_DIRECTORY + library
     file = open(filepath, "r")
     line_data = file.readlines()
-
-    item_addition = f'    "{filename}": "{resource_dir}",\n'
 
     duplicate = False
     new_lines = ""
@@ -81,14 +79,14 @@ def update_database_library(mode, resource_dir, filename):
         # Check if item is already in library. If so, replace.
         if f'"{filename}"' in line:
             duplicate = True
-            line = item_addition
+            line = "    " + save_data
         new_lines += line
 
     # if no duplicate was found, add the item to the end of the list.
     if not duplicate:
         # remove the bracket
         new_lines = new_lines[:-1]
-        new_lines += item_addition + "}"
+        new_lines += "    " + save_data + "}"
 
     # write the new line data to the file.
     file = open(filepath, "w")

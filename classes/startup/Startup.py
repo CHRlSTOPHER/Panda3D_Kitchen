@@ -55,6 +55,7 @@ class Startup(ShowBase):
         self.project_frame = None
         self.folder_location = None
         self.main = None
+        base.node_mover = None
         self.commands = [
             self.create_project,
             self.load_project,
