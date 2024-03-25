@@ -101,6 +101,8 @@ class NodeMover(NodePath, DirectObject):
             direction = move_option[3]
             set_transform(get_transform() + get_speed() * direction)
 
+        print(self.get_pos(), self.get_hpr())
+
         return task.again
 
     def stop_move_task(self, key):

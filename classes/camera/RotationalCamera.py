@@ -25,7 +25,7 @@ class RotationalCamera(DirectObject):
         self.cam_task = True
 
         base.disable_mouse()
-        self.toggle_orb_cam()
+        # self.toggle_orb_cam()
         self.accept(G.RIGHT_MOUSE_BUTTON, self.toggle_orb_cam)
 
     def toggle_orb_cam(self):

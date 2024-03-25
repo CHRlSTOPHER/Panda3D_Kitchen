@@ -1,6 +1,6 @@
 from panda3d.core import Camera, NodePath, MouseWatcher
 
-CENTER_REGION = [.1616, .8283, .1616, .8283]
+CENTER_REGION = [.3156, .9833, .3046, .9713]
 PREVIEW_REGION = [.3125, .6875, .1616, .8283]
 
 

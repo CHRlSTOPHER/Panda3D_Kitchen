@@ -50,7 +50,8 @@ class Startup(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         base.disable_mouse()
-        base.set_background_color(.1, .1, .125, 1)
+        base.set_background_color(.5, .55, .55, 1)
+        aspect2d.set_color_scale(.95, 1, 1, 1)
 
         self.project_frame = None
         self.folder_location = None
