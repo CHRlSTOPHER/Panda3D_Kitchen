@@ -1,4 +1,6 @@
-from direct.gui.DirectGui import DirectFrame, DirectButton, DirectScrolledFrame
+from direct.gui.DirectGui import (DirectFrame, DirectButton,
+                                  DirectScrolledFrame, DGG)
+from panda3d.core import PGButton, MouseButton
 from classes.props.PlaneModel import PlaneModel
 
 ENTITY_MODE_BUTTONS = [
@@ -9,6 +11,11 @@ ENTITY_MODE_BUTTONS = [
     ["Texture", (1.874, 0.0, -0.615), (0.169, 0.169, 0.166), (0, -0.096)],
     ["Particle", (2.252, 0.0, -0.615), (0.16, 0.181, 0.169), (-0.021, -0.108)]
 ]
+DGG.WHEELUP = (PGButton.getPressPrefix() + MouseButton.wheel_up().getName()
+               + '-')
+DGG.WHEELDOWN = (PGButton.getPressPrefix() + MouseButton.wheel_down().getName()
+              + '-')
+VALUE = 'verticalScroll_value'
 
 
 class EntitiesMenuGUI(DirectFrame):
@@ -19,6 +26,7 @@ class EntitiesMenuGUI(DirectFrame):
         self.entity_mode_buttons = {}
 
         self.load_gui()
+        self.bind_gui()
 
     def load_gui(self):
         # The 6 entity buttons
@@ -64,3 +72,23 @@ class EntitiesMenuGUI(DirectFrame):
                                              pos=(-1.443, 0.0, -0.776),
                                              scale=(0.16, 0.16, 0.16),
                                              pad=(1.176, 0.084),)
+
+    def bind_gui(self):
+        self.scene_scroll['state'] = DGG.NORMAL
+        self.selection_scroll['state'] = DGG.NORMAL
+        self.scene_scroll.bind(DGG.WHEELUP, self.scroll_scene_up)
+        self.scene_scroll.bind(DGG.WHEELDOWN, self.scroll_scene_down)
+        self.selection_scroll.bind(DGG.WHEELUP, self.selection_scroll_up)
+        self.selection_scroll.bind(DGG.WHEELDOWN, self.selection_scroll_down)
+
+    def scroll_scene_up(self, mouse_data):
+        self.scene_scroll[VALUE] -= 1
+
+    def scroll_scene_down(self, mouse_data):
+        self.scene_scroll[VALUE] += 1
+
+    def selection_scroll_up(self, mouse_data):
+        self.selection_scroll[VALUE] -= 1
+
+    def selection_scroll_down(self, mouse_data):
+        self.selection_scroll[VALUE] += 1

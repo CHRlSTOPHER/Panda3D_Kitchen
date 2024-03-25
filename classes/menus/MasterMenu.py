@@ -1,4 +1,4 @@
-from classes.menus.EntitiesMenu import EntitiesMenu
+from classes.menus.entities.EntitiesMenu import EntitiesMenu
 from classes.menus.SequenceManager import SequenceManager
 
 
