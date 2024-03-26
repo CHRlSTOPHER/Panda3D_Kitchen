@@ -9,7 +9,7 @@ ENTITY_MODE_BUTTONS = [
     ["Music", (1.115, 0.0, -0.615), (0.154, 0.154, 0.151), (0.039, -0.003)],
     ["Sound", (1.49, 0.0, -0.615), (0.154, 0.154, 0.148), (0.033, 0.03)],
     ["Texture", (1.874, 0.0, -0.615), (0.169, 0.169, 0.166), (0, -0.096)],
-    ["Particle", (2.252, 0.0, -0.615), (0.16, 0.181, 0.169), (-0.021, -0.108)]
+    ["Particle", (2.252, 0.0, -0.615), (0.16, 0.181, 0.169), (-0.021, -0.108)],
 ]
 DGG.WHEELUP = (PGButton.getPressPrefix() + MouseButton.wheel_up().getName()
                + '-')
@@ -39,7 +39,7 @@ class EntitiesMenuGUI(DirectFrame):
 
         # Scene Objects Menu
         self.scene_text = DirectFrame(parent=self, text="SCENE OBJECTS",
-                                      pos=(-1.215, 0.0, 0.852),
+                                      pos=(-1.215, 0.0, 0.843),
                                       scale=(0.103, 0.115, 0.109))
         self.scene_scroll = DirectScrolledFrame(self,
                                         pos=(-1.213, 0.0, 0.495),
@@ -65,13 +65,21 @@ class EntitiesMenuGUI(DirectFrame):
                                         pos=(-1.221, 0.0, -0.423),
                                         scale=(0.89, 0.955, 0.65))
         self.selection_add = DirectButton(parent=self, text="+",
-                                          pos=(-.999, 0.0, -0.765),
+                                          pos=(-1.459, 0.0, -0.765),
                                           scale=(0.151, 0.151, 0.151),
                                           pad=(1.113, -0.006))
         self.selection_remove = DirectButton(parent=self, text="-",
-                                             pos=(-1.443, 0.0, -0.776),
+                                             pos=(-1.013, 0.0, -0.776),
                                              scale=(0.16, 0.16, 0.16),
-                                             pad=(1.176, 0.084),)
+                                             pad=(1.176, 0.084))
+
+        geom = PlaneModel(f'editor/maps/add-Camera.png')
+        self.camera_button = DirectButton(parent=self, geom=geom,
+                                          pos=(0.035, 0.0, -.226),
+                                          scale=(0.16, 0.181, 0.169),
+                                          pad=(-0.021, -0.108))
+        self.camera_button.set_color_scale(1, 1, 1, .75)
+        self.camera_button.hide()
 
     def bind_gui(self):
         self.scene_scroll['state'] = DGG.NORMAL

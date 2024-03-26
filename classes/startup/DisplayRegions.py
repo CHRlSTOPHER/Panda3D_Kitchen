@@ -1,7 +1,16 @@
 from panda3d.core import Camera, NodePath, MouseWatcher
 
-CENTER_REGION = [.3156, .9833, .3046, .9713]
-PREVIEW_REGION = [.3125, .6875, .1616, .8283]
+SCENE_REGION = [.3156, .9833, .3046, .9713]
+PREVIEW_REGION = [.462, .8365, .3046, .9713]
+
+
+def swap_preview_region_in(preview):
+    if preview:
+        base.preview_region.set_dimensions(*PREVIEW_REGION)
+        base.main_region.set_dimensions(0, 0, 0, 0)
+    else:
+        base.preview_region.set_dimensions(0, 0, 0, 0)
+        base.main_region.set_dimensions(*SCENE_REGION)
 
 
 class KitchenDisplayRegions():
@@ -23,7 +32,7 @@ class KitchenDisplayRegions():
 
     def load_center_region(self):
         # First, make display region that will render the main scene
-        self.center_region = base.win.makeDisplayRegion(*CENTER_REGION)
+        self.center_region = base.win.makeDisplayRegion(*SCENE_REGION)
 
         # Second, we need a camera for the new display region
         main_cam_node = Camera('main_cam')
@@ -62,6 +71,10 @@ class KitchenDisplayRegions():
         base.mouseWatcher.get_parent().attach_new_node(
                             self.preview_mouse_watcher)
         self.preview_mouse_watcher.set_display_region(self.preview_region)
+
+        # debug test
+        env = loader.load_model('environment.egg')
+        env.reparent_to(self.preview_render)
 
     def get_center_region(self):
         return self.center_region

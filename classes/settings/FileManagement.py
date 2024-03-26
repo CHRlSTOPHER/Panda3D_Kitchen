@@ -27,7 +27,7 @@ def update_json_last_selected(folder_location, keyword):
     file.close()
 
 # Returns the directory relative to resources and the file name.
-def get_resource_dir_and_file_name(title="", initialdir="", multiple=False):
+def get_resource_and_filename(title="", initialdir="", multiple=False):
     root = tk.Tk()
     root.withdraw()  # Hide the tk box that pops up.
     if multiple:
