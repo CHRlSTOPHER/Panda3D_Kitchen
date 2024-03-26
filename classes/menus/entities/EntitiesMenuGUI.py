@@ -8,6 +8,8 @@ from classes.settings import Globals as G
 BASE_CANVAS_SIZE = (-1, 1, -.87, 1)
 CANVAS_LIMIT = 17
 CANVAS_INCREMENT = .31
+CAMERA_TEXTURE = f'editor/maps/capture-cam.png'
+DICE_TEXTURE = f'editor/maps/rng-dice.png'
 
 ENTITY_MODE_BUTTONS = [
     ["Actor", (0.356, 0.0, -0.615), (0.145, 0.148, 0.151), (0.087, 0.0)],
@@ -83,15 +85,21 @@ class EntitiesMenuGUI(DirectFrame):
                                              scale=(0.16, 0.16, 0.16),
                                              pad=(1.176, 0.084))
 
-        geom = PlaneModel(f'editor/maps/add-Camera.png')
+        geom = PlaneModel(CAMERA_TEXTURE)
         self.camera_button = DirectButton(parent=self, geom=geom,
                                           pos=(0.035, 0.0, -.226),
                                           scale=(0.16, 0.181, 0.169),
                                           pad=(-0.021, -0.108))
-        self.camera_button.set_color_scale(1, 1, 1, .75)
+        self.camera_button.set_alpha_scale(.75)
         self.camera_button.hide()
 
-        self.selection_scroll['verticalScroll_range'] = (0, 5)
+        geom = PlaneModel(DICE_TEXTURE)
+        self.random_anim_button = DirectButton(parent=self, geom=geom,
+                                          pos=(1.025, 0.0, -.226),
+                                          scale=(0.16, 0.181, 0.169),
+                                          pad=(-0.021, -0.108))
+        self.random_anim_button.set_alpha_scale(.75)
+        self.random_anim_button.hide()
 
     def bind_gui(self):
         self.scene_scroll['state'] = DGG.NORMAL
@@ -131,6 +139,8 @@ class EntitiesMenuGUI(DirectFrame):
 
             i += 1
             self.selection_buttons.append(button)
+        # This makes scrolling down pretty much align with the icons.
+        self.selection_scroll['verticalScroll_range'] = (0, int(i/4))
 
     def scroll_scene_up(self, mouse_data):
         self.scene_scroll[VALUE] -= 1

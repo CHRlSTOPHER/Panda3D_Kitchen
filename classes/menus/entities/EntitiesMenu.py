@@ -56,12 +56,9 @@ class EntitiesMenu(EntitiesMenuGUI):
             button['extraArgs'] = [name, button]
             self.mode_buttons.append(button)
 
-        # bottom add and remove button
         self.selection_add['command'] = self.choose_file
-        # self.selection_remove['command'] = self.remove_file()
-
-        # add flash cam and save file function to camera button
         self.camera_button['command'] = self.handle_image_data
+        MODES[self.mode].define_rng_button(self.random_anim_button)
 
     def set_mode(self, mode, disable_button):
         # clean up any leftover assets
@@ -107,7 +104,7 @@ class EntitiesMenu(EntitiesMenuGUI):
             pass # will implement this later.
         else:
             self.load_picture_list()
-        self.camera_button.hide()
+        self.hide_special_buttons() # buttons used for specific modes
 
     def change_button_colors(self, disable_button):
         for button in self.mode_buttons: # enable click
@@ -156,3 +153,7 @@ class EntitiesMenu(EntitiesMenuGUI):
             self.camera_button.show()
         else:
             self.camera_button.hide()
+
+    def hide_special_buttons(self):
+        self.camera_button.hide()
+        self.random_anim_button.hide()

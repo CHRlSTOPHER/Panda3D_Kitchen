@@ -1,5 +1,6 @@
 from direct.actor.Actor import Actor
 from panda3d.core import OmniBoundingVolume
+import random
 import math
 
 from classes.startup.DisplayRegions import swap_preview_region_in
@@ -11,6 +12,8 @@ class EntitiesMenuActor():
     def __init__(self):
         self.anim_list = None
         self.actor = None
+        self.rng_button = None
+        self.last_anim = None
 
     def load_entity(self, directory):
         self.actor = Actor()
@@ -34,6 +37,7 @@ class EntitiesMenuActor():
             first_anim = next(iter(self.anim_list))
             self.actor.pose(first_anim, 3)
 
+        self.rng_button.show()
         swap_preview_region_in(True)
         base.node_mover.set_node(self.actor)
         base.node_mover.set_clickability(False)
@@ -42,6 +46,21 @@ class EntitiesMenuActor():
         self.anim_list = {}
         for i in range(0, len(anim_names)):
             self.anim_list[f"{anim_names[i]}"] = f"{anim_dirs[i]}"
+
+    def randomize_anim(self):
+        anim = self.last_anim
+        if self.anim_list:
+            # keep going until a new anim is picked -- rarely loops
+            while anim == self.last_anim:
+                anim, location = random.choice(list(self.anim_list.items()))
+                anim_control = self.actor.get_anim_control(anim)
+                frames = anim_control.get_num_frames()
+                random_frame = random.choice([0, frames])
+                self.actor.pose(anim, random_frame)
+
+    def define_rng_button(self, button):
+        self.rng_button = button
+        self.rng_button['command'] = self.randomize_anim
 
     def save_item(self, item_name, item_location):
         save_data = {item_name: [item_location, self.anim_list]}
