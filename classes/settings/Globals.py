@@ -41,7 +41,7 @@ MAPS_4 = "phase_4/maps/"
 
 SFX_4 = "phase_4/audio/sfx/"
 
-R_EDITOR = "resources/editor"
+R_EDITOR = "resources/editor/"
 DATABASE_DIRECTORY = "databases/"
 
 JPG = ".jpg"

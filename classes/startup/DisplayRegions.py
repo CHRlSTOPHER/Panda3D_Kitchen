@@ -73,8 +73,8 @@ class KitchenDisplayRegions():
         self.preview_mouse_watcher.set_display_region(self.preview_region)
 
         # debug test
-        env = loader.load_model('environment.egg')
-        env.reparent_to(self.preview_render)
+        # env = loader.load_model('environment.egg')
+        # env.reparent_to(self.preview_render)
 
     def get_center_region(self):
         return self.center_region

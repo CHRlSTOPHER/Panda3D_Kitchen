@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+import json
 
 from classes.settings import Globals as G
 
@@ -66,29 +67,12 @@ def get_resource_and_filename(title="", initialdir="", multiple=False):
 
     return items_names, resource_directories
 
-# Adds or replaces new items into the database libraries.
-def update_database_library(mode, save_data, filename):
-    library = f"/{mode}Library.py"
-    filepath = G.DATABASE_DIRECTORY + library
-    file = open(filepath, "r")
-    line_data = file.readlines()
+def update_database_library(mode, save_data):
+    path = f"{G.DATABASE_DIRECTORY}{mode}Library.json"
+    with open(path) as f:
+        data = json.load(f)
 
-    duplicate = False
-    new_lines = ""
-    for line in line_data:
-        # Check if item is already in library. If so, replace.
-        if f'"{filename}"' in line:
-            duplicate = True
-            line = "    " + save_data
-        new_lines += line
+    data.update(save_data)
 
-    # if no duplicate was found, add the item to the end of the list.
-    if not duplicate:
-        # remove the bracket
-        new_lines = new_lines[:-1]
-        new_lines += "    " + save_data + "}"
-
-    # write the new line data to the file.
-    file = open(filepath, "w")
-    file.writelines(new_lines)
-    file.close()
+    with open(path, 'w') as f:
+        json.dump(data, f, indent=2, sort_keys=True)
