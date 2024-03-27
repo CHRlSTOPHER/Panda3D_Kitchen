@@ -140,7 +140,8 @@ class EntitiesMenuGUI(DirectFrame):
             i += 1
             self.selection_buttons.append(button)
         # This makes scrolling down pretty much align with the icons.
-        self.selection_scroll['verticalScroll_range'] = (0, int(i/4))
+        if i > 3:
+            self.selection_scroll['verticalScroll_range'] = (0, int(i/4))
 
     def scroll_scene_up(self, mouse_data):
         self.scene_scroll[VALUE] -= 1

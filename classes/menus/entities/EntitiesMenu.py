@@ -18,12 +18,12 @@ from classes.settings.FileManagement import get_resource_and_filename
 DISABLED_COLOR = (.8, .8, .8, .8)
 ENABLED_COLOR = (1.15, 1.15, 1.15, 1.2)
 MODES = {
-    'Actor': EntitiesMenuActor(),
-    'Prop': EntitiesMenuProp(),
-    'Music': EntitiesMenuMusic(),
-    'Sound': EntitiesMenuSound(),
-    'Texture': EntitiesMenuTexture(),
-    'Particle': EntitiesMenuParticle(),
+    'Actor': EntitiesMenuActor,
+    'Prop': EntitiesMenuProp,
+    'Music': EntitiesMenuMusic,
+    'Sound': EntitiesMenuSound,
+    'Texture': EntitiesMenuTexture,
+    'Particle': EntitiesMenuParticle,
 }
 
 
@@ -33,10 +33,16 @@ class EntitiesMenu(EntitiesMenuGUI):
         EntitiesMenuGUI.__init__(self)
 
         self.mode = 'Actor'
-        self.modes = MODES
+        self.modes = {}
         self.mode_buttons = []
         self.library = None
         self.resources = G.RESOURCES
+
+        self.generate()
+
+    def generate(self):
+        for name, mode in MODES.items():
+            self.modes[name] = mode()
 
         self.setup_fog()
         self.add_commands_to_buttons()
@@ -58,11 +64,11 @@ class EntitiesMenu(EntitiesMenuGUI):
 
         self.selection_add['command'] = self.choose_file
         self.camera_button['command'] = self.handle_image_data
-        MODES[self.mode].define_rng_button(self.random_anim_button)
+        self.modes[self.mode].define_rng_button(self.random_anim_button)
 
     def set_mode(self, mode, disable_button):
         # clean up any leftover assets
-        MODES[mode].cleanup_entity()
+        self.modes[mode].cleanup_entity()
         # update the buttons that are enabled and disabled.
         self.change_button_colors(disable_button)
         # load the new data from the specified library.
@@ -79,8 +85,8 @@ class EntitiesMenu(EntitiesMenuGUI):
         self.resources = ""
         self.check_for_anims()
         base.node_mover.set_clickability(True)
-        MODES[self.mode].cleanup_entity()
-        MODES[self.mode].load_entity(item_directory)
+        self.modes[self.mode].cleanup_entity()
+        self.modes[self.mode].load_entity(item_directory)
         self.item_name = item_name
         self.item_location = item_directory
         self.toggle_screenshot_button(True)
@@ -90,7 +96,7 @@ class EntitiesMenu(EntitiesMenuGUI):
             anim_names, anim_dirs = get_resource_and_filename(
                 title='Select Animations', initialdir=self.resources,
                 multiple=True)
-            MODES['Actor'].set_anims(anim_names, anim_dirs)
+            self.modes['Actor'].set_anims(anim_names, anim_dirs)
 
     def reload_menu_selection(self):
         path = f"{G.DATABASE_DIRECTORY}{self.mode}Library.json"
@@ -117,7 +123,7 @@ class EntitiesMenu(EntitiesMenuGUI):
     def handle_image_data(self):
         self.flash_screen() # play a camera flash animation
         # save the item to the library database of the specifed mode
-        MODES[self.mode].save_item(self.item_name, self.item_location)
+        self.modes[self.mode].save_item(self.item_name, self.item_location)
         # capture an image of the model and save it
         self.capture_and_save_image()
         self.reload_menu_selection()
