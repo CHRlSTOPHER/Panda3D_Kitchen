@@ -11,18 +11,6 @@
       "PBJfish-swim": "phase_4/models/char/PBJfish-swim.bam"
     }
   ],
-  "SelbotLegFactory": [
-    "SelbotLegFactory.bam",
-    {}
-  ],
-  "TT_G-1500": [
-    "phase_6/models/char/TT_G-1500.bam",
-    {
-      "TT_GRun": "phase_6/models/char/TT_GRun.bam",
-      "TT_GWait": "phase_6/models/char/TT_GWait.bam",
-      "TT_GWalk": "phase_6/models/char/TT_GWalk.bam"
-    }
-  ],
   "amoreEel-zero": [
     "phase_4/models/char/amoreEel-zero.bam",
     {
@@ -36,114 +24,16 @@
       "buff-nurse-run2": "phase_4/models/char/buff-nurse-run2.egg"
     }
   ],
-  "catFish-zero": [
-    "phase_4/models/char/catFish-zero.bam",
+  "clownFish-zero": [
+    "phase_4/models/char/clownFish-zero.bam",
     {
-      "catFish-swim": "phase_4/models/char/catFish-swim.bam"
-    }
-  ],
-  "cutThroatTrout-zero": [
-    "phase_4/models/char/cutThroatTrout-zero.bam",
-    {
-      "cutThroatTrout-swim": "phase_4/models/char/cutThroatTrout-swim.bam"
-    }
-  ],
-  "daisyduck_1600": [
-    "phase_4/models/char/daisyduck_1600.bam",
-    {
-      "daisyduck_walk": "phase_4/models/char/daisyduck_walk.bam"
+      "clownFish-swim": "phase_4/models/char/clownFish-swim.bam"
     }
   ],
   "devilRay-zero": [
     "phase_4/models/char/devilRay-zero.bam",
     {
       "devilRay-swim": "phase_4/models/char/devilRay-swim.bam"
-    }
-  ],
-  "dogFish-zero": [
-    "phase_4/models/char/dogFish-zero.bam",
-    {
-      "dogFish-swim": "phase_4/models/char/dogFish-swim.bam"
-    }
-  ],
-  "frozenFish-zero": [
-    "phase_4/models/char/frozenFish-zero.bam",
-    {
-      "frozenFish-swim": "phase_4/models/char/frozenFish-swim.bam"
-    }
-  ],
-  "holeyMackerel-zero": [
-    "phase_4/models/char/holeyMackerel-zero.bam",
-    {
-      "holeyMackerel-swim": "phase_4/models/char/holeyMackerel-swim.bam"
-    }
-  ],
-  "kingCrab-zero": [
-    "phase_4/models/char/kingCrab-zero.bam",
-    {
-      "kingCrab-swim": "phase_4/models/char/kingCrab-swim.bam"
-    }
-  ],
-  "mickey-1200": [
-    "phase_3/models/char/mickey-1200.bam",
-    {
-      "mickey-walk": "phase_3/models/char/mickey-walk.bam"
-    }
-  ],
-  "minnie-1200": [
-    "phase_3/models/char/minnie-1200.bam",
-    {
-      "minnie-walk": "phase_3/models/char/minnie-walk.bam"
-    }
-  ],
-  "mitra": [
-    "mitra.bam",
-    {}
-  ],
-  "nurseShark-zero": [
-    "phase_4/models/char/nurseShark-zero.bam",
-    {
-      "nurseShark-swim": "phase_4/models/char/nurseShark-swim.bam"
-    }
-  ],
-  "pianoTuna-zero": [
-    "phase_4/models/char/pianoTuna-zero.bam",
-    {
-      "pianoTuna-swim": "phase_4/models/char/pianoTuna-swim.bam"
-    }
-  ],
-  "seaHorse-zero": [
-    "phase_4/models/char/seaHorse-zero.bam",
-    {
-      "seaHorse-swim": "phase_4/models/char/seaHorse-swim.bam"
-    }
-  ],
-  "starFish-zero": [
-    "phase_4/models/char/starFish-zero.bam",
-    {
-      "starFish-swim": "phase_4/models/char/starFish-swim.bam"
-    }
-  ],
-  "ttr_r_chr_cbg_boss": [
-    "phase_5/models/char/ttr_r_chr_cbg_boss.bam",
-    {
-      "ttr_a_chr_cbg_boss_attack": "phase_5/models/char/ttr_a_chr_cbg_boss_attack.bam",
-      "ttr_a_chr_cbg_boss_defenseAttack": "phase_5/models/char/ttr_a_chr_cbg_boss_defenseAttack.bam",
-      "ttr_a_chr_cbg_boss_defenseIdle": "phase_5/models/char/ttr_a_chr_cbg_boss_defenseIdle.bam",
-      "ttr_a_chr_cbg_boss_defenseIntoOffense": "phase_5/models/char/ttr_a_chr_cbg_boss_defenseIntoOffense.bam",
-      "ttr_a_chr_cbg_boss_defenseRetentionPlan": "phase_5/models/char/ttr_a_chr_cbg_boss_defenseRetentionPlan.bam",
-      "ttr_a_chr_cbg_boss_hitThrow": "phase_5/models/char/ttr_a_chr_cbg_boss_hitThrow.bam",
-      "ttr_a_chr_cbg_boss_hurt": "phase_5/models/char/ttr_a_chr_cbg_boss_hurt.bam",
-      "ttr_a_chr_cbg_boss_idle": "phase_5/models/char/ttr_a_chr_cbg_boss_idle.bam",
-      "ttr_a_chr_cbg_boss_idleClosed": "phase_5/models/char/ttr_a_chr_cbg_boss_idleClosed.bam",
-      "ttr_a_chr_cbg_boss_idleOpen": "phase_5/models/char/ttr_a_chr_cbg_boss_idleOpen.bam",
-      "ttr_a_chr_cbg_boss_intro": "phase_5/models/char/ttr_a_chr_cbg_boss_intro.bam",
-      "ttr_a_chr_cbg_boss_introIdle": "phase_5/models/char/ttr_a_chr_cbg_boss_introIdle.bam",
-      "ttr_a_chr_cbg_boss_lose": "phase_5/models/char/ttr_a_chr_cbg_boss_lose.bam",
-      "ttr_a_chr_cbg_boss_lose2": "phase_5/models/char/ttr_a_chr_cbg_boss_lose2.bam",
-      "ttr_a_chr_cbg_boss_offenseAttack": "phase_5/models/char/ttr_a_chr_cbg_boss_offenseAttack.bam",
-      "ttr_a_chr_cbg_boss_offenseIdle": "phase_5/models/char/ttr_a_chr_cbg_boss_offenseIdle.bam",
-      "ttr_a_chr_cbg_boss_offenseIntoDefense": "phase_5/models/char/ttr_a_chr_cbg_boss_offenseIntoDefense.bam"
     }
   ]
 }

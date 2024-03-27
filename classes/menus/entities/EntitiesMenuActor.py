@@ -1,9 +1,8 @@
 from direct.actor.Actor import Actor
-from panda3d.core import OmniBoundingVolume
+from panda3d.core import OmniBoundingVolume, TransparencyAttrib
 import random
 import math
 
-from classes.startup.DisplayRegions import swap_preview_region_in
 from classes.settings.FileManagement import update_database_library
 
 
@@ -17,12 +16,14 @@ class EntitiesMenuActor():
 
     def load_entity(self, directory):
         self.actor = Actor()
+        self.entity = self.actor
         self.actor.load_model(directory)
         if self.anim_list:
             # load anims and set the actor to the first frame of the first anim
             self.actor.load_anims(self.anim_list)
             first_anim = next(iter(self.anim_list))
             self.actor.pose(first_anim, 3)
+        self.actor.set_transparency(TransparencyAttrib.MDual)
         self.actor.reparent_to(base.preview_render)
         # get y2 and y1 for the distance formula
         y2 = self.actor.get_tight_bounds()[0][1]
@@ -38,7 +39,6 @@ class EntitiesMenuActor():
             self.actor.pose(first_anim, 3)
 
         self.rng_button.show()
-        swap_preview_region_in(True)
         base.node_mover.set_node(self.actor)
         base.node_mover.set_clickability(False)
 
@@ -53,10 +53,12 @@ class EntitiesMenuActor():
             # keep going until a new anim is picked -- rarely loops
             while anim == self.last_anim:
                 anim, location = random.choice(list(self.anim_list.items()))
-                anim_control = self.actor.get_anim_control(anim)
-                frames = anim_control.get_num_frames()
-                random_frame = random.choice([0, frames])
+                frames = self.actor.get_num_frames(anim)
+                random_frame = random.randint(0, frames)
                 self.actor.pose(anim, random_frame)
+                # leave if there is only 1 anim in the list
+                if len(self.anim_list) == 1:
+                    break
 
     def define_rng_button(self, button):
         self.rng_button = button
@@ -67,6 +69,5 @@ class EntitiesMenuActor():
         update_database_library("Actor", save_data)
 
     def cleanup_entity(self):
-        swap_preview_region_in(False)
         if self.actor:
             self.actor.cleanup()

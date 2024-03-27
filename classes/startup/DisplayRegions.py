@@ -1,7 +1,11 @@
 from panda3d.core import Camera, NodePath, MouseWatcher
 
+from classes.props.PlaneModel import PlaneModel
+from classes.settings import Globals as G
+
 SCENE_REGION = [.3156, .9833, .3046, .9713]
-PREVIEW_REGION = [.462, .8365, .3046, .9713]
+PREVIEW_REGION = [.572, .9465, .3046, .9713]
+PREVIEW_BG = 'preview-bg.jpg'
 
 
 def swap_preview_region_in(preview):
@@ -32,7 +36,7 @@ class KitchenDisplayRegions():
 
     def load_center_region(self):
         # First, make display region that will render the main scene
-        self.center_region = base.win.makeDisplayRegion(*SCENE_REGION)
+        self.center_region = base.win.makeDisplayRegion(0, 0, 0, 0)
 
         # Second, we need a camera for the new display region
         main_cam_node = Camera('main_cam')
@@ -56,11 +60,11 @@ class KitchenDisplayRegions():
     def load_bottom_left_region(self):
         # This will be used for when we want to take screenshots
         # of actors, props, and particle effects.
-        self.preview_region = base.win.make_display_region(0, 0, 0, 0) # hide
+        self.preview_region = base.win.make_display_region(0, 0, 0, 0)
 
         preview_cam_node = Camera('preview_cam')
         self.preview_cam = NodePath(preview_cam_node)
-        self.preview_cam.node().get_lens().set_fov(35)
+        self.preview_cam.node().get_lens().set_fov(G.PREVIEW_FOV)
 
         self.preview_render = NodePath('preview_render')
         self.preview_cam.reparent_to(self.preview_render)
@@ -72,9 +76,10 @@ class KitchenDisplayRegions():
                             self.preview_mouse_watcher)
         self.preview_mouse_watcher.set_display_region(self.preview_region)
 
-        # debug test
-        # env = loader.load_model('environment.egg')
-        # env.reparent_to(self.preview_render)
+        # preview bg
+        base.preview_bg = PlaneModel(f"{G.R_EDITOR}/maps/{PREVIEW_BG}",
+                                pos=(0, 250, 0), scale=80)
+        base.preview_bg.reparent_to(self.preview_render)
 
     def get_center_region(self):
         return self.center_region

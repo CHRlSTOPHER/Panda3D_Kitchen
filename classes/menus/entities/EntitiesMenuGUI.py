@@ -12,12 +12,10 @@ CAMERA_TEXTURE = f'editor/maps/capture-cam.png'
 DICE_TEXTURE = f'editor/maps/rng-dice.png'
 
 ENTITY_MODE_BUTTONS = [
-    ["Actor", (0.356, 0.0, -0.615), (0.145, 0.148, 0.151), (0.087, 0.0)],
-    ["Prop", (0.734, 0.0, -0.615), (0.169, 0.175, 0.178), (-0.045, -0.162)],
-    ["Music", (1.115, 0.0, -0.615), (0.154, 0.154, 0.151), (0.039, -0.003)],
-    ["Sound", (1.49, 0.0, -0.615), (0.154, 0.154, 0.148), (0.033, 0.03)],
-    ["Texture", (1.874, 0.0, -0.615), (0.169, 0.169, 0.166), (0, -0.096)],
-    ["Particle", (2.252, 0.0, -0.615), (0.16, 0.181, 0.169), (-0.021, -0.108)],
+    ["Actor", (0.734, 0.0, -0.615), (0.145, 0.148, 0.151), (0.087, 0.0)],
+    ["Prop", (1.115, 0.0, -0.615), (0.169, 0.175, 0.178), (-0.045, -0.162)],
+    ["Texture", (1.49, 0.0, -0.615), (0.169, 0.169, 0.166), (0, -0.096)],
+    ["Particle", (1.874, 0.0, -0.615), (0.16, 0.181, 0.169), (-0.021, -0.108)],
 ]
 DGG.WHEELUP = (PGButton.getPressPrefix() + MouseButton.wheel_up().getName()
                + '-')
@@ -39,11 +37,12 @@ class EntitiesMenuGUI(DirectFrame):
         self.bind_gui()
 
     def load_gui(self):
+        self.entity_frame = DirectFrame(pos=(.44, 0, -.06), scale=.9)
         # The 6 entity buttons
         for text, pos, scale, pad in ENTITY_MODE_BUTTONS:
             geom = PlaneModel(f'editor/maps/add-{text}.png')
             pos = (pos[0] - .76, pos[1], pos[2])  # adjust x
-            button = DirectButton(parent=self, geom=geom,
+            button = DirectButton(parent=self.entity_frame, geom=geom,
                                   pos=pos, scale=scale, pad=pad)
             self.entity_mode_buttons[text] = button
 
@@ -66,7 +65,7 @@ class EntitiesMenuGUI(DirectFrame):
 
         # Menu Selection Menu
         self.menu_selection = DirectFrame(parent=self, text="MENU SELECTION",
-                                          pos=(-1.215, 0.0, -0.078),
+                                          pos=(-1.213, 0.0, 0.495),
                                           scale=(0.103, 0.115, 0.103))
         self.selection_scroll = DirectScrolledFrame(parent=self,
                                         canvasSize=BASE_CANVAS_SIZE,

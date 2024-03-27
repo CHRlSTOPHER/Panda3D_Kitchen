@@ -9,19 +9,16 @@ from classes.settings import Globals as G
 from classes.menus.entities.EntitiesMenuGUI import EntitiesMenuGUI
 from classes.menus.entities.EntitiesMenuActor import EntitiesMenuActor
 from classes.menus.entities.EntitiesMenuProp import EntitiesMenuProp
-from classes.menus.entities.EntitiesMenuMusic import EntitiesMenuMusic
-from classes.menus.entities.EntitiesMenuSound import EntitiesMenuSound
 from classes.menus.entities.EntitiesMenuTexture import EntitiesMenuTexture
 from classes.menus.entities.EntitiesMenuParticle import EntitiesMenuParticle
 from classes.settings.FileManagement import get_resource_and_filename
+from classes.startup.DisplayRegions import PREVIEW_REGION
 
 DISABLED_COLOR = (.8, .8, .8, .8)
 ENABLED_COLOR = (1.15, 1.15, 1.15, 1.2)
 MODES = {
     'Actor': EntitiesMenuActor,
     'Prop': EntitiesMenuProp,
-    'Music': EntitiesMenuMusic,
-    'Sound': EntitiesMenuSound,
     'Texture': EntitiesMenuTexture,
     'Particle': EntitiesMenuParticle,
 }
@@ -37,6 +34,9 @@ class EntitiesMenu(EntitiesMenuGUI):
         self.mode_buttons = []
         self.library = None
         self.resources = G.RESOURCES
+
+        # temporary until other sections have been developed.
+        base.preview_region.set_dimensions(*PREVIEW_REGION)
 
         self.generate()
 
@@ -132,9 +132,13 @@ class EntitiesMenu(EntitiesMenuGUI):
         def flash(density):
             self.fog.set_exp_density(density)
 
+        def fade(alpha):
+            self.modes[self.mode].entity.set_alpha_scale(alpha)
+
         Sequence(
-            LerpFunc(flash, duration=.5, fromData=0, toData=1),
-            LerpFunc(flash, duration=.5, fromData=1, toData=0),
+            LerpFunc(flash, duration=.35, fromData=0, toData=1),
+            LerpFunc(flash, duration=.35, fromData=1, toData=0),
+            LerpFunc(fade, duration=.3, fromData=1, toData=0),
             Func(self.modes[self.mode].cleanup_entity),
             Func(base.node_mover.set_clickability, True)
         ).start()
@@ -147,6 +151,7 @@ class EntitiesMenu(EntitiesMenuGUI):
                                               to_ram=True)
         buffer.set_sort(-100)
         camera = base.make_camera(buffer)
+        camera.node().get_lens().set_fov(G.PREVIEW_FOV)
         camera.reparent_to(base.preview_render)
         path = f"{G.R_EDITOR}{self.mode}/{self.item_name}.png"
         file_name = Filename.fromOsSpecific(path)
